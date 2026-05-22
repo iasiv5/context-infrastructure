@@ -7,7 +7,7 @@ import os
 import sys
 import time
 from datetime import datetime
-from opencode_client import OpenCodeClient
+import heartbeat_state
 
 KNOWLEDGE_BASE = "/path/to/your/workspace/periodic_jobs/ai_heartbeat/docs/KNOWLEDGE_BASE.md"
 OBSERVATIONS_PATH = os.path.join(
@@ -52,34 +52,56 @@ def main():
     model_id = args.model
     delete_after = not args.no_delete
 
-    # Idempotency: skip if entry for target_date already exists
-    if os.path.exists(OBSERVATIONS_PATH):
-        with open(OBSERVATIONS_PATH, "r", encoding="utf-8") as f:
-            content = f.read()
-        if f"Date: {target_date}" in content:
-            print(f"Idempotent skip: entry for {target_date} already exists in OBSERVATIONS.md")
+    try:
+        # Idempotency: skip if entry for target_date already exists
+        if os.path.exists(OBSERVATIONS_PATH):
+            with open(OBSERVATIONS_PATH, "r", encoding="utf-8") as f:
+                content = f.read()
+            if f"Date: {target_date}" in content:
+                heartbeat_state.persist_skipped("observer", target_date=target_date)
+                print(f"Idempotent skip: entry for {target_date} already exists in OBSERVATIONS.md")
+                return
+
+        print(f"Triggering Fully Agentic Observer for date: {target_date} using model: {model_id}...")
+        from opencode_client import OpenCodeClient
+
+        client = OpenCodeClient()
+
+        session_id = client.create_session(f"Heartbeat L1 - Persistence Mode - {target_date}")
+        if not session_id:
+            heartbeat_state.persist_failure(
+                "observer",
+                error="Failed to create OpenCode session.",
+                target_date=target_date,
+            )
             return
 
-    print(f"Triggering Fully Agentic Observer for date: {target_date} using model: {model_id}...")
-    client = OpenCodeClient()
-    
-    session_id = client.create_session(f"Heartbeat L1 - Persistence Mode - {target_date}")
-    if not session_id:
-        return
-        
-    prompt = PROMPT_TEMPLATE.format(kb_path=KNOWLEDGE_BASE, target_date=target_date)
-    client.send_message(session_id, prompt, model_id=model_id)
-    # If send_message timed out, agent may still be running; poll until done
-    print("Waiting for session to complete (sync mode)...")
-    client.wait_for_session_complete(session_id)
-    # Ephemeral: delete session by default (--no-delete to keep)
-    if delete_after:
-        if client.delete_session(session_id):
-            print(f"Task complete (session {session_id} deleted).")
+        prompt = PROMPT_TEMPLATE.format(kb_path=KNOWLEDGE_BASE, target_date=target_date)
+        client.send_message(session_id, prompt, model_id=model_id)
+        # If send_message timed out, agent may still be running; poll until done
+        print("Waiting for session to complete (sync mode)...")
+        completed = client.wait_for_session_complete(session_id)
+        if not completed:
+            heartbeat_state.persist_failure(
+                "observer",
+                error="Observer session did not complete before timeout.",
+                target_date=target_date,
+            )
+            return
+
+        heartbeat_state.persist_success("observer", target_date=target_date)
+
+        # Ephemeral: delete session by default (--no-delete to keep)
+        if delete_after:
+            if client.delete_session(session_id):
+                print(f"Task complete (session {session_id} deleted).")
+            else:
+                print(f"Task complete (Session: {session_id}).")
         else:
             print(f"Task complete (Session: {session_id}).")
-    else:
-        print(f"Task complete (Session: {session_id}).")
+    except Exception as exc:
+        heartbeat_state.persist_failure("observer", error=str(exc), target_date=target_date)
+        print(f"Observer failed: {exc}")
 
 if __name__ == "__main__":
     main()

@@ -2,11 +2,13 @@
 
 本文档描述 context infrastructure 系统所需的定时任务。
 
+如果你只想使用 AI Heartbeat 的手动提醒模式，先运行 `python periodic_jobs/ai_heartbeat/src/v0/heartbeat_preflight.py` 即可；这份文档只覆盖仍然选择 cron 或其他系统级调度的场景。
+
 ---
 
 ## 时间线总览
 
-```
+```raw
 3:05 AM   → Situation Awareness: 每日摘要 + 摄像头缓存刷新
 4:00 AM   → Session Sync: 导出 AI session 归档
 6:30 AM   → WeChat DB Parser: 导出每日消息为 CSV（如适用）

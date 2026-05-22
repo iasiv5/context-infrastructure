@@ -5,8 +5,8 @@ Instructs OpenCode-Builder to perform memory garbage collection directly on the 
 """
 import os
 import sys
-from opencode_client import OpenCodeClient
 from datetime import datetime
+import heartbeat_state
 
 KNOWLEDGE_BASE = "/path/to/your/workspace/periodic_jobs/ai_heartbeat/docs/KNOWLEDGE_BASE.md"
 
@@ -40,19 +40,39 @@ def main():
     model_id = args.model
     target_date = datetime.now().strftime("%Y-%m-%d")
 
-    print(f"Triggering Fully Agentic Reflector using model: {model_id}...")
-    client = OpenCodeClient()
-    
-    session_id = client.create_session(f"Heartbeat L2 Reflector - {target_date}")
-    if not session_id:
-        return
-        
-    prompt = PROMPT_TEMPLATE.format(kb_path=KNOWLEDGE_BASE)
-    client.send_message(session_id, prompt, model_id=model_id)
-    # If send_message timed out, agent may still be running; poll until done
-    print("Waiting for session to complete (sync mode)...")
-    client.wait_for_session_complete(session_id)
-    print(f"Task complete (Session: {session_id}).")
+    try:
+        print(f"Triggering Fully Agentic Reflector using model: {model_id}...")
+        from opencode_client import OpenCodeClient
+
+        client = OpenCodeClient()
+
+        session_id = client.create_session(f"Heartbeat L2 Reflector - {target_date}")
+        if not session_id:
+            heartbeat_state.persist_failure(
+                "reflector",
+                error="Failed to create OpenCode session.",
+                target_date=target_date,
+            )
+            return
+
+        prompt = PROMPT_TEMPLATE.format(kb_path=KNOWLEDGE_BASE)
+        client.send_message(session_id, prompt, model_id=model_id)
+        # If send_message timed out, agent may still be running; poll until done
+        print("Waiting for session to complete (sync mode)...")
+        completed = client.wait_for_session_complete(session_id)
+        if not completed:
+            heartbeat_state.persist_failure(
+                "reflector",
+                error="Reflector session did not complete before timeout.",
+                target_date=target_date,
+            )
+            return
+
+        heartbeat_state.persist_success("reflector", target_date=target_date)
+        print(f"Task complete (Session: {session_id}).")
+    except Exception as exc:
+        heartbeat_state.persist_failure("reflector", error=str(exc), target_date=target_date)
+        print(f"Reflector failed: {exc}")
 
 if __name__ == "__main__":
     main()

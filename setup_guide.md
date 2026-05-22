@@ -75,48 +75,65 @@
 
 ---
 
-## Step 3：配置记忆系统（可选，30 分钟）
+## Step 3：配置记忆系统（可选，20-30 分钟）
 
-**价值**：让 AI 自动积累你的工作经验，越用越懂你。
+**价值**：让 AI 积累你的工作经验，但不强依赖后台定时任务。
 
 ### 3a. 理解三层架构
 
-```
+```raw
 L3（全局约束）: rules/ 下所有文件 → 每次 session 被动加载
 L1/L2（动态记忆）: contexts/memory/OBSERVATIONS.md → agent 主动检索
 ```
 
-L3 你已经配置好了（Step 1）。L1/L2 需要设置 cron 自动运行。
+L3 你已经配置好了（Step 1）。L1/L2 现在有两种运行方式：
 
-### 3b. 配置 OpenCode Server
+1. **手动提醒模式（默认推荐）**：每次会话前检查 observer / reflector 是否过期，再按提示手动执行。
+2. **Cron 增强模式（可选）**：如果你愿意配置后台定时任务，再接入系统级调度。
 
-`periodic_jobs/ai_heartbeat/` 的脚本依赖 OpenCode Server API。
+### 3b. 手动提醒模式（默认）
 
-1. 确认本地 OpenCode Server 运行（或配置连接）
-2. 在 `periodic_jobs/ai_heartbeat/src/v0/` 检查 `opencode_client.py`（需要你自行补充，源码参考 OpenCode 文档）
-3. 测试连通性：`python3 observer.py --help`
+`periodic_jobs/ai_heartbeat/src/v0/heartbeat_preflight.py` 会读取本地状态文件，判断 observer 是否超过 24 小时、reflector 是否超过 7 天，并给出提醒。
 
-### 3c. 配置 Cron
+先确认这三个入口都能正常响应：
+1. `python periodic_jobs/ai_heartbeat/src/v0/heartbeat_preflight.py --help`
+2. `python periodic_jobs/ai_heartbeat/src/v0/observer.py --help`
+3. `python periodic_jobs/ai_heartbeat/src/v0/reflector.py --help`
 
+如果你在 GitHub Copilot 里启用了 hooks，这个 workspace 已自带 `.github/hooks/ai-heartbeat.session-start.json`；它会在 SessionStart 时调用 `.github/hooks/pre-session.ps1`，后者内部执行 `heartbeat_preflight.py --hook-mode` 并自动做同日去重。
+
+### 3c. 可选：配置 OpenCode Server
+
+如果你准备真正执行 observer / reflector，它们仍然依赖 OpenCode Server API。
 ```bash
-# 每日 8:00 AM 运行 observer（扫描当日变化）
-0 8 * * * cd /path/to/your/workspace && python3 periodic_jobs/ai_heartbeat/src/v0/observer.py >> /tmp/observer.log 2>&1
+# 查看当前是否需要执行 observer / reflector
+python periodic_jobs/ai_heartbeat/src/v0/heartbeat_preflight.py
 
-# 每周一 9:00 AM 运行 reflector（蒸馏和晋升）
-0 9 * * 1 cd /path/to/your/workspace && python3 periodic_jobs/ai_heartbeat/src/v0/reflector.py >> /tmp/reflector.log 2>&1
+# 如果这次只提醒、不执行，记录“今天已经提醒过”
+python periodic_jobs/ai_heartbeat/src/v0/heartbeat_preflight.py --mark-prompted observer reflector
+
+# 手动执行 observer
+python periodic_jobs/ai_heartbeat/src/v0/observer.py 2026-05-22
+
+# 手动执行 reflector
+python periodic_jobs/ai_heartbeat/src/v0/reflector.py
 ```
 
-调整路径和时间为你的实际情况。
+### 3e. 可选：配置 Cron
 
-### 3d. 验证
+如果你希望把手动提醒模式升级为后台自动执行，再去看 `docs/CRONTAB.md`。这一步不是必需的。
 
-运行一次 observer：
+### 3f. 验证
+
+先跑一次会前检查：
 
 ```bash
-python3 periodic_jobs/ai_heartbeat/src/v0/observer.py 2024-01-15
+python periodic_jobs/ai_heartbeat/src/v0/heartbeat_preflight.py
 ```
 
-查看 `contexts/memory/OBSERVATIONS.md` 是否有新条目写入。
+查看 `periodic_jobs/ai_heartbeat/state/heartbeat_status.json` 是否已创建，并确认命令输出能说明 observer / reflector 的当前状态。
+
+如果你决定继续走后台调度，再去参考 `docs/CRONTAB.md`；如果不配 cron，手动提醒模式已经可以工作。
 
 ---
 
