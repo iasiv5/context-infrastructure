@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenBMC - 开源固件解决方案</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #050b18;
+            --bg-soft: #0c1426;
+            --card: rgba(255, 255, 255, 0.06);
+            --card-strong: rgba(255, 255, 255, 0.12);
+            --border: rgba(255, 255, 255, 0.14);
+            --text: #e9eef7;
+            --muted: #9fb1cc;
+            --accent: #2bd4db;
+            --accent-2: #ffb347;
+            --shadow: 0 18px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', 'Plus Jakarta Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: radial-gradient(120% 120% at 10% 20%, rgba(43, 212, 219, 0.15), transparent 45%),
+                        radial-gradient(80% 80% at 90% 10%, rgba(255, 179, 71, 0.18), transparent 40%),
+                        linear-gradient(145deg, #040812 0%, #0b1a2d 60%, #050b18 100%);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            padding: 24px;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                        linear-gradient(0deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 60px 60px;
+            opacity: 0.6;
+            pointer-events: none;
+            z-index: -2;
+        }
+
+        .page-shell {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .glass-panel {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
+        }
+
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 18px;
+            margin-bottom: 24px;
+            position: sticky;
+            top: 20px;
+            z-index: 10;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .brand-mark {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent), #67e8f9);
+            display: grid;
+            place-items: center;
+            color: #04101a;
+            font-weight: 800;
+            box-shadow: 0 10px 30px rgba(43, 212, 219, 0.25);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        .nav-links a {
+            color: inherit;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--text);
+            background: var(--card-strong);
+        }
+
+        .nav-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #2bd4db, #9efcff);
+            color: #04101a;
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: 0 10px 25px rgba(43, 212, 219, 0.35);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 12px 30px rgba(43, 212, 219, 0.45);
+            color: #04101a;
+        }
+
+        .hero-section {
+            padding: 28px;
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::after {
+            content: "";
+            position: absolute;
+            inset: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 18px;
+            pointer-events: none;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 28px;
+            align-items: center;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .eyebrow i {
+            color: var(--accent);
+        }
+
+        .hero-title {
+            font-size: clamp(2.3rem, 4vw, 3.1rem);
+            font-weight: 700;
+            margin: 14px 0;
+            line-height: 1.12;
+        }
+
+        .hero-title span {
+            color: var(--accent);
+        }
+
+        .hero-subtitle {
+            color: var(--muted);
+            font-size: 1.05rem;
+            line-height: 1.7;
+            max-width: 520px;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 20px 0 10px;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--accent), #8ef4ff);
+            color: #04101a;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: 0 12px 30px rgba(43, 212, 219, 0.35);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 34px rgba(43, 212, 219, 0.45);
+            color: #04101a;
+        }
+
+        .btn-ghost {
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            color: var(--text);
+            text-decoration: none;
+            transition: background 0.2s ease, border-color 0.2s ease;
+        }
+
+        .btn-ghost:hover {
+            background: var(--card-strong);
+            border-color: rgba(255, 255, 255, 0.3);
+            color: var(--text);
+        }
+
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .chip {
+            padding: 10px 12px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--muted);
+            border: 1px solid var(--border);
+            font-size: 0.95rem;
+        }
+
+        .hero-visual {
+            position: relative;
+        }
+
+        .glow-ring {
+            position: absolute;
+            inset: -18px;
+            background: radial-gradient(circle, rgba(43, 212, 219, 0.28) 0%, rgba(4, 16, 26, 0) 55%);
+            filter: blur(18px);
+            z-index: 0;
+        }
+
+        .hero-card {
+            position: relative;
+            border-radius: 18px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background: var(--bg-soft);
+            padding: 14px;
+            box-shadow: var(--shadow);
+            z-index: 1;
+        }
+
+        .hero-card img {
+            width: 100%;
+            border-radius: 12px;
+            display: block;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 12px;
+            margin: 40px 0 14px;
+        }
+
+        .section-header h2 {
+            font-size: 1.45rem;
+            margin: 0;
+        }
+
+        .section-header p {
+            margin: 0;
+            color: var(--muted);
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+        }
+
+        .feature-card {
+            padding: 18px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.28);
+            box-shadow: 0 18px 38px rgba(0, 0, 0, 0.28);
+        }
+
+        .feature-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: rgba(43, 212, 219, 0.12);
+            display: grid;
+            place-items: center;
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+
+        .feature-title {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .feature-description {
+            color: var(--muted);
+            line-height: 1.6;
+            font-size: 0.98rem;
+        }
+
+        .highlight-list {
+            display: grid;
+            gap: 12px;
+            margin-top: 14px;
+        }
+
+        .highlight-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--muted);
+        }
+
+        .highlight-item i {
+            color: var(--accent-2);
+        }
+
+        .cta-band {
+            margin-top: 34px;
+            padding: 18px 20px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(43, 212, 219, 0.18), rgba(255, 179, 71, 0.16));
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .footer {
+            margin-top: 30px;
+            padding: 18px 20px;
+            border-radius: 16px;
+            background: var(--bg-soft);
+            border: 1px solid var(--border);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 6px;
+        }
+
+        .footer-link {
+            color: var(--muted);
+            text-decoration: none;
+            display: inline-flex;
+            gap: 8px;
+            align-items: center;
+            transition: color 0.2s ease;
+        }
+
+        .footer-link:hover {
+            color: var(--text);
+            text-decoration: underline;
+        }
+
+        .footer small {
+            color: var(--muted);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 18px;
+            }
+
+            .top-nav {
+                position: static;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-shell">
+        <nav class="top-nav glass-panel">
+            <div class="brand">
+                <div class="brand-mark">OB</div>
+                <div>
+                    <div>OpenBMC</div>
+                    <small style="color: var(--muted);">iasi-FOSS</small>
+                </div>
+            </div>
+            <div class="nav-links">
+                <a href="#features">特性</a>
+                <a href="https://github.com/openbmc/openbmc" target="_blank" rel="noreferrer">GitHub</a>
+                <a href="mailto:iasi@163.com">联系</a>
+                <a class="nav-cta" href="#hero">快速体验 <i class="fa-solid fa-arrow-up-right"></i></a>
+            </div>
+        </nav>
+
+        <section class="hero-section glass-panel" id="hero">
+            <div class="hero-grid">
+                <div>
+                    <div class="eyebrow"><i class="fa-solid fa-sparkles"></i> 开源固件 · Smart Ops</div>
+                    <h1 class="hero-title">面向新一代服务器的 <span>OpenBMC</span> 体验</h1>
+                    <p class="hero-subtitle">安全可信的 BMC 固件，兼顾远程运维、节能调优与社区共建。用更快的交付节奏，支撑数据中心的可持续增长。</p>
+
+                    <div class="hero-actions">
+                        <a class="btn-primary-custom" href="https://github.com/openbmc/openbmc" target="_blank" rel="noreferrer">浏览源代码</a>
+                        <a class="btn-ghost" href="mailto:iasi@163.com">预约演示</a>
+                    </div>
+
+                    <div class="hero-meta">
+                        <div class="chip"><i class="fa-solid fa-shield-check"></i> 安全合规</div>
+                        <div class="chip"><i class="fa-solid fa-chart-line"></i> 可观测与调优</div>
+                        <div class="chip"><i class="fa-solid fa-people-group"></i> 社区共建</div>
+                    </div>
+                </div>
+
+                <div class="hero-visual">
+                    <div class="glow-ring"></div>
+                    <div class="hero-card">
+                        <img src="pic/iasi-FOSS-2.png" alt="OpenBMC firmware dashboard">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-header" id="features">
+            <h2>核心能力</h2>
+            <p>针对运维、可靠性与社区协作的端到端设计</p>
+        </div>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-microchip"></i></div>
+                <h3 class="feature-title">开源固件栈</h3>
+                <p class="feature-description">基于 OpenBMC 主线构建，保持社区同步，快速获得安全修复与新特性。</p>
+                <div class="highlight-list">
+                    <div class="highlight-item"><i class="fa-solid fa-check"></i> D-Bus 架构与模块化服务</div>
+                    <div class="highlight-item"><i class="fa-solid fa-check"></i> 主流服务器平台适配</div>
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-code-branch"></i></div>
+                <h3 class="feature-title">社区驱动交付</h3>
+                <p class="feature-description">iasi-FOSS 维护长周期分支，与上游协同，提供补丁回传与知识共享。</p>
+                <div class="highlight-list">
+                    <div class="highlight-item"><i class="fa-solid fa-check"></i> CI 验证与合规扫描</div>
+                    <div class="highlight-item"><i class="fa-solid fa-check"></i> 文档与脚本自包含交付</div>
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-shield-halved"></i></div>
+                <h3 class="feature-title">安全与可观测</h3>
+                <p class="feature-description">内置审计、日志和指标导出，易于接入企业监控体系，满足合规要求。</p>
+                <div class="highlight-list">
+                    <div class="highlight-item"><i class="fa-solid fa-check"></i> Redfish/PLDM 互操作</div>
+                    <div class="highlight-item"><i class="fa-solid fa-check"></i> 告警、事件流与追踪</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="cta-band">
+            <div>
+                <strong>想验证特定平台或场景？</strong>
+                <div style="color: var(--muted);">联系我们获取演示镜像与最佳实践手册。</div>
+            </div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <a class="btn-primary-custom" href="mailto:iasi@163.com">预约试用</a>
+                <a class="btn-ghost" href="http://beian.miit.gov.cn/" target="_blank" rel="noreferrer">备案信息</a>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="footer-links">
+                <a href="http://beian.miit.gov.cn/" target="_blank" rel="noreferrer" class="footer-link"><i class="fas fa-certificate"></i> 沪ICP备19029598号</a>
+                <a href="mailto:iasi@163.com" class="footer-link"><i class="fas fa-envelope"></i> 联系我们</a>
+                <a href="https://github.com/openbmc/openbmc" target="_blank" rel="noreferrer" class="footer-link"><i class="fas fa-github"></i> GitHub</a>
+            </div>
+            <small>版权所有 © OpenBMC X iasi-FOSS 2026 / All Rights Reserved</small>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

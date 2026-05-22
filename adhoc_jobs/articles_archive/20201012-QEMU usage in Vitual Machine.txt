@@ -1,0 +1,42 @@
+=========================================
+Setting up QEMU enviroment on Ubuntu 16.04
+=========================================
+apt-get install libpixman-1-dev
+git clone https://github.com/openbmc/qemu.git
+cd qemu
+git submodule update --init dtc
+mkdir build
+cd build
+../configure --target-list=arm-softmmu
+make
+# Built file will be located at: arm-softmmu/qemu-system-arm
+=========================================
+QEMU 使用
+=========================================
+假设QEMU安装在 home/project/qemu/build/arm-softmmu/qemu-system-arm
+假设BMC image存在 /home/project/openbmc/build/tmp/deploy/images/romulus
+
+home/project/qemu/build/arm-softmmu/qemu-system-arm -m 256 -M romulus-bmc -nographic \
+-drive file=/home/project/openbmc/build/tmp/deploy/images/romulus/flash-romulus,format=raw,if=mtd \
+-net nic \
+-net user,hostfwd=:127.0.0.1:2222-:22,hostfwd=:127.0.0.1:2443-:443,hostfwd=:127.0.0.1:3333-:3000,hostname=rom815 \
+
+可以使用 ssh -p 2222 root@localhost 登陆BMC
+可以使用 地址 https://localhost:2443 访问BMC WEB
+可以使用 地址 http://localhost:3333  访问D-bus debug info
+=========================================
+QEMU update in Vitual Machine - SOP
+=========================================
+cd /home/project/qemu
+git pull
+git submodule update --init dtc
+mv build build-old
+mkdir build
+cd build
+apt-get --purge remove libsdl1.2-dev
+apt-get --purge remove libsdl1.2debian
+sudo apt-get install libsdl2-2.0
+sudo apt-get install libglib2.0-dev
+../configure --target-list=arm-softmmu
+make
+ # Built file will be located at: arm-softmmu/qemu-system-arm
