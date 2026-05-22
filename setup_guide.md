@@ -95,16 +95,15 @@ L3 你已经配置好了（Step 1）。L1/L2 现在有两种运行方式：
 
 `periodic_jobs/ai_heartbeat/src/v0/heartbeat_preflight.py` 会读取本地状态文件，判断 observer 是否超过 24 小时、reflector 是否超过 7 天，并给出提醒。
 
-先确认这三个入口都能正常响应：
+先确认这两个入口都能正常响应：
 1. `python periodic_jobs/ai_heartbeat/src/v0/heartbeat_preflight.py --help`
-2. `python periodic_jobs/ai_heartbeat/src/v0/observer.py --help`
-3. `python periodic_jobs/ai_heartbeat/src/v0/reflector.py --help`
+2. `python periodic_jobs/ai_heartbeat/src/v0/heartbeat_local_runner.py --help`
 
-如果你在 GitHub Copilot 里启用了 hooks，这个 workspace 已自带 `.github/hooks/ai-heartbeat.session-start.json`；它会在 SessionStart 时调用 `.github/hooks/pre-session.ps1`，后者内部执行 `heartbeat_preflight.py --hook-mode` 并自动做同日去重。
+如果你在 GitHub Copilot 里启用了 hooks，这个 workspace 已自带 `.github/hooks/ai-heartbeat.session-start.json`；它会在 SessionStart 时调用 `.github/hooks/pre-session.ps1`，后者内部执行 `heartbeat_preflight.py --hook-dialog-spec`，并直接弹出原生的 observer / reflector 选择框。
 
-### 3c. 可选：配置 OpenCode Server
+### 3c. 可选：保留旧版 OpenCode 触发器
 
-如果你准备真正执行 observer / reflector，它们仍然依赖 OpenCode Server API。
+默认推荐使用 `heartbeat_local_runner.py` 做本地 direct-exec。只有在你明确要兼容旧版 OpenCode 流程时，才需要继续保留 `observer.py` / `reflector.py` 及其相关依赖。
 ```bash
 # 查看当前是否需要执行 observer / reflector
 python periodic_jobs/ai_heartbeat/src/v0/heartbeat_preflight.py
@@ -113,10 +112,13 @@ python periodic_jobs/ai_heartbeat/src/v0/heartbeat_preflight.py
 python periodic_jobs/ai_heartbeat/src/v0/heartbeat_preflight.py --mark-prompted observer reflector
 
 # 手动执行 observer
-python periodic_jobs/ai_heartbeat/src/v0/observer.py 2026-05-22
+python periodic_jobs/ai_heartbeat/src/v0/heartbeat_local_runner.py observer --target-date 2026-05-22
 
 # 手动执行 reflector
-python periodic_jobs/ai_heartbeat/src/v0/reflector.py
+python periodic_jobs/ai_heartbeat/src/v0/heartbeat_local_runner.py reflector --target-date 2026-05-22
+
+# 一次执行 observer + reflector
+python periodic_jobs/ai_heartbeat/src/v0/heartbeat_local_runner.py observer reflector --target-date 2026-05-22
 ```
 
 ### 3e. 可选：配置 Cron
@@ -184,11 +186,11 @@ A：可以用来理解系统的结构，但核心内容代表原作者的视角�
 **Q：skills 能直接用吗？**  
 A：✅ 标记的可以直接用。⚙️ 标记的需要替换配置（endpoint、API key、域名等）。BestPractice 类基本都可以直接用。
 
-**Q：observer.py 需要什么依赖？**  
-A：依赖 `opencode_client.py`（OpenCode Server 的客户端封装）。这部分需要你根据自己使用的 AI agent 框架来实现或适配。
+**Q：heartbeat_local_runner.py 需要什么依赖？**  
+A：默认只依赖本地 Python 环境和 workspace 文件读写能力，不再要求 OpenCode Server。observer / reflector 的状态回写和本地落盘都由它直接完成。
 
-**Q：能用其他 AI agent（不用 OpenCode）吗？**  
-A：可以。`observer.py` 的核心逻辑是构造 prompt 并调用 AI；你可以替换 `opencode_client` 为 Claude API、OpenAI API 或任何支持长对话的 AI 接口。
+**Q：observer.py / reflector.py 还能用吗？**  
+A：可以，但它们现在属于旧版 OpenCode 触发器，主要用于兼容或迁移，不再是默认推荐路径。
 
 ---
 

@@ -1,12 +1,12 @@
 # Memory Observations
 
-这是三层记忆系统的 L1/L2 层。每日观察由 `periodic_jobs/ai_heartbeat/src/v0/observer.py` 自动写入，每周由 `reflector.py` 整理和蒸馏。
+这是三层记忆系统的动态记忆日志。observer 会把当天观测追加到这里；reflector 会回看这里的近期内容，清理低价值项，并据此产出规则晋升与报告。默认触发方式是 `.github/hooks/pre-session.ps1` 调用 `periodic_jobs/ai_heartbeat/src/v0/heartbeat_local_runner.py`。
 
 ## 格式说明
 
 每个日期条目格式如下：
 
-```
+```raw
 Date: YYYY-MM-DD
 
 🔴 High: [方法论/约束] 描述
@@ -36,4 +36,11 @@ grep -A 20 "Date: $(date -v-7d +%Y-%m-%d)" contexts/memory/OBSERVATIONS.md
 
 ---
 
-<!-- 以下是记录区域，由 observer.py 自动追加 -->
+<!-- 以下是记录区域，由 AI Heartbeat 本地执行器追加与整理 -->
+
+Date: 2026-05-22
+
+🔴 High: Local observer scan detected rule-surface changes in AGENTS.md, docs/plans/2026-05-22-ai-heartbeat-manual-reminder-implementation-plan.md, docs/specs/2026-05-22-ai-heartbeat-manual-reminder-design.md, rules/WORKSPACE.md, docs/specs/2026-05-22-migrate-iasi-workspace-design.md, docs/plans/2026-05-22-migrate-iasi-workspace-implementation-plan.md, ... (+80).
+🟡 Medium: Local observer scan detected active workspace changes in periodic_jobs/ai_heartbeat/tests/test_heartbeat_preflight.py, periodic_jobs/ai_heartbeat/src/v0/heartbeat_preflight.py, periodic_jobs/ai_heartbeat/tests/test_heartbeat_local_runner.py, periodic_jobs/ai_heartbeat/src/v0/heartbeat_local_runner.py, periodic_jobs/ai_heartbeat/tests/test_heartbeat_status_cli.py, periodic_jobs/ai_heartbeat/src/v0/heartbeat_status_cli.py, ... (+63).
+🟢 Low: Local observer scan detected routine workspace churn in .github/hooks/pre-session.ps1, .gitignore, .github/hooks/ai-heartbeat.session-start.json, pyrightconfig.json, contexts/thought_review/.gitkeep, contexts/survey_sessions/.gitkeep, ... (+11).
+

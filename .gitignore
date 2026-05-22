@@ -3,3 +3,4 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 periodic_jobs/ai_heartbeat/state/heartbeat_status.json
+periodic_jobs/ai_heartbeat/state/heartbeat_reflector_report.md

@@ -47,7 +47,7 @@ context-infrastructure/
 │
 ├── contexts/
 │   ├── memory/
-│   │   └── OBSERVATIONS.md      # 三层记忆系统的 L1/L2 层
+│   │   └── OBSERVATIONS.md      # observer 追加观测、reflector 回看的动态记忆日志
 │   ├── survey_sessions/         # 调研报告存放目录
 │   ├── daily_records/           # 日常记录存放目录
 │   └── thought_review/          # 思考复盘存放目录
@@ -58,11 +58,13 @@ context-infrastructure/
 │       │   ├── PRD.md           # 记忆系统设计文档
 │       │   └── KNOWLEDGE_BASE.md # 观察和反思的 SOP
 │       ├── state/
-│       │   └── heartbeat_status.json # observer / reflector 的本地状态
+│       │   ├── heartbeat_status.json # observer / reflector 的本地状态
+│       │   └── heartbeat_reflector_report.md # 本地 reflector 执行报告
 │       └── src/v0/
-│           ├── heartbeat_preflight.py # 会话前检查与手动提醒入口
-│           ├── observer.py      # 每日观察脚本（可手动触发，cron 可选）
-│           └── reflector.py     # 每周反思脚本（可手动触发，cron 可选）
+│           ├── heartbeat_preflight.py   # 会话前检查与提醒入口
+│           ├── heartbeat_local_runner.py # hook / 手动 / cron 共用的本地执行器
+│           ├── observer.py              # 旧 OpenCode observer 触发器（兼容保留）
+│           └── reflector.py             # 旧 OpenCode reflector 触发器（兼容保留）
 │
 ├── tools/
 │   ├── semantic_search/         # 语义搜索（Tier 2）
@@ -77,7 +79,7 @@ context-infrastructure/
 
 **展示层（可以参考，不能复制）**：[`rules/axioms/`](rules/axioms/) 和 [`rules/skills/`](rules/skills/) 包含了这个系统积累一年的内容。43 条公理是从具体经历中蒸馏出来的，skills 是从真实项目中总结的。这些代表原作者的视角，对你有参考价值，但不能替代你自己积累的认知。
 
-**可复用层（直接用）**：[`rules/SOUL.md`](rules/SOUL.md)、[`rules/USER.md`](rules/USER.md) 是模板，填写即可使用。[`rules/COMMUNICATION.md`](rules/COMMUNICATION.md) 是通用的沟通风格指南，大多数人可以直接采用。[`periodic_jobs/ai_heartbeat/`](periodic_jobs/ai_heartbeat/) 提供了记忆系统的实现代码。默认可用的是会前手动提醒模式：运行 `periodic_jobs/ai_heartbeat/src/v0/heartbeat_preflight.py` 检查 observer / reflector 是否逾期；如果你在 GitHub Copilot 里启用了 hooks，这个 workspace 已自带 `.github/hooks/ai-heartbeat.session-start.json`，会在 SessionStart 时调用 `.github/hooks/pre-session.ps1`；如果你想升级成后台定时执行，再参考 [`docs/CRONTAB.md`](docs/CRONTAB.md)。
+**可复用层（直接用）**：[`rules/SOUL.md`](rules/SOUL.md)、[`rules/USER.md`](rules/USER.md) 是模板，填写即可使用。[`rules/COMMUNICATION.md`](rules/COMMUNICATION.md) 是通用的沟通风格指南，大多数人可以直接采用。[`periodic_jobs/ai_heartbeat/`](periodic_jobs/ai_heartbeat/) 提供了记忆系统的实现代码。默认可用的是会前手动提醒模式：运行 `periodic_jobs/ai_heartbeat/src/v0/heartbeat_preflight.py` 检查 observer / reflector 是否逾期。这里的触发入口是统一的，但任务语义保持区分：observer 负责把当天观测追加到 `contexts/memory/OBSERVATIONS.md`，reflector 负责回看这些观测、清理低价值项，并产出规则与报告输出。如果你在 GitHub Copilot 里启用了 hooks，这个 workspace 已自带 `.github/hooks/ai-heartbeat.session-start.json`，会在 SessionStart 时调用 `.github/hooks/pre-session.ps1`；如果你想升级成后台定时执行，再参考 [`docs/CRONTAB.md`](docs/CRONTAB.md)。
 
 **不可复用层**：公理的具体内容、skill 背后的具体经验。理解它们的结构和形成方式，然后从你自己的数据中积累。
 

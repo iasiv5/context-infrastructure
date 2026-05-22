@@ -28,16 +28,16 @@ Daily     → Crontab Monitor: 健康审计，发现异常则发告警邮件
 
 扫描 workspace 文件变动，提取有价值的观察写入 `contexts/memory/OBSERVATIONS.md`。这是三层记忆系统的"输入端"。
 
-- **脚本**：`periodic_jobs/ai_heartbeat/src/v0/observer.py`
-- **依赖**：OpenCode Server API（`OPENCODE_API_URL`）
+- **脚本**：`periodic_jobs/ai_heartbeat/src/v0/heartbeat_local_runner.py observer --target-date <当天日期>`
+- **依赖**：本地 Python 环境、workspace 文件读写权限
 - **建议时间**：每日 8:00 AM（在 daily briefing 之后）
 
 ### AI Heartbeat Reflector（每周）
 
 合并、提升、清理 OBSERVATIONS.md 中积累的观察，蒸馏为更高层次的认知。
 
-- **脚本**：`periodic_jobs/ai_heartbeat/src/v0/reflector.py`
-- **依赖**：OpenCode Server API（`OPENCODE_API_URL`）
+- **脚本**：`periodic_jobs/ai_heartbeat/src/v0/heartbeat_local_runner.py reflector --target-date <执行日期>`
+- **依赖**：本地 Python 环境、workspace 文件读写权限
 - **建议时间**：每周日 9:00 AM
 
 ### Crontab Monitor（每日）
@@ -68,10 +68,10 @@ Daily     → Crontab Monitor: 健康审计，发现异常则发告警邮件
 # TZ=America/Los_Angeles
 
 # AI Heartbeat Observer — 每日 8:00 AM
-0 8 * * * cd /path/to/your/workspace && /path/to/your/workspace/.venv/bin/python periodic_jobs/ai_heartbeat/src/v0/observer.py >> /tmp/observer.log 2>&1
+0 8 * * * cd /path/to/your/workspace && /path/to/your/workspace/.venv/bin/python periodic_jobs/ai_heartbeat/src/v0/heartbeat_local_runner.py observer --target-date $(date +\%F) >> /tmp/observer.log 2>&1
 
 # AI Heartbeat Reflector — 每周日 9:00 AM
-0 9 * * 0 cd /path/to/your/workspace && /path/to/your/workspace/.venv/bin/python periodic_jobs/ai_heartbeat/src/v0/reflector.py >> /tmp/reflector.log 2>&1
+0 9 * * 0 cd /path/to/your/workspace && /path/to/your/workspace/.venv/bin/python periodic_jobs/ai_heartbeat/src/v0/heartbeat_local_runner.py reflector --target-date $(date +\%F) >> /tmp/reflector.log 2>&1
 
 # Crontab Monitor — 每日 9:00 AM
 0 9 * * * cd /path/to/your/workspace && /path/to/your/workspace/.venv/bin/python periodic_jobs/ai_heartbeat/src/v0/jobs/crontab_monitor.py >> /tmp/crontab_monitor.log 2>&1

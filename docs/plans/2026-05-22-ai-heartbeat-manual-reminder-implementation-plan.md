@@ -1,5 +1,7 @@
 # AI Heartbeat 手动提醒机制实施计划
 
+> 历史说明：本文记录的是第一阶段实施计划。当前默认执行链路已经收敛到 SessionStart hook + periodic_jobs/ai_heartbeat/src/v0/heartbeat_local_runner.py；文中对 observer.py / reflector.py 的引用主要用于保留当时的实施背景。
+
 ## 目标
 
 - 将已批准设计 [docs/specs/2026-05-22-ai-heartbeat-manual-reminder-design.md](docs/specs/2026-05-22-ai-heartbeat-manual-reminder-design.md) 落成可执行实现，不再依赖 cron 才能知道 observer 和 reflector 是否逾期。

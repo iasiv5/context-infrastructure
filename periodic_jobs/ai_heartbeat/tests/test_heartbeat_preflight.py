@@ -78,6 +78,22 @@ def test_main_prints_human_readable_summary(tmp_path: Path) -> None:
     assert "reflector" in rendered
 
 
+def test_build_dialog_spec_shows_only_relevant_actions(tmp_path: Path) -> None:
+    state_path = tmp_path / "heartbeat_status.json"
+    now = datetime(2026, 5, 22, 9, 0, tzinfo=timezone.utc)
+    state = heartbeat_state.default_state()
+    state["observer"]["last_success_at"] = _iso(now - timedelta(hours=1))
+    state["reflector"]["last_success_at"] = _iso(now - timedelta(days=8))
+    heartbeat_state.save_state(state, state_path)
+
+    reminders = heartbeat_preflight.run_preflight(state_path=state_path, now=now)
+    spec = heartbeat_preflight.build_dialog_spec(reminders, now=now)
+
+    assert [option["label"] for option in spec["options"]] == ["忽略", "执行 reflector"]
+    assert "commands" not in spec
+    assert spec["target_date"] == "2026-05-22"
+
+
 def test_run_hook_marks_prompted_and_returns_message(tmp_path: Path) -> None:
     state_path = tmp_path / "heartbeat_status.json"
     now = datetime(2026, 5, 22, 9, 0, tzinfo=timezone.utc)
@@ -86,9 +102,10 @@ def test_run_hook_marks_prompted_and_returns_message(tmp_path: Path) -> None:
 
     assert message is not None
     assert "AI Heartbeat 会前提醒" in message
-    assert "手动执行" in message
     assert "observer" in message
     assert "reflector" in message
+    assert "可直接运行本地执行器" in message
+    assert "heartbeat_local_runner.py observer reflector --target-date 2026-05-22" in message
     assert ".\\.venv\\Scripts\\python.exe" in message
 
     state = json.loads(state_path.read_text(encoding="utf-8"))
@@ -96,7 +113,28 @@ def test_run_hook_marks_prompted_and_returns_message(tmp_path: Path) -> None:
     assert state["reflector"]["last_prompted_on"] == "2026-05-22"
 
 
-def test_hook_mode_dedups_same_day(tmp_path: Path) -> None:
+def test_run_hook_dialog_spec_marks_prompted_and_returns_payload(tmp_path: Path) -> None:
+    state_path = tmp_path / "heartbeat_status.json"
+    now = datetime(2026, 5, 22, 9, 0, tzinfo=timezone.utc)
+
+    dialog_spec = heartbeat_preflight.run_hook_dialog_spec(state_path=state_path, now=now)
+
+    assert dialog_spec is not None
+    assert dialog_spec["due_tasks"] == ["observer", "reflector"]
+    assert dialog_spec["target_date"] == "2026-05-22"
+    assert [option["label"] for option in dialog_spec["options"]] == [
+        "忽略",
+        "执行 observer",
+        "执行 reflector",
+        "执行 observer + reflector",
+    ]
+
+    state = json.loads(state_path.read_text(encoding="utf-8"))
+    assert state["observer"]["last_prompted_on"] == "2026-05-22"
+    assert state["reflector"]["last_prompted_on"] == "2026-05-22"
+
+
+def test_hook_dialog_spec_mode_dedups_same_day(tmp_path: Path) -> None:
     state_path = tmp_path / "heartbeat_status.json"
     now = datetime(2026, 5, 22, 9, 0, tzinfo=timezone.utc)
     state = heartbeat_state.default_state()
@@ -104,6 +142,21 @@ def test_hook_mode_dedups_same_day(tmp_path: Path) -> None:
     state["reflector"]["last_prompted_on"] = "2026-05-22"
     heartbeat_state.save_state(state, state_path)
 
-    message = heartbeat_preflight.run_hook(state_path=state_path, now=now)
+    dialog_spec = heartbeat_preflight.run_hook_dialog_spec(state_path=state_path, now=now)
 
-    assert message is None
+    assert dialog_spec is None
+
+
+def test_hook_message_omits_irrelevant_actions_for_single_due_task(tmp_path: Path) -> None:
+    state_path = tmp_path / "heartbeat_status.json"
+    now = datetime(2026, 5, 22, 9, 0, tzinfo=timezone.utc)
+    state = heartbeat_state.default_state()
+    state["observer"]["last_success_at"] = _iso(now - timedelta(hours=1))
+    state["reflector"]["last_success_at"] = _iso(now - timedelta(days=8))
+    heartbeat_state.save_state(state, state_path)
+
+    message = heartbeat_preflight.run_hook(state_path=state_path, now=now)
+    assert message is not None
+    assert "reflector" in message
+    assert "reflector（L2，每周反思）" in message
+    assert "执行 observer + reflector" not in message

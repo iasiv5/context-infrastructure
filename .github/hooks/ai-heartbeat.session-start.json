@@ -4,11 +4,9 @@
       {
         "type": "command",
         "command": "powershell -NoProfile -ExecutionPolicy Bypass -File ./.github/hooks/pre-session.ps1",
-        "windows": {
-          "command": "powershell -NoProfile -ExecutionPolicy Bypass -File ./.github/hooks/pre-session.ps1"
-        },
+        "windows": "powershell -NoProfile -ExecutionPolicy Bypass -File ./.github/hooks/pre-session.ps1",
         "cwd": ".",
-        "timeout": 15
+        "timeout": 120
       }
     ]
   }

@@ -1,5 +1,7 @@
 # AI Heartbeat 手动提醒机制设计文档
 
+> 历史说明：本文保留了最初的设计阶段语境。当前落地实现已把默认执行路径切到 `periodic_jobs/ai_heartbeat/src/v0/heartbeat_local_runner.py`，不再以 `observer.py` / `reflector.py` 作为默认 direct-exec 入口。
+
 ## 背景与目标
 
 - 现有记忆系统把 observer 和 reflector 设计成外部定时任务，默认依赖 OpenCode Server 和 cron。

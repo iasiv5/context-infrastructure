@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -12,6 +13,27 @@ if str(MODULE_DIR) not in sys.path:
     sys.path.insert(0, str(MODULE_DIR))
 
 import heartbeat_state
+
+
+LOCAL_PYTHON_HINT = ".\\.venv\\Scripts\\python.exe"
+
+
+def _local_runner_command(*tasks: str, target_date: str) -> str:
+    task_args = " ".join(tasks)
+    return (
+        f"{LOCAL_PYTHON_HINT} periodic_jobs/ai_heartbeat/src/v0/heartbeat_local_runner.py "
+        f"{task_args} --target-date {target_date}"
+    )
+
+
+def _status_cli_command(task_name: str, target_date: str, *, status: str = "success") -> str:
+    command = (
+        f"{LOCAL_PYTHON_HINT} periodic_jobs/ai_heartbeat/src/v0/heartbeat_status_cli.py "
+        f"{task_name} --status {status} --target-date {target_date}"
+    )
+    if status == "failed":
+        command += ' --error "<brief error>"'
+    return command
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -30,6 +52,11 @@ def build_parser() -> argparse.ArgumentParser:
         "--hook-mode",
         action="store_true",
         help="Emit a concise pre-session hook message and mark due reminders as prompted.",
+    )
+    parser.add_argument(
+        "--hook-dialog-spec",
+        action="store_true",
+        help="Emit a JSON dialog spec for SessionStart hooks and mark due reminders as prompted.",
     )
     return parser
 
@@ -78,6 +105,61 @@ def format_reminder(reminder: dict[str, Any]) -> str:
     return f"{task_name}: {overdue_by}; last success at {last_success_at}"
 
 
+def build_dialog_spec(
+    reminders: Sequence[dict[str, Any]],
+    *,
+    now: datetime | None = None,
+) -> dict[str, Any]:
+    current_time = now or datetime.now(timezone.utc)
+    due_tasks = [item["task"] for item in reminders]
+
+    options = [
+        {
+            "action": "ignore",
+            "label": "忽略",
+            "description": "本次先不执行，继续当前会话",
+        }
+    ]
+
+    if "observer" in due_tasks:
+        options.append(
+            {
+                "action": "run_observer",
+                "label": "执行 observer",
+                "description": "运行 L1 当天观测",
+            }
+        )
+
+    if "reflector" in due_tasks:
+        options.append(
+            {
+                "action": "run_reflector",
+                "label": "执行 reflector",
+                "description": "运行 L2 每周反思",
+            }
+        )
+
+    if {"observer", "reflector"}.issubset(due_tasks):
+        options.append(
+            {
+                "action": "run_observer_and_reflector",
+                "label": "执行 observer + reflector",
+                "description": "先运行 observer，再运行 reflector",
+            }
+        )
+
+    due_text = "、".join(due_tasks)
+    question = f"检测到 AI Heartbeat 的 {due_text} 已过期，请选择处理方式。"
+
+    return {
+        "title": "AI Heartbeat 会前提醒",
+        "question": question,
+        "due_tasks": due_tasks,
+        "target_date": current_time.date().isoformat(),
+        "options": options,
+    }
+
+
 def build_hook_message(
     reminders: Sequence[dict[str, Any]],
     *,
@@ -95,21 +177,40 @@ def build_hook_message(
         else:
             lines.append(f"- {task_name}：还没有成功执行记录")
 
-    lines.append("如果你现在要补跑，请在终端手动执行：")
+    target_date = current_time.date().isoformat()
+    lines.append("如果你现在要处理，可直接运行本地执行器：")
     for reminder in reminders:
         task_name = reminder["task"]
         if task_name == "observer":
-            lines.append("- observer（L1，当天观测）")
-            lines.append(
-                f"  python periodic_jobs/ai_heartbeat/src/v0/observer.py {current_time.date().isoformat()}"
-            )
+            lines.append("- observer（L1，当天观测）：更新 contexts/memory/OBSERVATIONS.md，不要修改 rules/。")
+            lines.append(f"  执行命令：{_local_runner_command('observer', target_date=target_date)}")
+            lines.append(f"  如需单独回写成功：{_status_cli_command('observer', target_date)}")
         elif task_name == "reflector":
-            lines.append("- reflector（L2，每周反思）")
-            lines.append("  python periodic_jobs/ai_heartbeat/src/v0/reflector.py")
+            lines.append("- reflector（L2，每周反思）：基于 OBSERVATIONS.md 提炼规则并更新 rules/。")
+            lines.append(f"  执行命令：{_local_runner_command('reflector', target_date=target_date)}")
+            lines.append(f"  如需单独回写成功：{_status_cli_command('reflector', target_date)}")
 
-    lines.append("如果你使用本仓库的本地虚拟环境，可把 python 替换成 .\\.venv\\Scripts\\python.exe。")
-    lines.append("如果这次先不执行，本次提示已记为今天已提醒，不会在同一天重复弹出。")
+    if {item["task"] for item in reminders} == {"observer", "reflector"}:
+        lines.append(f"- 一次执行两个任务：{_local_runner_command('observer', 'reflector', target_date=target_date)}")
+
+    lines.append("如果任务失败，可把上面的命令改成 --status failed --error \"<brief error>\"。")
+    lines.append("这些提醒已经记为今天已提醒；如果这次先不执行，也不要再次调用 --mark-prompted。")
     return "\n".join(lines)
+
+
+def run_hook_dialog_spec(
+    *,
+    state_path: str | Path | None = None,
+    now: datetime | None = None,
+) -> dict[str, Any] | None:
+    current_time = now or datetime.now(timezone.utc)
+    reminders = run_preflight(state_path=state_path, now=current_time)
+    if not reminders:
+        return None
+
+    dialog_spec = build_dialog_spec(reminders, now=current_time)
+    mark_prompted([item["task"] for item in reminders], state_path=state_path, now=current_time)
+    return dialog_spec
 
 
 def run_hook(
@@ -129,6 +230,12 @@ def run_hook(
 def main(argv: Sequence[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
+
+    if args.hook_dialog_spec:
+        dialog_spec = run_hook_dialog_spec(state_path=args.state_path)
+        if dialog_spec:
+            print(json.dumps(dialog_spec, ensure_ascii=False))
+        return 0
 
     if args.hook_mode:
         message = run_hook(state_path=args.state_path)

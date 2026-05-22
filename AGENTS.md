@@ -16,6 +16,12 @@ Before doing anything else:
 
 Don't ask permission. Just do it.
 
+## SessionStart Hook: AI Heartbeat
+
+AI Heartbeat 的会前选择框和本地执行现在都由 `.github/hooks/pre-session.ps1` 直接处理。
+
+不要在模型侧重复实现 askQuestions、pending 文件消费协议、或额外的会前任务消费逻辑，除非你确认 SessionStart hook 本身失效。
+
 ## File Routing
 
 **找文件时，先查 `rules/WORKSPACE.md`，再搜索。** WORKSPACE.md 是这个 workspace 的目录索引，记录了每类内容的存放位置。绝大多数情况下查一下就能定位到目标目录，不需要全盘 glob/grep。如果发现新目录或项目没被收录，顺手更新 WORKSPACE.md。
@@ -67,7 +73,7 @@ Don't ask permission. Just do it.
 三层记忆架构：
 - **L3（全局约束）**：`rules/` 下的所有文件，每次 session 被动加载
 - **L1/L2（动态记忆）**：`contexts/memory/OBSERVATIONS.md`，agent 主动检索
-- **自动积累**：`periodic_jobs/ai_heartbeat/` 每日 observer + 每周 reflector
+- **自动积累**：`periodic_jobs/ai_heartbeat/` 保留 observer（L1，当天观测）与 reflector（L2，每周反思）两种任务；默认由 SessionStart hook 按到期状态提醒并触发，cron 只是可选增强
 
 ## Safety
 
