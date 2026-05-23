@@ -13,7 +13,7 @@
 ```bash
 git clone https://github.com/grapeot/context-infrastructure
 cd context-infrastructure
-# 用 Claude Code / OpenCode / Cursor 打开这个目录
+# 用 VS Code（需安装 GitHub Copilot 扩展）、Cursor 或 Claude Code 打开这个目录
 ```
 
 然后：打开 [`rules/USER.md`](rules/USER.md)，填写你的基本信息。这是 ROI 最高的一步，完成后 AI 的行为立刻个性化。
@@ -29,7 +29,9 @@ context-infrastructure/
 ├── AGENTS.md                    # 根路由表（AI 每次 session 的起点）
 ├── setup_guide.md               # 配置指引
 ├── .env.example                 # 环境变量模板
+├── CLAUDE.md                    # Claude Code 入口（转发到 AGENTS.md）
 ├── .github/
+│   ├── copilot-instructions.md  # GitHub Copilot 入口（转发到 AGENTS.md）
 │   └── hooks/
 │       ├── ai-heartbeat.session-start.json # GitHub Copilot SessionStart 注册文件
 │       └── pre-session.ps1      # GitHub Copilot 会话前 hook（调用 heartbeat_preflight）
@@ -63,8 +65,8 @@ context-infrastructure/
 │       └── src/v0/
 │           ├── heartbeat_preflight.py   # 会话前检查与提醒入口
 │           ├── heartbeat_local_runner.py # hook / 手动 / cron 共用的本地执行器
-│           ├── observer.py              # 旧 OpenCode observer 触发器（兼容保留）
-│           └── reflector.py             # 旧 OpenCode reflector 触发器（兼容保留）
+│           ├── observer.py              # observer 触发器（兼容保留）
+│           └── reflector.py             # reflector 触发器（兼容保留）
 │
 ├── tools/
 │   ├── semantic_search/         # 语义搜索（Tier 2）
@@ -79,7 +81,7 @@ context-infrastructure/
 
 **展示层（可以参考，不能复制）**：[`rules/axioms/`](rules/axioms/) 和 [`rules/skills/`](rules/skills/) 包含了这个系统积累一年的内容。43 条公理是从具体经历中蒸馏出来的，skills 是从真实项目中总结的。这些代表原作者的视角，对你有参考价值，但不能替代你自己积累的认知。
 
-**可复用层（直接用）**：[`rules/SOUL.md`](rules/SOUL.md)、[`rules/USER.md`](rules/USER.md) 是模板，填写即可使用。[`rules/COMMUNICATION.md`](rules/COMMUNICATION.md) 是通用的沟通风格指南，大多数人可以直接采用。[`periodic_jobs/ai_heartbeat/`](periodic_jobs/ai_heartbeat/) 提供了记忆系统的实现代码。默认可用的是会前手动提醒模式：运行 `periodic_jobs/ai_heartbeat/src/v0/heartbeat_preflight.py` 检查 observer / reflector 是否逾期。这里的触发入口是统一的，但任务语义保持区分：observer 负责把当天观测追加到 `contexts/memory/OBSERVATIONS.md`，reflector 负责回看这些观测、清理低价值项，并产出规则与报告输出。如果你在 GitHub Copilot 里启用了 hooks，这个 workspace 已自带 `.github/hooks/ai-heartbeat.session-start.json`，会在 SessionStart 时调用 `.github/hooks/pre-session.ps1`；如果你想升级成后台定时执行，再参考 [`docs/CRONTAB.md`](docs/CRONTAB.md)。
+**可复用层（直接用）**：[`rules/SOUL.md`](rules/SOUL.md)、[`rules/USER.md`](rules/USER.md) 是模板，填写即可使用。GitHub Copilot 用户通过 `.github/copilot-instructions.md` 自动加载 `AGENTS.md`；Claude Code 用户通过根目录 `CLAUDE.md` 加载。[`rules/COMMUNICATION.md`](rules/COMMUNICATION.md) 是通用的沟通风格指南，大多数人可以直接采用。[`periodic_jobs/ai_heartbeat/`](periodic_jobs/ai_heartbeat/) 提供了记忆系统的实现代码。默认可用的是会前手动提醒模式：运行 `periodic_jobs/ai_heartbeat/src/v0/heartbeat_preflight.py` 检查 observer / reflector 是否逾期。这里的触发入口是统一的，但任务语义保持区分：observer 负责把当天观测追加到 `contexts/memory/OBSERVATIONS.md`，reflector 负责回看这些观测、清理低价值项，并产出规则与报告输出。如果你在 GitHub Copilot 里启用了 hooks，这个 workspace 已自带 `.github/hooks/ai-heartbeat.session-start.json`，会在 SessionStart 时调用 `.github/hooks/pre-session.ps1`；如果你想升级成后台定时执行，再参考 [`docs/CRONTAB.md`](docs/CRONTAB.md)。
 
 **不可复用层**：公理的具体内容、skill 背后的具体经验。理解它们的结构和形成方式，然后从你自己的数据中积累。
 

@@ -101,9 +101,9 @@ L3 你已经配置好了（Step 1）。L1/L2 现在有两种运行方式：
 
 如果你在 GitHub Copilot 里启用了 hooks，这个 workspace 已自带 `.github/hooks/ai-heartbeat.session-start.json`；它会在 SessionStart 时调用 `.github/hooks/pre-session.ps1`，后者内部执行 `heartbeat_preflight.py --hook-dialog-spec`，并直接弹出原生的 observer / reflector 选择框。
 
-### 3c. 可选：保留旧版 OpenCode 触发器
+### 3c. 兼容性说明
 
-默认推荐使用 `heartbeat_local_runner.py` 做本地 direct-exec。只有在你明确要兼容旧版 OpenCode 流程时，才需要继续保留 `observer.py` / `reflector.py` 及其相关依赖。
+默认推荐使用 `heartbeat_local_runner.py` 做本地 direct-exec。`observer.py` / `reflector.py` 保留在目录中作为兼容参考，日常使用不需要关注。
 ```bash
 # 查看当前是否需要执行 observer / reflector
 python periodic_jobs/ai_heartbeat/src/v0/heartbeat_preflight.py
@@ -187,10 +187,10 @@ A：可以用来理解系统的结构，但核心内容代表原作者的视角�
 A：✅ 标记的可以直接用。⚙️ 标记的需要替换配置（endpoint、API key、域名等）。BestPractice 类基本都可以直接用。
 
 **Q：heartbeat_local_runner.py 需要什么依赖？**  
-A：默认只依赖本地 Python 环境和 workspace 文件读写能力，不再要求 OpenCode Server。observer / reflector 的状态回写和本地落盘都由它直接完成。
+A：默认只依赖本地 Python 环境和 workspace 文件读写能力。observer / reflector 的状态回写和本地落盘都由它直接完成。
 
 **Q：observer.py / reflector.py 还能用吗？**  
-A：可以，但它们现在属于旧版 OpenCode 触发器，主要用于兼容或迁移，不再是默认推荐路径。
+A：保留在目录中作为兼容参考，默认推荐使用 `heartbeat_local_runner.py`。
 
 ---
 

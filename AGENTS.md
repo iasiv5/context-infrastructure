@@ -1,7 +1,5 @@
 # AGENTS.md - Your Workspace
 
-> **First time here?** Start with `setup_guide.md` — it'll walk you through setup in under an hour.
-
 This folder is home. Treat it that way.
 
 ## Every Session
@@ -18,9 +16,7 @@ Don't ask permission. Just do it.
 
 ## SessionStart Hook: AI Heartbeat
 
-AI Heartbeat 的会前选择框和本地执行现在都由 `.github/hooks/pre-session.ps1` 直接处理。
-
-不要在模型侧重复实现 askQuestions、pending 文件消费协议、或额外的会前任务消费逻辑，除非你确认 SessionStart hook 本身失效。
+AI Heartbeat 的会前选择框和本地执行现在都由 `.github/hooks/pre-session.ps1` 直接处理。SessionStart hook 会在新会话开始时自动执行 `heartbeat_preflight.py`，检查 observer / reflector 是否到期并给出提醒。
 
 ## File Routing
 
@@ -43,7 +39,7 @@ AI Heartbeat 的会前选择框和本地执行现在都由 `.github/hooks/pre-se
 
 **调用后台 Agent / 并行 Subagent** → `rules/skills/workflow_parallel_subagents.md`  
 - 何时拆分任务、如何并行派出多个 subagent  
-- 准备调用 `run_in_background=True` 前，先把这个 skill 读一遍再执行  
+- 准备使用并行 subagent 前，先把这个 skill 读一遍
 - 派出 agent 后等系统通知即可，不需要轮询
 
 ## Axioms（公理）
@@ -52,21 +48,22 @@ AI Heartbeat 的会前选择框和本地执行现在都由 `.github/hooks/pre-se
 
 ## Sub-agent 模型路由
 
-配置文件：`~/.config/opencode/oh-my-opencode.json`
+不同工具有各自的 subagent 机制和模型选择策略。当前主用 GitHub Copilot，偶尔用 Claude Code：
 
-常用路由速查：
-- **Gemini 3 Pro**（创意、brainstorm、非常规思路）→ `category="artistry"`
-- **Sonnet 4.6**（执行、调研、代码）→ `category="deep"` 或 `category="unspecified-high"`
-- **Haiku 4.5**（轻量任务）→ `category="quick"`
-- **Opus 4.6**（最难的逻辑/架构）→ `category="ultrabrain"`
+- **GitHub Copilot**：subagent 由 Copilot 自动调度，无需手动配置路由
+- **Claude Code**：如需指定模型或并行 subagent，参考自身配置文件
 
-创意性工作（brainstorm、文章结构、观点碰撞）默认派一个 Gemini（artistry）在后台跑，和自己的思考并行。用户说「调 Gemini」→ artistry，说「调 Sonnet」→ deep。
+创意性工作（brainstorm、文章结构、观点碰撞）可考虑在后台跑一个独立 agent，与主线程并行推进。
 
-## Opus 工作模式
+## 高能力模型工作模式
 
-如果你的模型 ID 包含 `opus`，以下规则生效：
+当使用高能力模型（如 Opus、Sonnet 等）时，注意 token 预算的合理分配：
 
-**你的 context window 很宝贵。** Opus 的核心能力是设计、质量把关和写作。调研、写脚本、关键词检索这些事交给 sub-agent。你的两个主要任务：（1）**设计**：拆分问题、设计计划、分配 sub-agent 任务；（2）**写作与质量把关**：最终文本自己写，sub-agent 结果自己验证。写代码、调研、数据处理全部 delegate，写作和质量验证绝不外包。设计任务拆分时默认考虑并行性（`run_in_background=true`）。
+- **设计**：拆分问题、设计计划、分配 sub-agent 任务
+- **质量把关与写作**：最终文本自己写，sub-agent 结果自己验证
+- **调研和数据处理**：交给 sub-agent 执行
+
+核心原则：把 token 预算集中在只有高能力模型才能做好的事情上，常规执行类工作交给 sub-agent。
 
 ## Memory System（记忆系统）
 
