@@ -19,7 +19,56 @@
 
 ---
 
-## 2. 目标结构
+## 2. Public/Private Repo Intake Gate
+
+**在动目录结构之前，必须先确认一件事：这个 repo 将来会不会发布到公开 GitHub。**
+
+因为 privacy、skill 拆分、`.env.example` 处理、fake fixture 这些东西全部取决于这个答案。如果 scaffolding 已经完成才发现是 public repo，回头改的成本高得多。
+
+### 确认方式
+
+脚手架开始时，问用户：
+
+> 这个 repo 以后会发到公开 GitHub 吗？还是只在自己的 workspace/私人 Git 里用？
+
+选项：`public（会开源/发 GitHub）` / `private（只在本地用）`。
+
+不要跳过这步。用户不说，就问。
+
+### Public repo 必须做的事
+
+如果确认是 public repo，以下内容是强制要求，不属于可选的优化：
+
+1. **`.gitignore` 必须阻塞私密文件**。至少覆盖 `.env`、`.env.*`（保留 `!.env.example`）、`__pycache__/`、`.pytest_cache/`、`*.pyc`、`dist/`、`build/`、`*.egg-info/`、本地数据目录、日志目录。对于 Python 项目，加 `py.typed` 标记。
+
+2. **必须创建 `.env.example`**。所有环境变量用 fake 占位符，不要留空。live test 所需的 env var 必须在 `.env.example` 里列出并写入 fake 值，形式上和真实 `.env` 一致，这样抄过去就能用。
+
+3. **所有公开文件用 fake handles / domains / keys**。`README.md`、docs、tests、fixtures、scripts 里不能出现真实的邮箱、手机号、API key、内部路径、服务器地址、1Password vault 引用。常用 fake 占位符：
+   - 邮箱：`alice@example.com`、`bob@example.net`
+   - 手机号：`+15555550123`（北美测试号段）
+   - API key：`replace-with-your-real-key`
+   - 1Password：`op://your-vault/your-item/your-field`
+   - 域名：`example.com`、`example.org`
+
+4. **README 必须声明 publishable**。在 README 的 Privacy 节写清楚：`This repository is designed to be publishable with only fake examples.`
+
+5. **如果项目包含 skill**，必须拆成两层。公开 repo 里放技术实现（CLI、测试、API contract、skill 的工作流文档），私有联系人、私有路由、私有 handle 放在 workspace 全局 skill 目录（如 `rules/skills/`）或私有 `.env` 中。公开 repo 的 skill 文档里要写清楚「私有 alias 在哪找」。参考 `adhoc_jobs/resend_email_skill/`（公开技术 skill）和 `rules/skills/imessage.md`（私有联系人路由）的拆分方式。
+
+6. **完成后的隐私检查**。在最终验证阶段（Phase 4），必须跑一次隐私扫描：
+
+   ```bash
+   rg -n "真实邮箱模式|真实手机号段|内部路径|op://" .
+   ```
+
+   零匹配才算通过。如果匹配到了，逐个修复后再扫。
+
+### Private repo 的处理
+
+如果确认是 private repo，不需要 fake fixtures 和隐私拆分。正常的 `.env.example` 和 `.gitignore` 仍然推荐，但不强制 fake 占位符。
+
+---
+
+## 3. 目标结构
 
 最小推荐结构：
 
@@ -27,6 +76,7 @@
 project_root/
 ├── AGENTS.md
 ├── .gitignore
+├── .env.example        # public repo 必须；private repo 推荐
 ├── docs/
 │   ├── prd.md
 │   ├── rfc.md
@@ -120,9 +170,15 @@ project_root/
 
 ---
 
-## 3. 推荐执行顺序
+## 4. 推荐执行顺序
 
-### Phase 1：先确认边界
+### Phase 0：确认 public/private
+
+执行第 2 节的 intake gate：问用户这个 repo 将来会不会发公开 GitHub。
+
+如果用户回答 public，整个 scaffolding 过程都要带着 public repo 的约束做（`.env.example` fake 值、`.gitignore` 阻塞私密文件、所有公开文件用 fake handles、skill 拆两层）。不要做完再回头改。
+
+### Phase 1：确认项目边界
 
 先判断三件事：
 
@@ -137,7 +193,7 @@ project_root/
 推荐顺序：
 
 1. 建 `docs/ / src/ / scripts/ / tests/`
-2. 写 `AGENTS.md`、`.gitignore`
+2. 写 `AGENTS.md`、`.gitignore`、`.env.example`
 3. 先写 `prd.md` / `rfc.md` / `test.md`
 4. 再把代码迁到 `src/`，把可执行入口放进 `scripts/`
 5. 最后补 `working.md`
@@ -153,9 +209,27 @@ project_root/
 
 这样可以先完成重构，再逐步迁移调用方。
 
+### Phase 4：验证与隐私检查
+
+所有代码和测试完成后，必须跑一轮验证，顺序固定：
+
+1. Lint（如果项目配置了 linter）。
+2. 测试：先跑默认 offline 测试，再跑 opt-in integration test（如果有）。
+3. Public repo 必须跑隐私扫描：
+
+   ```bash
+   rg -n "真实邮箱|真实手机号|内部服务器|op://|private key pattern" .
+   ```
+
+   零匹配才通过。如果匹配到了，逐个修复后再扫。
+
+4. 把验证结果写进 `docs/working.md` 的当天 changelog，记录 xxx passed / xxx skipped / xxx found and fixed。
+
+只有 Phase 4 全部通过，scaffolding 才算是交付完成。
+
 ---
 
-## 4. Git 策略
+## 5. Git 策略
 
 如果目录需要长期维护，而且和 workspace 大仓库的历史无关，优先单独 `git init`。
 
@@ -172,7 +246,7 @@ project_root/
 
 ---
 
-## 5. AGENTS.md 最少要写什么
+## 6. AGENTS.md 最少要写什么
 
 项目局部 `AGENTS.md` 至少要覆盖：
 
@@ -186,7 +260,7 @@ project_root/
 
 ---
 
-## 6. working.md 维护要求
+## 7. working.md 维护要求
 
 ### Changelog
 
@@ -205,7 +279,7 @@ project_root/
 
 ---
 
-## 7. test.md 应该写什么
+## 8. test.md 应该写什么
 
 至少要说明：
 
@@ -218,7 +292,7 @@ project_root/
 
 ---
 
-## 8. 重整已有项目时的硬规则
+## 9. 重整已有项目时的硬规则
 
 1. 没有用户许可，不要擅自大规模迁目录
 2. 先建骨架，再搬代码
@@ -228,6 +302,8 @@ project_root/
 
 ---
 
-## 9. 一句话判断标准
+## 10. 一句话判断标准
 
 如果一个目录未来还会被继续改，而且希望不同 AI/人能低成本接手，那它就不该继续保持“散装脚本目录”状态，而应该尽快升级成上面这套项目骨架。
+
+如果这个 repo 将来要发公开 GitHub，Phase 0 必须问过用户，Phase 4 的隐私扫描不能跳过。
