@@ -44,3 +44,9 @@ Date: 2026-05-22
 🟡 Medium: Local observer scan detected active workspace changes in periodic_jobs/ai_heartbeat/tests/test_heartbeat_preflight.py, periodic_jobs/ai_heartbeat/src/v0/heartbeat_preflight.py, periodic_jobs/ai_heartbeat/tests/test_heartbeat_local_runner.py, periodic_jobs/ai_heartbeat/src/v0/heartbeat_local_runner.py, periodic_jobs/ai_heartbeat/tests/test_heartbeat_status_cli.py, periodic_jobs/ai_heartbeat/src/v0/heartbeat_status_cli.py, ... (+63).
 🟢 Low: Local observer scan detected routine workspace churn in .github/hooks/pre-session.ps1, .gitignore, .github/hooks/ai-heartbeat.session-start.json, pyrightconfig.json, contexts/thought_review/.gitkeep, contexts/survey_sessions/.gitkeep, ... (+11).
 
+Date: 2026-05-23
+
+🔴 High: Local observer scan detected rule-surface changes in AGENTS.md, rules/skills/ai_heartbeat_local_reflections.md, docs/plans/2026-05-22-ai-heartbeat-manual-reminder-implementation-plan.md, docs/specs/2026-05-22-ai-heartbeat-manual-reminder-design.md, rules/skills/INDEX.md, rules/WORKSPACE.md, ... (+79).
+🟡 Medium: Local observer scan detected active workspace changes in README.md, periodic_jobs/ai_heartbeat/tests/test_heartbeat_local_runner.py, periodic_jobs/ai_heartbeat/src/v0/heartbeat_local_runner.py, docs/CRONTAB.md, setup_guide.md, periodic_jobs/ai_heartbeat/tests/test_heartbeat_preflight.py, ... (+63).
+🟢 Low: Local observer scan detected routine workspace churn in .github/copilot-instructions.md, .github/hooks/pre-session.ps1, .gitignore, CLAUDE.md, .github/hooks/ai-heartbeat.session-start.json, pyrightconfig.json, ... (+13).
+
