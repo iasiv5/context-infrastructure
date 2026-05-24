@@ -50,3 +50,9 @@ Date: 2026-05-23
 🟡 Medium: Local observer scan detected active workspace changes in README.md, periodic_jobs/ai_heartbeat/tests/test_heartbeat_local_runner.py, periodic_jobs/ai_heartbeat/src/v0/heartbeat_local_runner.py, docs/CRONTAB.md, setup_guide.md, periodic_jobs/ai_heartbeat/tests/test_heartbeat_preflight.py, ... (+63).
 🟢 Low: Local observer scan detected routine workspace churn in .github/copilot-instructions.md, .github/hooks/pre-session.ps1, .gitignore, CLAUDE.md, .github/hooks/ai-heartbeat.session-start.json, pyrightconfig.json, ... (+13).
 
+Date: 2026-05-24
+
+🔴 High: AI Heartbeat 架构重大重构——`periodic_jobs/ai_heartbeat/src/v0/heartbeat_local_runner.py` 从本地确定性机械扫描（`_iter_recent_files` / `_build_observer_lines` 分桶逻辑）改造为 Claude Code CLI 驱动的触发器模式。选择方案 C（Claude 全权执行 observer / reflector，Python 只做触发与审计），放弃机械降级路径，reflector 引入 git checkpoint 恢复机制和 allowlist 约束。设计文档：`docs/specs/2026-05-24-claude-code-smart-heartbeat-design.md`；实施计划：`docs/plans/2026-05-24-claude-code-smart-heartbeat-implementation-plan.md`。变更尚未提交。
+🟡 Medium: 新增 observer / reflector 独立 prompt 模板：`periodic_jobs/ai_heartbeat/src/v0/prompts/observer.md` 和 `periodic_jobs/ai_heartbeat/src/v0/prompts/reflector.md`，将任务协议从 Python 硬编码拆离为 Markdown 模板，支持变量渲染。`rules/skills/project_scaffold.md` 增加公开仓库脚手架门控（commit b660593）。
+🟢 Low: `.gitignore` 新增忽略 `periodic_jobs/ai_heartbeat/state/claude_runs/`（Claude 运行日志目录）。commit de605f9 添加 Copilot CLI 智能心跳设计文档到 `docs/specs/`。
+

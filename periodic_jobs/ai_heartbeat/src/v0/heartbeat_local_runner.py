@@ -1,11 +1,15 @@
 from __future__ import annotations
 
 import argparse
+import json
 import os
+import re
+import shutil
+import subprocess
 import sys
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
-from typing import Iterable, Sequence
+from typing import Sequence
 
 
 MODULE_DIR = Path(__file__).resolve().parent
@@ -17,17 +21,27 @@ import heartbeat_state
 
 WORKSPACE_ROOT = Path(__file__).resolve().parents[4]
 HEARTBEAT_ROOT = Path(__file__).resolve().parents[2]
+PROMPTS_DIR = MODULE_DIR / "prompts"
 DEFAULT_OBSERVATIONS_PATH = WORKSPACE_ROOT / "contexts" / "memory" / "OBSERVATIONS.md"
 DEFAULT_REPORT_PATH = HEARTBEAT_ROOT / "state" / "heartbeat_reflector_report.md"
 DEFAULT_RULES_PROMOTION_PATH = WORKSPACE_ROOT / "rules" / "skills" / "ai_heartbeat_local_reflections.md"
-EXCLUDED_DIR_NAMES = {".git", ".venv", "__pycache__", ".pytest_cache", "node_modules"}
-HIGH_PRIORITY_PREFIXES = ("rules/", "docs/specs/", "docs/plans/")
-MEDIUM_PRIORITY_PREFIXES = ("periodic_jobs/", "docs/", "tools/", "m/")
-HIGH_PRIORITY_FILES = {"AGENTS.md"}
-MEDIUM_PRIORITY_FILES = {"README.md", "setup_guide.md"}
-MAX_PATHS_PER_BUCKET = 6
+DEFAULT_OBSERVER_PROMPT_PATH = PROMPTS_DIR / "observer.md"
+DEFAULT_REFLECTOR_PROMPT_PATH = PROMPTS_DIR / "reflector.md"
+DEFAULT_CLAUDE_RUNS_DIR = HEARTBEAT_ROOT / "state" / "claude_runs"
+DEFAULT_KNOWLEDGE_BASE_PATH = HEARTBEAT_ROOT / "docs" / "KNOWLEDGE_BASE.md"
+DEFAULT_PRD_PATH = HEARTBEAT_ROOT / "docs" / "PRD.md"
+DEFAULT_CLAUDE_COMMAND = "claude"
+DEFAULT_CLAUDE_TIMEOUT_SECONDS = 300
 LOW_PRIORITY_RETENTION_DAYS = 30
 RECENT_REVIEW_DAYS = 14
+REFLECTOR_ALLOWLIST_RELATIVE_PATHS = (
+    "contexts/memory/OBSERVATIONS.md",
+    "rules/SOUL.md",
+    "rules/USER.md",
+    "rules/COMMUNICATION.md",
+    "rules/WORKSPACE.md",
+    "rules/skills/ai_heartbeat_local_reflections.md",
+)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -44,15 +58,6 @@ def build_parser() -> argparse.ArgumentParser:
 
 def _utc_now() -> datetime:
     return datetime.now(timezone.utc)
-
-
-def _parse_datetime(value: str | None) -> datetime | None:
-    if not value:
-        return None
-    parsed = datetime.fromisoformat(value)
-    if parsed.tzinfo is None:
-        parsed = parsed.replace(tzinfo=timezone.utc)
-    return parsed.astimezone(timezone.utc)
 
 
 def _resolve_workspace_root(path: str | None) -> Path:
@@ -75,92 +80,463 @@ def _resolve_rules_promotion_path(path: str | None) -> Path:
     return Path(path) if path else DEFAULT_RULES_PROMOTION_PATH
 
 
-def _as_posix_relative(path: Path, root: Path) -> str:
-    return path.relative_to(root).as_posix()
+def _resolve_claude_runs_dir(state_path: str | None) -> Path:
+    if state_path:
+        return Path(state_path).resolve().parent / "claude_runs"
+    return DEFAULT_CLAUDE_RUNS_DIR
 
 
-def _iter_recent_files(workspace_root: Path, since: datetime) -> list[str]:
-    results: list[tuple[datetime, str]] = []
-
-    for current_root, dir_names, file_names in os.walk(workspace_root):
-        dir_names[:] = [name for name in dir_names if name not in EXCLUDED_DIR_NAMES]
-        current_path = Path(current_root)
-        for file_name in file_names:
-            candidate = current_path / file_name
-            try:
-                relative_path = _as_posix_relative(candidate, workspace_root)
-            except ValueError:
-                continue
-
-            if relative_path == "contexts/memory/OBSERVATIONS.md":
-                continue
-            if relative_path.startswith("periodic_jobs/ai_heartbeat/state/"):
-                continue
-
-            try:
-                modified_at = datetime.fromtimestamp(candidate.stat().st_mtime, tz=timezone.utc)
-            except OSError:
-                continue
-
-            if modified_at < since:
-                continue
-
-            results.append((modified_at, relative_path))
-
-    results.sort(key=lambda item: (item[0], item[1]), reverse=True)
-    return [relative_path for _, relative_path in results]
+def _resolve_claude_timeout_seconds() -> int:
+    configured = os.environ.get("AI_HEARTBEAT_CLAUDE_TIMEOUT_SECONDS")
+    if not configured:
+        return DEFAULT_CLAUDE_TIMEOUT_SECONDS
+    try:
+        return max(1, int(configured))
+    except ValueError:
+        return DEFAULT_CLAUDE_TIMEOUT_SECONDS
 
 
-def _bucket_for_path(relative_path: str) -> str:
-    if relative_path in HIGH_PRIORITY_FILES or relative_path.startswith(HIGH_PRIORITY_PREFIXES):
-        return "high"
-    if relative_path in MEDIUM_PRIORITY_FILES or relative_path.startswith(MEDIUM_PRIORITY_PREFIXES):
-        return "medium"
-    return "low"
+def _resolve_claude_command() -> str:
+    configured = os.environ.get("AI_HEARTBEAT_CLAUDE_COMMAND")
+    if os.name != "nt":
+        return configured or DEFAULT_CLAUDE_COMMAND
+
+    candidates: list[str] = []
+    if configured:
+        configured_path = Path(configured)
+        if configured_path.suffix.lower() == ".ps1":
+            cmd_candidate = configured_path.with_suffix(".cmd")
+            if cmd_candidate.exists():
+                return str(cmd_candidate)
+        candidates.append(configured)
+        if not configured_path.suffix:
+            candidates.append(f"{configured}.cmd")
+            candidates.append(f"{configured}.exe")
+    else:
+        candidates.extend(["claude.cmd", "claude.exe", DEFAULT_CLAUDE_COMMAND])
+
+    for candidate in candidates:
+        resolved = shutil.which(candidate)
+        if not resolved:
+            continue
+        if Path(resolved).suffix.lower() == ".ps1":
+            continue
+        return resolved
+
+    return configured or "claude.cmd"
 
 
-def _format_bucket_line(bucket: str, paths: Iterable[str]) -> str | None:
-    collected = list(paths)
-    if not collected:
+def _load_prompt_template(prompt_path: Path) -> str:
+    if not prompt_path.exists():
+        raise FileNotFoundError(f"Prompt template does not exist: {prompt_path}")
+    return prompt_path.read_text(encoding="utf-8")
+
+
+def _coerce_text(value: object | None) -> str:
+    if value is None:
+        return ""
+    if isinstance(value, str):
+        return value
+    return str(value)
+
+def _path_relative_to_workspace(path: Path, *, workspace_root: Path) -> str | None:
+    try:
+        return path.resolve().relative_to(workspace_root.resolve()).as_posix()
+    except ValueError:
         return None
 
-    preview = ", ".join(collected[:MAX_PATHS_PER_BUCKET])
-    if len(collected) > MAX_PATHS_PER_BUCKET:
-        preview += f", ... (+{len(collected) - MAX_PATHS_PER_BUCKET})"
 
-    if bucket == "high":
-        return f"🔴 High: Local observer scan detected rule-surface changes in {preview}."
-    if bucket == "medium":
-        return f"🟡 Medium: Local observer scan detected active workspace changes in {preview}."
-    return f"🟢 Low: Local observer scan detected routine workspace churn in {preview}."
+def _path_for_prompt(path: Path, *, workspace_root: Path) -> str:
+    relative_path = _path_relative_to_workspace(path, workspace_root=workspace_root)
+    if relative_path is not None:
+        return relative_path
+    return path.as_posix()
 
 
-def _build_observer_lines(recent_files: Iterable[str]) -> list[str]:
-    buckets = {"high": [], "medium": [], "low": []}
-    for relative_path in recent_files:
-        buckets[_bucket_for_path(relative_path)].append(relative_path)
+def _reflector_allowlist_relative_paths(*, workspace_root: Path, report_path: Path) -> tuple[str, ...]:
+    allowlist_relative_paths = list(REFLECTOR_ALLOWLIST_RELATIVE_PATHS)
+    report_relative_path = _path_relative_to_workspace(report_path, workspace_root=workspace_root)
+    if report_relative_path and report_relative_path not in allowlist_relative_paths:
+        allowlist_relative_paths.append(report_relative_path)
+    return tuple(allowlist_relative_paths)
 
-    lines = [
-        _format_bucket_line("high", buckets["high"]),
-        _format_bucket_line("medium", buckets["medium"]),
-        _format_bucket_line("low", buckets["low"]),
+
+def _render_observer_prompt(*, prompt_path: Path, workspace_root: Path, observations_path: Path, target_date: str) -> str:
+    template = _load_prompt_template(prompt_path)
+    prompt = template.format(
+        target_date=target_date,
+        workspace_root=".",
+        observations_path=_path_for_prompt(observations_path, workspace_root=workspace_root),
+        agents_path=_path_for_prompt(workspace_root / "AGENTS.md", workspace_root=workspace_root),
+        claude_md_path=_path_for_prompt(workspace_root / "CLAUDE.md", workspace_root=workspace_root),
+        knowledge_base_path=_path_for_prompt(DEFAULT_KNOWLEDGE_BASE_PATH, workspace_root=workspace_root),
+        prd_path=_path_for_prompt(DEFAULT_PRD_PATH, workspace_root=workspace_root),
+        soul_path=_path_for_prompt(workspace_root / "rules" / "SOUL.md", workspace_root=workspace_root),
+        user_path=_path_for_prompt(workspace_root / "rules" / "USER.md", workspace_root=workspace_root),
+        workspace_rules_path=_path_for_prompt(workspace_root / "rules" / "WORKSPACE.md", workspace_root=workspace_root),
+        communication_path=_path_for_prompt(workspace_root / "rules" / "COMMUNICATION.md", workspace_root=workspace_root),
+    )
+    return (
+        "All workspace paths below are repo-relative and resolved against the current working directory.\n"
+        "Do not rewrite them into absolute Windows paths or 8.3 short paths.\n"
+        "When using tools, prefer repo-relative paths like rules/SOUL.md and contexts/memory/OBSERVATIONS.md.\n\n"
+        f"{prompt}"
+    )
+
+
+def _render_reflector_prompt(
+    *,
+    prompt_path: Path,
+    workspace_root: Path,
+    observations_path: Path,
+    report_path: Path,
+    rules_promotion_path: Path,
+    target_date: str,
+) -> str:
+    template = _load_prompt_template(prompt_path)
+    allowlist_paths = "\n".join(
+        f"- {path}"
+        for path in _reflector_allowlist_relative_paths(
+            workspace_root=workspace_root,
+            report_path=report_path,
+        )
+    )
+    prompt = template.format(
+        target_date=target_date,
+        workspace_root=".",
+        observations_path=_path_for_prompt(observations_path, workspace_root=workspace_root),
+        report_path=_path_for_prompt(report_path, workspace_root=workspace_root),
+        rules_promotion_path=_path_for_prompt(rules_promotion_path, workspace_root=workspace_root),
+        agents_path=_path_for_prompt(workspace_root / "AGENTS.md", workspace_root=workspace_root),
+        claude_md_path=_path_for_prompt(workspace_root / "CLAUDE.md", workspace_root=workspace_root),
+        knowledge_base_path=_path_for_prompt(DEFAULT_KNOWLEDGE_BASE_PATH, workspace_root=workspace_root),
+        prd_path=_path_for_prompt(DEFAULT_PRD_PATH, workspace_root=workspace_root),
+        soul_path=_path_for_prompt(workspace_root / "rules" / "SOUL.md", workspace_root=workspace_root),
+        user_path=_path_for_prompt(workspace_root / "rules" / "USER.md", workspace_root=workspace_root),
+        workspace_rules_path=_path_for_prompt(workspace_root / "rules" / "WORKSPACE.md", workspace_root=workspace_root),
+        communication_path=_path_for_prompt(workspace_root / "rules" / "COMMUNICATION.md", workspace_root=workspace_root),
+        allowlist_paths=allowlist_paths,
+    )
+    return (
+        "All workspace paths below are repo-relative and resolved against the current working directory.\n"
+        "Do not rewrite them into absolute Windows paths or 8.3 short paths.\n"
+        "When using tools, prefer repo-relative paths like rules/SOUL.md, contexts/memory/OBSERVATIONS.md, and rules/skills/ai_heartbeat_local_reflections.md.\n\n"
+        "When writing `## Touched Files`, use one bare repo-relative path per bullet in the exact form `- path/to/file.ext`.\n"
+        "Do not wrap touched file paths in backticks and do not add descriptions or commentary on those lines.\n\n"
+        f"{prompt}"
+    )
+
+
+def _run_claude_cli(*, task_name: str, prompt_text: str, workspace_root: Path, target_date: str) -> dict[str, object]:
+    command_path = _resolve_claude_command()
+    command = [
+        command_path,
+        "-p",
+        "--output-format",
+        "json",
+        "--permission-mode",
+        "bypassPermissions",
+        "--dangerously-skip-permissions",
     ]
-    rendered = [line for line in lines if line]
-    if rendered:
-        return rendered
-    return ["🟢 Low: No recent workspace changes detected during local observer scan."]
+    configured_model = os.environ.get("AI_HEARTBEAT_CLAUDE_MODEL")
+    if configured_model:
+        command.extend(["--model", configured_model])
+
+    timeout_seconds = _resolve_claude_timeout_seconds()
+    try:
+        completed = subprocess.run(
+            command,
+            cwd=workspace_root,
+            capture_output=True,
+            input=prompt_text,
+            text=True,
+            encoding="utf-8",
+            timeout=timeout_seconds,
+            check=False,
+        )
+    except FileNotFoundError as exc:
+        raise RuntimeError(f"{task_name} Claude CLI is unavailable: attempted {command_path}: {exc}") from exc
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(f"{task_name} Claude CLI timed out after {timeout_seconds} seconds") from exc
+
+    stdout = completed.stdout or ""
+    stderr = completed.stderr or ""
+    stripped_stdout = stdout.strip()
+    parsed_output = None
+    parse_error = None
+    if stripped_stdout:
+        try:
+            parsed_output = json.loads(stripped_stdout)
+        except json.JSONDecodeError:
+            lowered_stdout = stripped_stdout.lower()
+            if "requires manual approval" in lowered_stdout or "requested permissions" in lowered_stdout or "等待你批准" in stripped_stdout:
+                parse_error = f"{task_name} Claude CLI requested manual approval"
+            else:
+                parse_error = f"{task_name} Claude CLI returned invalid JSON output"
+    elif completed.returncode == 0:
+        parse_error = f"{task_name} Claude CLI returned empty output"
+
+    return {
+        "command": command,
+        "exit_code": completed.returncode,
+        "stdout": stdout,
+        "stderr": stderr,
+        "parsed_output": parsed_output,
+        "parse_error": parse_error,
+        "target_date": target_date,
+    }
 
 
-def _append_observation_entry(observations_path: Path, target_date: str, lines: Sequence[str]) -> None:
-    observations_path.parent.mkdir(parents=True, exist_ok=True)
-    existing = observations_path.read_text(encoding="utf-8") if observations_path.exists() else ""
-    if existing and not existing.endswith("\n"):
-        existing += "\n"
-    if existing and not existing.endswith("\n\n"):
-        existing += "\n"
+def _raise_for_failed_claude_result(task_name: str, result: dict[str, object]) -> None:
+    exit_code = result.get("exit_code")
+    if exit_code != 0:
+        detail = _coerce_text(result.get("stderr")).strip() or _coerce_text(result.get("stdout")).strip() or "no output"
+        raise RuntimeError(f"{task_name} Claude CLI exited with code {exit_code}: {detail}")
 
-    entry = "\n".join([f"Date: {target_date}", "", *lines]).rstrip() + "\n\n"
-    observations_path.write_text(existing + entry, encoding="utf-8")
+    parse_error = _coerce_text(result.get("parse_error")).strip()
+    if parse_error:
+        raise RuntimeError(parse_error)
+
+
+def _write_claude_run_artifacts(
+    *,
+    task_name: str,
+    target_date: str,
+    state_path: str | None,
+    prompt_text: str,
+    result: dict[str, object] | None,
+    status: str,
+    error: str | None,
+) -> Path:
+    runs_dir = _resolve_claude_runs_dir(state_path)
+    timestamp = _utc_now().strftime("%Y%m%dT%H%M%S%fZ")
+    run_dir = runs_dir / f"{target_date}-{task_name}-{timestamp}"
+    run_dir.mkdir(parents=True, exist_ok=False)
+
+    (run_dir / "prompt.md").write_text(prompt_text, encoding="utf-8")
+    (run_dir / "stdout.txt").write_text(_coerce_text(None if result is None else result.get("stdout")), encoding="utf-8")
+    (run_dir / "stderr.txt").write_text(_coerce_text(None if result is None else result.get("stderr")), encoding="utf-8")
+    metadata = {
+        "task_name": task_name,
+        "target_date": target_date,
+        "status": status,
+        "error": error,
+        "created_at": _utc_now().isoformat(),
+        "exit_code": None if result is None else result.get("exit_code"),
+        "parse_error": None if result is None else result.get("parse_error"),
+        "command": None if result is None else result.get("command"),
+    }
+    (run_dir / "metadata.json").write_text(json.dumps(metadata, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return run_dir
+
+
+def _run_git_command(*, workspace_root: Path, args: Sequence[str]) -> subprocess.CompletedProcess[str]:
+    try:
+        completed = subprocess.run(
+            ["git", "-c", "core.quotepath=false", *args],
+            cwd=workspace_root,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            check=False,
+        )
+    except FileNotFoundError as exc:
+        raise RuntimeError(f"git is unavailable: {exc}") from exc
+
+    if completed.returncode != 0:
+        detail = completed.stderr.strip() or completed.stdout.strip() or "no output"
+        raise RuntimeError(f"git {' '.join(args)} failed: {detail}")
+
+    return completed
+
+
+def _parse_git_status(stdout: str) -> dict[str, str]:
+    status_by_path: dict[str, str] = {}
+    for raw_line in stdout.splitlines():
+        if not raw_line:
+            continue
+        status = raw_line[:2]
+        path = raw_line[3:]
+        if " -> " in path:
+            path = path.split(" -> ", 1)[1]
+        status_by_path[path] = status
+    return status_by_path
+
+
+def _git_status_for_paths(*, workspace_root: Path, relative_paths: Sequence[str]) -> dict[str, str]:
+    completed = _run_git_command(
+        workspace_root=workspace_root,
+        args=["status", "--short", "--untracked-files=all", "--", *relative_paths],
+    )
+    return _parse_git_status(completed.stdout)
+
+
+def _git_status_all_paths(*, workspace_root: Path) -> dict[str, str]:
+    completed = _run_git_command(
+        workspace_root=workspace_root,
+        args=["status", "--short", "--untracked-files=all", "--", "."],
+    )
+    return _parse_git_status(completed.stdout)
+
+
+def _create_reflector_checkpoint(*, workspace_root: Path) -> str:
+    timestamp = _utc_now().strftime("%Y%m%dT%H%M%S%fZ")
+    completed = _run_git_command(
+        workspace_root=workspace_root,
+        args=["stash", "create", f"ai-heartbeat-reflector-{timestamp}"],
+    )
+    checkpoint_ref = completed.stdout.strip()
+    if not checkpoint_ref:
+        raise RuntimeError("Reflector git checkpoint creation returned an empty ref")
+    return checkpoint_ref
+
+
+def _prepare_reflector_git_context(*, workspace_root: Path, allowlist_relative_paths: Sequence[str]) -> dict[str, object]:
+    pre_run_status = _git_status_for_paths(
+        workspace_root=workspace_root,
+        relative_paths=allowlist_relative_paths,
+    )
+    git_context: dict[str, object] = {
+        "baseline_ref": "HEAD",
+        "checkpoint_ref": None,
+        "pre_run_status": pre_run_status,
+        "pre_run_repo_status": _git_status_all_paths(workspace_root=workspace_root),
+    }
+    if pre_run_status:
+        checkpoint_ref = _create_reflector_checkpoint(workspace_root=workspace_root)
+        git_context["baseline_ref"] = checkpoint_ref
+        git_context["checkpoint_ref"] = checkpoint_ref
+    return git_context
+
+
+def _git_path_exists_in_ref(*, workspace_root: Path, ref: str, relative_path: str) -> bool:
+    try:
+        completed = subprocess.run(
+            ["git", "-c", "core.quotepath=false", "cat-file", "-e", f"{ref}:{relative_path}"],
+            cwd=workspace_root,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            check=False,
+        )
+    except FileNotFoundError as exc:
+        raise RuntimeError(f"git is unavailable: {exc}") from exc
+
+    return completed.returncode == 0
+
+
+def _restore_reflector_paths(
+    *,
+    workspace_root: Path,
+    baseline_ref: str,
+    relative_paths: Sequence[str],
+    pre_run_status: dict[str, str],
+) -> None:
+    if not relative_paths:
+        return
+
+    checkout_paths: list[str] = []
+    remove_paths: list[str] = []
+
+    for relative_path in relative_paths:
+        if pre_run_status.get(relative_path) == "??":
+            continue
+        if _git_path_exists_in_ref(workspace_root=workspace_root, ref=baseline_ref, relative_path=relative_path):
+            checkout_paths.append(relative_path)
+        else:
+            remove_paths.append(relative_path)
+
+    if checkout_paths:
+        _run_git_command(
+            workspace_root=workspace_root,
+            args=["checkout", baseline_ref, "--", *checkout_paths],
+        )
+
+    for relative_path in remove_paths:
+        restore_path = workspace_root / Path(relative_path)
+        if restore_path.is_dir():
+            shutil.rmtree(restore_path, ignore_errors=True)
+        else:
+            restore_path.unlink(missing_ok=True)
+
+
+def _drop_reflector_checkpoint(*, workspace_root: Path, checkpoint_ref: str) -> None:
+    return None
+
+
+def _detect_unexpected_reflector_changes(
+    *,
+    workspace_root: Path,
+    before_status: dict[str, str],
+    allowlist_relative_paths: Sequence[str],
+) -> list[str]:
+    after_status = _git_status_all_paths(workspace_root=workspace_root)
+    unexpected_paths: list[str] = []
+    for path, status in after_status.items():
+        if path in allowlist_relative_paths:
+            continue
+        if before_status.get(path) != status:
+            unexpected_paths.append(path)
+    return sorted(unexpected_paths)
+
+
+def _extract_touched_files(report_content: str) -> list[str]:
+    touched_files: list[str] = []
+    in_section = False
+
+    for raw_line in report_content.splitlines():
+        stripped = raw_line.strip()
+        if stripped == "## Touched Files":
+            in_section = True
+            continue
+        if in_section and stripped.startswith("## "):
+            break
+        if in_section and stripped.startswith("- "):
+            touched_entry = stripped[2:].strip()
+            backtick_match = re.match(r"`([^`]+)`", touched_entry)
+            if backtick_match:
+                touched_files.append(backtick_match.group(1).strip())
+                continue
+            for separator in (" — ", " - "):
+                if separator in touched_entry:
+                    touched_entry = touched_entry.split(separator, 1)[0].strip()
+                    break
+            touched_files.append(touched_entry.strip("` "))
+
+    return touched_files
+
+
+def _validate_reflector_outputs(
+    *,
+    workspace_root: Path,
+    observations_path: Path,
+    report_path: Path,
+    target_date: str,
+    allowlist_relative_paths: Sequence[str],
+) -> list[str]:
+    observations_path.read_text(encoding="utf-8")
+    if not report_path.exists():
+        raise RuntimeError(f"Reflector report does not exist: {report_path}")
+
+    report_content = report_path.read_text(encoding="utf-8")
+    if f"Date: {target_date}" not in report_content:
+        raise RuntimeError(f"Reflector report does not contain Date: {target_date}")
+
+    touched_files = _extract_touched_files(report_content)
+    if not touched_files:
+        raise RuntimeError("Reflector report did not list touched files")
+
+    unexpected_files = [path for path in touched_files if path not in allowlist_relative_paths]
+    if unexpected_files:
+        raise RuntimeError(f"Reflector report mentioned files outside the allowlist: {', '.join(unexpected_files)}")
+
+    for relative_path in touched_files:
+        touched_path = workspace_root / Path(relative_path)
+        if not touched_path.exists():
+            raise RuntimeError(f"Reflector report referenced missing touched file: {relative_path}")
+        touched_path.read_text(encoding="utf-8")
+
+    return touched_files
 
 
 def run_observer_local(
@@ -176,183 +552,145 @@ def run_observer_local(
         print(f"[observer] Entry for {target_date} already exists, skipping.")
         return
 
-    state = heartbeat_state.load_or_init_state(state_path)
-    last_success_at = _parse_datetime(state["observer"].get("last_success_at"))
-    scan_start = _utc_now() - timedelta(days=7)
-    if last_success_at is not None and last_success_at > scan_start:
-        scan_start = last_success_at
+    prompt_text = ""
+    result: dict[str, object] | None = None
+    try:
+        prompt_text = _render_observer_prompt(
+            prompt_path=DEFAULT_OBSERVER_PROMPT_PATH,
+            workspace_root=workspace_root,
+            observations_path=observations_path,
+            target_date=target_date,
+        )
+        result = _run_claude_cli(
+            task_name="observer",
+            prompt_text=prompt_text,
+            workspace_root=workspace_root,
+            target_date=target_date,
+        )
+        _raise_for_failed_claude_result("observer", result)
 
-    recent_files = _iter_recent_files(workspace_root, scan_start)
-    observer_lines = _build_observer_lines(recent_files)
-    _append_observation_entry(observations_path, target_date, observer_lines)
+        updated = observations_path.read_text(encoding="utf-8") if observations_path.exists() else ""
+        if f"Date: {target_date}" not in updated:
+            raise RuntimeError(f"Observer run did not write Date: {target_date} to {observations_path}")
+
+        _write_claude_run_artifacts(
+            task_name="observer",
+            target_date=target_date,
+            state_path=state_path,
+            prompt_text=prompt_text,
+            result=result,
+            status="success",
+            error=None,
+        )
+    except Exception as exc:
+        _write_claude_run_artifacts(
+            task_name="observer",
+            target_date=target_date,
+            state_path=state_path,
+            prompt_text=prompt_text,
+            result=result,
+            status="failed",
+            error=str(exc),
+        )
+        raise
+
     heartbeat_state.persist_success("observer", path=state_path, target_date=target_date)
     print(f"[observer] Wrote Date: {target_date} entry to {observations_path}.")
-    print(f"[observer] Recent files considered: {len(recent_files)}")
-
-
-def _prune_observations(content: str, *, target_date: str) -> tuple[str, int, int, int, int]:
-    target_day = date.fromisoformat(target_date)
-    low_cutoff = target_day - timedelta(days=LOW_PRIORITY_RETENTION_DAYS)
-    review_cutoff = target_day - timedelta(days=RECENT_REVIEW_DAYS)
-
-    current_entry_date: date | None = None
-    reviewed_entries = 0
-    recent_high = 0
-    recent_medium = 0
-    removed_low = 0
-    kept_lines: list[str] = []
-
-    for raw_line in content.splitlines():
-        stripped = raw_line.strip()
-        if stripped.startswith("Date: "):
-            try:
-                current_entry_date = date.fromisoformat(stripped.split(": ", 1)[1])
-                reviewed_entries += 1
-            except ValueError:
-                current_entry_date = None
-
-        if current_entry_date is not None and current_entry_date >= review_cutoff:
-            if stripped.startswith("🔴 High:"):
-                recent_high += 1
-            elif stripped.startswith("🟡 Medium:"):
-                recent_medium += 1
-
-        if current_entry_date is not None and current_entry_date < low_cutoff and stripped.startswith("🟢 Low:"):
-            removed_low += 1
-            continue
-
-        kept_lines.append(raw_line)
-
-    pruned = "\n".join(kept_lines)
-    if content.endswith("\n"):
-        pruned += "\n"
-    return pruned, reviewed_entries, recent_high, recent_medium, removed_low
-
-
-def _write_reflector_report(
-    report_path: Path,
-    *,
-    target_date: str,
-    reviewed_entries: int,
-    recent_high: int,
-    recent_medium: int,
-    removed_low: int,
-    promotion_count: int,
-    rules_path: Path,
-) -> None:
-    report_path.parent.mkdir(parents=True, exist_ok=True)
-    report_lines = [
-        "# AI Heartbeat Local Reflector Report",
-        "",
-        f"Date: {target_date}",
-        "",
-        "## Summary",
-        f"- Reviewed entries: {reviewed_entries}",
-        f"- Recent high-priority lines: {recent_high}",
-        f"- Recent medium-priority lines: {recent_medium}",
-        f"- Removed stale low-priority lines: {removed_low}",
-        f"- Promoted operational rules: {promotion_count}",
-        f"- Rules output: {rules_path.as_posix()}",
-        "",
-    ]
-    report_path.write_text("\n".join(report_lines), encoding="utf-8")
-
-
-def _build_reflection_rules(recent_high: int, recent_medium: int) -> list[str]:
-    promoted_rules: list[str] = []
-    if recent_high:
-        promoted_rules.extend(
-            [
-                "Treat AGENTS.md, rules/, docs/specs/, and docs/plans/ as a single high-priority review surface whenever AI Heartbeat behavior changes.",
-                "When rule-surface files change, re-check SessionStart hook behavior and documentation together before considering the change complete.",
-            ]
-        )
-
-    if recent_medium:
-        promoted_rules.extend(
-            [
-                "Treat periodic_jobs/, docs/, tools/, and m/ changes as active workspace signals that should inform reflector review before promoting or pruning memory.",
-                "Prefer promoting verified workflow or routing changes into rules/ before deleting the corresponding OBSERVATIONS entries.",
-            ]
-        )
-
-    if not promoted_rules:
-        promoted_rules.append("No promotable operational rules were detected in the current reflector window.")
-
-    return promoted_rules
-
-
-def _write_rules_promotions(
-    rules_path: Path,
-    *,
-    target_date: str,
-    reviewed_entries: int,
-    recent_high: int,
-    recent_medium: int,
-) -> int:
-    rules_path.parent.mkdir(parents=True, exist_ok=True)
-    promoted_rules = _build_reflection_rules(recent_high, recent_medium)
-    bullet_lines = [f"- {rule}" for rule in promoted_rules]
-    lines = [
-        "# AI Heartbeat Local Reflections",
-        "",
-        "This file is generated by `periodic_jobs/ai_heartbeat/src/v0/heartbeat_local_runner.py` during the local reflector phase.",
-        "It stores the currently promoted operational rules distilled from recent OBSERVATIONS windows.",
-        "",
-        f"Last Updated: {target_date}",
-        f"Reviewed Entries: {reviewed_entries}",
-        f"Recent High Signals: {recent_high}",
-        f"Recent Medium Signals: {recent_medium}",
-        "",
-        "## Promoted Rules",
-        *bullet_lines,
-        "",
-        "## Scope",
-        "- This is a controlled local-reflector output, not a general-purpose skill.",
-        "- Update this file only through the AI Heartbeat local reflector or an intentional manual edit.",
-        "",
-    ]
-    rules_path.write_text("\n".join(lines), encoding="utf-8")
-    return 0 if promoted_rules == ["No promotable operational rules were detected in the current reflector window."] else len(promoted_rules)
+    print(f"[observer] Claude CLI completed with exit code {result['exit_code']}.")
 
 
 def run_reflector_local(
     *,
+    workspace_root: Path,
     observations_path: Path,
     report_path: Path,
     rules_promotion_path: Path,
     state_path: str | None,
     target_date: str,
 ) -> None:
-    content = observations_path.read_text(encoding="utf-8") if observations_path.exists() else ""
-    pruned_content, reviewed_entries, recent_high, recent_medium, removed_low = _prune_observations(content, target_date=target_date)
-    if pruned_content != content:
-        observations_path.write_text(pruned_content, encoding="utf-8")
-        print(f"[reflector] Pruned {removed_low} stale low-priority lines from {observations_path}.")
-    else:
-        print("[reflector] No OBSERVATIONS cleanup was needed.")
-
-    promotion_count = _write_rules_promotions(
-        rules_promotion_path,
-        target_date=target_date,
-        reviewed_entries=reviewed_entries,
-        recent_high=recent_high,
-        recent_medium=recent_medium,
+    prompt_text = ""
+    result: dict[str, object] | None = None
+    touched_files: list[str] = []
+    allowlist_relative_paths = _reflector_allowlist_relative_paths(
+        workspace_root=workspace_root,
+        report_path=report_path,
     )
-    print(f"[reflector] Wrote promoted operational rules to {rules_promotion_path}.")
+    git_context: dict[str, object] = {
+        "baseline_ref": "HEAD",
+        "checkpoint_ref": None,
+        "pre_run_status": {},
+        "pre_run_repo_status": {},
+    }
+    should_restore = False
+    try:
+        git_context = _prepare_reflector_git_context(
+            workspace_root=workspace_root,
+            allowlist_relative_paths=allowlist_relative_paths,
+        )
+        should_restore = True
+        prompt_text = _render_reflector_prompt(
+            prompt_path=DEFAULT_REFLECTOR_PROMPT_PATH,
+            workspace_root=workspace_root,
+            observations_path=observations_path,
+            report_path=report_path,
+            rules_promotion_path=rules_promotion_path,
+            target_date=target_date,
+        )
+        result = _run_claude_cli(
+            task_name="reflector",
+            prompt_text=prompt_text,
+            workspace_root=workspace_root,
+            target_date=target_date,
+        )
+        _raise_for_failed_claude_result("reflector", result)
+        unexpected_paths = _detect_unexpected_reflector_changes(
+            workspace_root=workspace_root,
+            before_status=dict(git_context.get("pre_run_repo_status", git_context.get("pre_run_status", {}))),
+            allowlist_relative_paths=allowlist_relative_paths,
+        )
+        if unexpected_paths:
+            raise RuntimeError(f"Reflector modified files outside the allowlist: {', '.join(unexpected_paths)}")
+        touched_files = _validate_reflector_outputs(
+            workspace_root=workspace_root,
+            observations_path=observations_path,
+            report_path=report_path,
+            target_date=target_date,
+            allowlist_relative_paths=allowlist_relative_paths,
+        )
+        _write_claude_run_artifacts(
+            task_name="reflector",
+            target_date=target_date,
+            state_path=state_path,
+            prompt_text=prompt_text,
+            result=result,
+            status="success",
+            error=None,
+        )
+        checkpoint_ref = git_context.get("checkpoint_ref")
+        if checkpoint_ref:
+            _drop_reflector_checkpoint(workspace_root=workspace_root, checkpoint_ref=str(checkpoint_ref))
+    except Exception as exc:
+        if should_restore:
+            _restore_reflector_paths(
+                workspace_root=workspace_root,
+                baseline_ref=str(git_context.get("baseline_ref", "HEAD")),
+                relative_paths=allowlist_relative_paths,
+                pre_run_status=dict(git_context.get("pre_run_status", {})),
+            )
+        _write_claude_run_artifacts(
+            task_name="reflector",
+            target_date=target_date,
+            state_path=state_path,
+            prompt_text=prompt_text,
+            result=result,
+            status="failed",
+            error=str(exc),
+        )
+        raise
 
-    _write_reflector_report(
-        report_path,
-        target_date=target_date,
-        reviewed_entries=reviewed_entries,
-        recent_high=recent_high,
-        recent_medium=recent_medium,
-        removed_low=removed_low,
-        promotion_count=promotion_count,
-        rules_path=rules_promotion_path,
-    )
     heartbeat_state.persist_success("reflector", path=state_path, target_date=target_date)
-    print(f"[reflector] Wrote local reflector report to {report_path}.")
+    print(f"[reflector] Claude CLI completed with exit code {result['exit_code']}.")
+    print(f"[reflector] Report validated with {len(touched_files)} touched files.")
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -376,6 +714,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 )
             else:
                 run_reflector_local(
+                    workspace_root=workspace_root,
                     observations_path=observations_path,
                     report_path=report_path,
                     rules_promotion_path=rules_promotion_path,
