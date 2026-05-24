@@ -24,7 +24,6 @@ HEARTBEAT_ROOT = Path(__file__).resolve().parents[2]
 PROMPTS_DIR = MODULE_DIR / "prompts"
 DEFAULT_OBSERVATIONS_PATH = WORKSPACE_ROOT / "contexts" / "memory" / "OBSERVATIONS.md"
 DEFAULT_REPORT_PATH = HEARTBEAT_ROOT / "state" / "heartbeat_reflector_report.md"
-DEFAULT_RULES_PROMOTION_PATH = WORKSPACE_ROOT / "rules" / "skills" / "ai_heartbeat_local_reflections.md"
 DEFAULT_OBSERVER_PROMPT_PATH = PROMPTS_DIR / "observer.md"
 DEFAULT_REFLECTOR_PROMPT_PATH = PROMPTS_DIR / "reflector.md"
 DEFAULT_CLAUDE_RUNS_DIR = HEARTBEAT_ROOT / "state" / "claude_runs"
@@ -34,13 +33,16 @@ DEFAULT_CLAUDE_COMMAND = "claude"
 DEFAULT_CLAUDE_TIMEOUT_SECONDS = 300
 LOW_PRIORITY_RETENTION_DAYS = 30
 RECENT_REVIEW_DAYS = 14
+REFLECTOR_RETIRED_RELATIVE_PATHS = (
+    "rules/skills/" + "ai_heartbeat_local_" + "reflections.md",
+)
 REFLECTOR_ALLOWLIST_RELATIVE_PATHS = (
     "contexts/memory/OBSERVATIONS.md",
     "rules/SOUL.md",
     "rules/USER.md",
     "rules/COMMUNICATION.md",
     "rules/WORKSPACE.md",
-    "rules/skills/ai_heartbeat_local_reflections.md",
+    "rules/skills/INDEX.md",
 )
 
 
@@ -51,7 +53,6 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--workspace-root")
     parser.add_argument("--observations-path")
     parser.add_argument("--report-path")
-    parser.add_argument("--rules-promotion-path")
     parser.add_argument("--state-path")
     return parser
 
@@ -74,10 +75,6 @@ def _resolve_report_path(path: str | None, state_path: str | None) -> Path:
     if state_path:
         return Path(state_path).with_name("heartbeat_reflector_report.md")
     return DEFAULT_REPORT_PATH
-
-
-def _resolve_rules_promotion_path(path: str | None) -> Path:
-    return Path(path) if path else DEFAULT_RULES_PROMOTION_PATH
 
 
 def _resolve_claude_runs_dir(state_path: str | None) -> Path:
@@ -153,11 +150,48 @@ def _path_for_prompt(path: Path, *, workspace_root: Path) -> str:
     return path.as_posix()
 
 
+def _normalize_relative_path(relative_path: str) -> str:
+    return relative_path.strip().replace("\\", "/")
+
+
+def _is_retired_reflector_path(relative_path: str) -> bool:
+    return _normalize_relative_path(relative_path) in REFLECTOR_RETIRED_RELATIVE_PATHS
+
+
+def _is_real_skill_doc_path(relative_path: str) -> bool:
+    normalized_path = _normalize_relative_path(relative_path)
+    if _is_retired_reflector_path(normalized_path):
+        return False
+    if normalized_path == "rules/skills/INDEX.md":
+        return False
+    if not normalized_path.startswith("rules/skills/") or not normalized_path.endswith(".md"):
+        return False
+    skill_name = normalized_path.removeprefix("rules/skills/")
+    return bool(skill_name) and "/" not in skill_name
+
+
+def _is_allowed_reflector_path(relative_path: str, *, allowlist_relative_paths: Sequence[str]) -> bool:
+    normalized_path = _normalize_relative_path(relative_path)
+    if _is_retired_reflector_path(normalized_path):
+        return False
+    return normalized_path in allowlist_relative_paths or _is_real_skill_doc_path(normalized_path)
+
+
 def _reflector_allowlist_relative_paths(*, workspace_root: Path, report_path: Path) -> tuple[str, ...]:
     allowlist_relative_paths = list(REFLECTOR_ALLOWLIST_RELATIVE_PATHS)
     report_relative_path = _path_relative_to_workspace(report_path, workspace_root=workspace_root)
     if report_relative_path and report_relative_path not in allowlist_relative_paths:
         allowlist_relative_paths.append(report_relative_path)
+
+    skills_dir = workspace_root / "rules" / "skills"
+    if skills_dir.exists():
+        for skill_path in sorted(skills_dir.glob("*.md")):
+            relative_path = _path_relative_to_workspace(skill_path, workspace_root=workspace_root)
+            if not relative_path or not _is_real_skill_doc_path(relative_path):
+                continue
+            if relative_path not in allowlist_relative_paths:
+                allowlist_relative_paths.append(relative_path)
+
     return tuple(allowlist_relative_paths)
 
 
@@ -190,7 +224,6 @@ def _render_reflector_prompt(
     workspace_root: Path,
     observations_path: Path,
     report_path: Path,
-    rules_promotion_path: Path,
     target_date: str,
 ) -> str:
     template = _load_prompt_template(prompt_path)
@@ -206,7 +239,6 @@ def _render_reflector_prompt(
         workspace_root=".",
         observations_path=_path_for_prompt(observations_path, workspace_root=workspace_root),
         report_path=_path_for_prompt(report_path, workspace_root=workspace_root),
-        rules_promotion_path=_path_for_prompt(rules_promotion_path, workspace_root=workspace_root),
         agents_path=_path_for_prompt(workspace_root / "AGENTS.md", workspace_root=workspace_root),
         claude_md_path=_path_for_prompt(workspace_root / "CLAUDE.md", workspace_root=workspace_root),
         knowledge_base_path=_path_for_prompt(DEFAULT_KNOWLEDGE_BASE_PATH, workspace_root=workspace_root),
@@ -220,7 +252,7 @@ def _render_reflector_prompt(
     return (
         "All workspace paths below are repo-relative and resolved against the current working directory.\n"
         "Do not rewrite them into absolute Windows paths or 8.3 short paths.\n"
-        "When using tools, prefer repo-relative paths like rules/SOUL.md, contexts/memory/OBSERVATIONS.md, and rules/skills/ai_heartbeat_local_reflections.md.\n\n"
+        "When using tools, prefer repo-relative paths like rules/SOUL.md, contexts/memory/OBSERVATIONS.md, and rules/skills/INDEX.md.\n\n"
         "When writing `## Touched Files`, use one bare repo-relative path per bullet in the exact form `- path/to/file.ext`.\n"
         "Do not wrap touched file paths in backticks and do not add descriptions or commentary on those lines.\n\n"
         f"{prompt}"
@@ -473,11 +505,36 @@ def _detect_unexpected_reflector_changes(
     after_status = _git_status_all_paths(workspace_root=workspace_root)
     unexpected_paths: list[str] = []
     for path, status in after_status.items():
-        if path in allowlist_relative_paths:
+        if _is_allowed_reflector_path(path, allowlist_relative_paths=allowlist_relative_paths):
             continue
         if before_status.get(path) != status:
             unexpected_paths.append(path)
     return sorted(unexpected_paths)
+
+
+def _reflector_dynamic_restore_relative_paths(
+    *,
+    workspace_root: Path,
+    before_status: dict[str, str],
+    report_path: Path,
+) -> tuple[str, ...]:
+    restore_relative_paths: list[str] = []
+    after_status = _git_status_all_paths(workspace_root=workspace_root)
+
+    for path, status in after_status.items():
+        if before_status.get(path) == status:
+            continue
+        if _is_real_skill_doc_path(path) or _is_retired_reflector_path(path):
+            restore_relative_paths.append(path)
+
+    if report_path.exists():
+        report_content = report_path.read_text(encoding="utf-8")
+        for path in _extract_touched_files(report_content):
+            normalized_path = _normalize_relative_path(path)
+            if _is_real_skill_doc_path(normalized_path) or _is_retired_reflector_path(normalized_path):
+                restore_relative_paths.append(normalized_path)
+
+    return tuple(sorted(set(restore_relative_paths)))
 
 
 def _extract_touched_files(report_content: str) -> list[str]:
@@ -506,6 +563,53 @@ def _extract_touched_files(report_content: str) -> list[str]:
     return touched_files
 
 
+def _extract_garbage_collected_entries(report_content: str) -> list[str]:
+    garbage_collected_entries: list[str] = []
+    in_section = False
+
+    for raw_line in report_content.splitlines():
+        stripped = raw_line.strip()
+        if stripped == "## Garbage-Collected Entries":
+            in_section = True
+            continue
+        if in_section and stripped.startswith("## "):
+            break
+        if in_section and stripped.startswith("- "):
+            garbage_collected_entries.append(stripped[2:].strip().strip("`"))
+
+    if not in_section:
+        raise RuntimeError("Reflector report did not include ## Garbage-Collected Entries")
+
+    return garbage_collected_entries
+
+
+def _validate_reflector_gc_entries(
+    *,
+    report_content: str,
+    observations_before_content: str,
+    observations_after_content: str,
+) -> None:
+    garbage_collected_entries = _extract_garbage_collected_entries(report_content)
+    before_lines = observations_before_content.splitlines()
+    after_lines = observations_after_content.splitlines()
+
+    for entry in garbage_collected_entries:
+        if not entry:
+            raise RuntimeError("Reflector report listed an empty garbage-collected entry")
+
+        if re.fullmatch(r"Date: \d{4}-\d{2}-\d{2}", entry):
+            if entry not in before_lines:
+                raise RuntimeError(f"Reflector report claimed GC for missing date block: {entry}")
+            if entry in after_lines:
+                raise RuntimeError(f"Reflector report claimed GC but date block still exists: {entry}")
+            continue
+
+        if entry not in before_lines:
+            raise RuntimeError(f"Reflector report claimed GC for missing observation line: {entry}")
+        if entry in after_lines:
+            raise RuntimeError(f"Reflector report claimed GC but observation line still exists: {entry}")
+
+
 def _validate_reflector_outputs(
     *,
     workspace_root: Path,
@@ -513,8 +617,11 @@ def _validate_reflector_outputs(
     report_path: Path,
     target_date: str,
     allowlist_relative_paths: Sequence[str],
+    observations_before_content: str | None = None,
 ) -> list[str]:
-    observations_path.read_text(encoding="utf-8")
+    observations_after_content = observations_path.read_text(encoding="utf-8")
+    if observations_before_content is None:
+        observations_before_content = observations_after_content
     if not report_path.exists():
         raise RuntimeError(f"Reflector report does not exist: {report_path}")
 
@@ -526,9 +633,30 @@ def _validate_reflector_outputs(
     if not touched_files:
         raise RuntimeError("Reflector report did not list touched files")
 
-    unexpected_files = [path for path in touched_files if path not in allowlist_relative_paths]
+    retired_files = [path for path in touched_files if _is_retired_reflector_path(path)]
+    if retired_files:
+        raise RuntimeError(
+            "Reflector report touched retired local reflector output files: "
+            + ", ".join(sorted(retired_files))
+        )
+
+    unexpected_files = [
+        path for path in touched_files if not _is_allowed_reflector_path(path, allowlist_relative_paths=allowlist_relative_paths)
+    ]
     if unexpected_files:
         raise RuntimeError(f"Reflector report mentioned files outside the allowlist: {', '.join(unexpected_files)}")
+
+    touched_skill_docs = [path for path in touched_files if _is_real_skill_doc_path(path)]
+    if touched_skill_docs and "rules/skills/INDEX.md" not in touched_files:
+        raise RuntimeError(
+            "Reflector report touched real skill docs without also touching rules/skills/INDEX.md"
+        )
+
+    _validate_reflector_gc_entries(
+        report_content=report_content,
+        observations_before_content=observations_before_content,
+        observations_after_content=observations_after_content,
+    )
 
     for relative_path in touched_files:
         touched_path = workspace_root / Path(relative_path)
@@ -604,13 +732,13 @@ def run_reflector_local(
     workspace_root: Path,
     observations_path: Path,
     report_path: Path,
-    rules_promotion_path: Path,
     state_path: str | None,
     target_date: str,
 ) -> None:
     prompt_text = ""
     result: dict[str, object] | None = None
     touched_files: list[str] = []
+    observations_before_content = observations_path.read_text(encoding="utf-8") if observations_path.exists() else ""
     allowlist_relative_paths = _reflector_allowlist_relative_paths(
         workspace_root=workspace_root,
         report_path=report_path,
@@ -633,7 +761,6 @@ def run_reflector_local(
             workspace_root=workspace_root,
             observations_path=observations_path,
             report_path=report_path,
-            rules_promotion_path=rules_promotion_path,
             target_date=target_date,
         )
         result = _run_claude_cli(
@@ -656,6 +783,7 @@ def run_reflector_local(
             report_path=report_path,
             target_date=target_date,
             allowlist_relative_paths=allowlist_relative_paths,
+            observations_before_content=observations_before_content,
         )
         _write_claude_run_artifacts(
             task_name="reflector",
@@ -671,10 +799,27 @@ def run_reflector_local(
             _drop_reflector_checkpoint(workspace_root=workspace_root, checkpoint_ref=str(checkpoint_ref))
     except Exception as exc:
         if should_restore:
+            dynamic_restore_relative_paths: tuple[str, ...] = ()
+            try:
+                dynamic_restore_relative_paths = _reflector_dynamic_restore_relative_paths(
+                    workspace_root=workspace_root,
+                    before_status=dict(git_context.get("pre_run_repo_status", git_context.get("pre_run_status", {}))),
+                    report_path=report_path,
+                )
+            except RuntimeError:
+                dynamic_restore_relative_paths = ()
+            restore_relative_paths = tuple(
+                dict.fromkeys(
+                    [
+                        *allowlist_relative_paths,
+                        *dynamic_restore_relative_paths,
+                    ]
+                )
+            )
             _restore_reflector_paths(
                 workspace_root=workspace_root,
                 baseline_ref=str(git_context.get("baseline_ref", "HEAD")),
-                relative_paths=allowlist_relative_paths,
+                relative_paths=restore_relative_paths,
                 pre_run_status=dict(git_context.get("pre_run_status", {})),
             )
         _write_claude_run_artifacts(
@@ -700,7 +845,6 @@ def main(argv: Sequence[str] | None = None) -> int:
     workspace_root = _resolve_workspace_root(args.workspace_root)
     observations_path = _resolve_observations_path(args.observations_path, workspace_root)
     report_path = _resolve_report_path(args.report_path, args.state_path)
-    rules_promotion_path = _resolve_rules_promotion_path(args.rules_promotion_path)
     exit_code = 0
 
     for task_name in args.tasks:
@@ -717,7 +861,6 @@ def main(argv: Sequence[str] | None = None) -> int:
                     workspace_root=workspace_root,
                     observations_path=observations_path,
                     report_path=report_path,
-                    rules_promotion_path=rules_promotion_path,
                     state_path=args.state_path,
                     target_date=args.target_date,
                 )

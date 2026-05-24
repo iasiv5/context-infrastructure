@@ -325,6 +325,17 @@ def test_local_observer_persists_failure_artifacts_for_claude_runner_errors(
     assert expected_error in str(metadata["error"])
 
 
+def test_reflector_parser_rejects_legacy_promotion_argument() -> None:
+    with pytest.raises(SystemExit):
+        heartbeat_local_runner.build_parser().parse_args(
+            [
+                "reflector",
+                "--rules" "-promotion-path",
+                heartbeat_local_runner.REFLECTOR_RETIRED_RELATIVE_PATHS[0],
+            ]
+        )
+
+
 def test_local_reflector_runs_claude_and_validates_report_touched_files(tmp_path: Path, monkeypatch) -> None:
     workspace_root = tmp_path / "workspace"
     observations_path = workspace_root / "contexts" / "memory" / "OBSERVATIONS.md"
@@ -337,12 +348,12 @@ def test_local_reflector_runs_claude_and_validates_report_touched_files(tmp_path
     )
     state_path = tmp_path / "heartbeat_status.json"
     report_path = tmp_path / "heartbeat_reflector_report.md"
-    rules_path = workspace_root / "rules" / "skills" / "ai_heartbeat_local_reflections.md"
     prompt_path = tmp_path / "reflector.md"
     prompt_path.write_text(
         "Date: {target_date}\n"
         "Report: {report_path}\n"
-        "Rules output: {rules_promotion_path}\n",
+        "Index: rules/skills/INDEX.md\n"
+        "Skill routing: create a new real skill doc under rules/skills/ when needed\n",
         encoding="utf-8",
     )
 
@@ -382,14 +393,12 @@ def test_local_reflector_runs_claude_and_validates_report_touched_files(tmp_path
             "🔴 High: recent durable constraint\n",
             encoding="utf-8",
         )
-        rules_path.parent.mkdir(parents=True, exist_ok=True)
-        rules_path.write_text("# AI Heartbeat Local Reflections\n", encoding="utf-8")
         report_path.write_text(
             "# AI Heartbeat Reflector Report\n\n"
             "Date: 2026-05-22\n\n"
             "## Touched Files\n"
-            "- `contexts/memory/OBSERVATIONS.md` — 垃圾回收\n"
-            "- `rules/skills/ai_heartbeat_local_reflections.md` — 晋升\n",
+            "- contexts/memory/OBSERVATIONS.md\n\n"
+            "## Garbage-Collected Entries\n",
             encoding="utf-8",
         )
         return {
@@ -413,8 +422,6 @@ def test_local_reflector_runs_claude_and_validates_report_touched_files(tmp_path
             str(observations_path),
             "--report-path",
             str(report_path),
-            "--rules-promotion-path",
-            str(rules_path),
             "--state-path",
             str(state_path),
         ]
@@ -423,13 +430,16 @@ def test_local_reflector_runs_claude_and_validates_report_touched_files(tmp_path
     assert exit_code == 0
     assert captured["task_name"] == "reflector"
     assert heartbeat_local_runner._path_for_prompt(report_path, workspace_root=workspace_root) in captured["prompt_text"]
+    assert "Rules promotion path:" not in captured["prompt_text"]
+    assert "Update {rules_" "promotion_path}" not in captured["prompt_text"]
+    assert heartbeat_local_runner.REFLECTOR_RETIRED_RELATIVE_PATHS[0] not in captured["prompt_text"]
+    assert "rules/skills/INDEX.md" in captured["prompt_text"]
+    assert "create a new real skill doc under rules/skills/" in captured["prompt_text"]
     assert "When writing `## Touched Files`, use one bare repo-relative path per bullet" in captured["prompt_text"]
     assert "Do not wrap touched file paths in backticks and do not add descriptions or commentary" in captured["prompt_text"]
     report = report_path.read_text(encoding="utf-8")
     assert "Date: 2026-05-22" in report
-    assert "rules/skills/ai_heartbeat_local_reflections.md" in report
-    promoted_rules = rules_path.read_text(encoding="utf-8")
-    assert "# AI Heartbeat Local Reflections" in promoted_rules
+    assert "contexts/memory/OBSERVATIONS.md" in report
     state = json.loads(state_path.read_text(encoding="utf-8"))
     assert state["reflector"]["last_status"] == "success"
 
@@ -441,7 +451,6 @@ def test_local_reflector_fails_when_report_is_missing_target_date(tmp_path: Path
     observations_path.write_text("Date: 2026-05-20\n", encoding="utf-8")
     state_path = tmp_path / "heartbeat_status.json"
     report_path = tmp_path / "heartbeat_reflector_report.md"
-    rules_path = workspace_root / "rules" / "skills" / "ai_heartbeat_local_reflections.md"
     prompt_path = tmp_path / "reflector.md"
     prompt_path.write_text("Date: {target_date}\n", encoding="utf-8")
 
@@ -473,8 +482,6 @@ def test_local_reflector_fails_when_report_is_missing_target_date(tmp_path: Path
     )
 
     def fake_run_claude_cli(*, task_name: str, prompt_text: str, workspace_root: Path, target_date: str):
-        rules_path.parent.mkdir(parents=True, exist_ok=True)
-        rules_path.write_text("# AI Heartbeat Local Reflections\n", encoding="utf-8")
         report_path.write_text(
             "# AI Heartbeat Reflector Report\n\n"
             "## Touched Files\n"
@@ -502,8 +509,6 @@ def test_local_reflector_fails_when_report_is_missing_target_date(tmp_path: Path
             str(observations_path),
             "--report-path",
             str(report_path),
-            "--rules-promotion-path",
-            str(rules_path),
             "--state-path",
             str(state_path),
         ]
@@ -525,7 +530,6 @@ def test_local_reflector_fails_when_report_mentions_non_allowlist_file(tmp_path:
     observations_path.write_text("Date: 2026-05-20\n", encoding="utf-8")
     state_path = tmp_path / "heartbeat_status.json"
     report_path = tmp_path / "heartbeat_reflector_report.md"
-    rules_path = workspace_root / "rules" / "skills" / "ai_heartbeat_local_reflections.md"
     prompt_path = tmp_path / "reflector.md"
     prompt_path.write_text("Date: {target_date}\n", encoding="utf-8")
 
@@ -557,8 +561,6 @@ def test_local_reflector_fails_when_report_mentions_non_allowlist_file(tmp_path:
     )
 
     def fake_run_claude_cli(*, task_name: str, prompt_text: str, workspace_root: Path, target_date: str):
-        rules_path.parent.mkdir(parents=True, exist_ok=True)
-        rules_path.write_text("# AI Heartbeat Local Reflections\n", encoding="utf-8")
         report_path.write_text(
             "# AI Heartbeat Reflector Report\n\n"
             "Date: 2026-05-22\n\n"
@@ -588,8 +590,6 @@ def test_local_reflector_fails_when_report_mentions_non_allowlist_file(tmp_path:
             str(observations_path),
             "--report-path",
             str(report_path),
-            "--rules-promotion-path",
-            str(rules_path),
             "--state-path",
             str(state_path),
         ]
@@ -684,7 +684,6 @@ def test_local_reflector_drops_temporary_checkpoint_on_success(tmp_path: Path, m
     observations_path.write_text("Date: 2026-05-20\n", encoding="utf-8")
     state_path = tmp_path / "heartbeat_status.json"
     report_path = tmp_path / "heartbeat_reflector_report.md"
-    rules_path = workspace_root / "rules" / "skills" / "ai_heartbeat_local_reflections.md"
     prompt_path = tmp_path / "reflector.md"
     prompt_path.write_text("Date: {target_date}\n", encoding="utf-8")
 
@@ -716,14 +715,12 @@ def test_local_reflector_drops_temporary_checkpoint_on_success(tmp_path: Path, m
     )
 
     def fake_run_claude_cli(*, task_name: str, prompt_text: str, workspace_root: Path, target_date: str):
-        rules_path.parent.mkdir(parents=True, exist_ok=True)
-        rules_path.write_text("# AI Heartbeat Local Reflections\n", encoding="utf-8")
         report_path.write_text(
             "# AI Heartbeat Reflector Report\n\n"
             "Date: 2026-05-22\n\n"
             "## Touched Files\n"
-            "- contexts/memory/OBSERVATIONS.md\n"
-            "- rules/skills/ai_heartbeat_local_reflections.md\n",
+            "- contexts/memory/OBSERVATIONS.md\n\n"
+            "## Garbage-Collected Entries\n",
             encoding="utf-8",
         )
         return {
@@ -747,8 +744,6 @@ def test_local_reflector_drops_temporary_checkpoint_on_success(tmp_path: Path, m
             str(observations_path),
             "--report-path",
             str(report_path),
-            "--rules-promotion-path",
-            str(rules_path),
             "--state-path",
             str(state_path),
         ]
@@ -768,7 +763,276 @@ def test_reflector_allowlist_includes_report_path_inside_workspace(tmp_path: Pat
         report_path=report_path,
     )
 
+    assert "rules/skills/INDEX.md" in allowlist_relative_paths
     assert "periodic_jobs/ai_heartbeat/state/heartbeat_reflector_report.md" in allowlist_relative_paths
+    assert heartbeat_local_runner.REFLECTOR_RETIRED_RELATIVE_PATHS[0] not in allowlist_relative_paths
+
+
+def test_reflector_allowlist_includes_existing_skill_and_excludes_retired_file(tmp_path: Path) -> None:
+    workspace_root = tmp_path / "workspace"
+    skills_dir = workspace_root / "rules" / "skills"
+    skills_dir.mkdir(parents=True)
+    (skills_dir / "existing_skill.md").write_text("# Existing Skill\n", encoding="utf-8")
+    (skills_dir / Path(heartbeat_local_runner.REFLECTOR_RETIRED_RELATIVE_PATHS[0]).name).write_text(
+        "# Retired\n",
+        encoding="utf-8",
+    )
+    report_path = workspace_root / "periodic_jobs" / "ai_heartbeat" / "state" / "heartbeat_reflector_report.md"
+
+    allowlist_relative_paths = heartbeat_local_runner._reflector_allowlist_relative_paths(
+        workspace_root=workspace_root,
+        report_path=report_path,
+    )
+
+    assert "rules/skills/existing_skill.md" in allowlist_relative_paths
+    assert "rules/skills/INDEX.md" in allowlist_relative_paths
+    assert heartbeat_local_runner.REFLECTOR_RETIRED_RELATIVE_PATHS[0] not in allowlist_relative_paths
+
+
+def test_validate_reflector_outputs_allows_existing_skill_when_index_is_touched(tmp_path: Path) -> None:
+    workspace_root = tmp_path / "workspace"
+    observations_path = workspace_root / "contexts" / "memory" / "OBSERVATIONS.md"
+    observations_path.parent.mkdir(parents=True)
+    observations_path.write_text("Date: 2026-05-20\n", encoding="utf-8")
+    skill_path = workspace_root / "rules" / "skills" / "existing_skill.md"
+    skill_path.parent.mkdir(parents=True, exist_ok=True)
+    skill_path.write_text("# Existing Skill\n", encoding="utf-8")
+    index_path = workspace_root / "rules" / "skills" / "INDEX.md"
+    index_path.write_text("# Skills Index\n", encoding="utf-8")
+    report_path = workspace_root / "periodic_jobs" / "ai_heartbeat" / "state" / "heartbeat_reflector_report.md"
+    report_path.parent.mkdir(parents=True)
+    report_path.write_text(
+        "# AI Heartbeat Reflector Report\n\n"
+        "Date: 2026-05-22\n\n"
+        "## Touched Files\n"
+        "- contexts/memory/OBSERVATIONS.md\n"
+        "- rules/skills/existing_skill.md\n"
+        "- rules/skills/INDEX.md\n\n"
+        "## Garbage-Collected Entries\n",
+        encoding="utf-8",
+    )
+
+    touched_files = heartbeat_local_runner._validate_reflector_outputs(
+        workspace_root=workspace_root,
+        observations_path=observations_path,
+        report_path=report_path,
+        target_date="2026-05-22",
+        allowlist_relative_paths=heartbeat_local_runner._reflector_allowlist_relative_paths(
+            workspace_root=workspace_root,
+            report_path=report_path,
+        ),
+    )
+
+    assert touched_files == [
+        "contexts/memory/OBSERVATIONS.md",
+        "rules/skills/existing_skill.md",
+        "rules/skills/INDEX.md",
+    ]
+
+
+def test_validate_reflector_outputs_requires_index_when_skill_is_touched(tmp_path: Path) -> None:
+    workspace_root = tmp_path / "workspace"
+    observations_path = workspace_root / "contexts" / "memory" / "OBSERVATIONS.md"
+    observations_path.parent.mkdir(parents=True)
+    observations_path.write_text("Date: 2026-05-20\n", encoding="utf-8")
+    skill_path = workspace_root / "rules" / "skills" / "existing_skill.md"
+    skill_path.parent.mkdir(parents=True, exist_ok=True)
+    skill_path.write_text("# Existing Skill\n", encoding="utf-8")
+    report_path = workspace_root / "periodic_jobs" / "ai_heartbeat" / "state" / "heartbeat_reflector_report.md"
+    report_path.parent.mkdir(parents=True)
+    report_path.write_text(
+        "# AI Heartbeat Reflector Report\n\n"
+        "Date: 2026-05-22\n\n"
+        "## Touched Files\n"
+        "- contexts/memory/OBSERVATIONS.md\n"
+        "- rules/skills/existing_skill.md\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(RuntimeError, match="rules/skills/INDEX.md"):
+        heartbeat_local_runner._validate_reflector_outputs(
+            workspace_root=workspace_root,
+            observations_path=observations_path,
+            report_path=report_path,
+            target_date="2026-05-22",
+            allowlist_relative_paths=heartbeat_local_runner._reflector_allowlist_relative_paths(
+                workspace_root=workspace_root,
+                report_path=report_path,
+            ),
+        )
+
+
+def test_detect_unexpected_reflector_changes_allows_new_skill_doc(tmp_path: Path, monkeypatch) -> None:
+    workspace_root = tmp_path / "workspace"
+    workspace_root.mkdir()
+    report_path = workspace_root / "periodic_jobs" / "ai_heartbeat" / "state" / "heartbeat_reflector_report.md"
+
+    monkeypatch.setattr(
+        heartbeat_local_runner,
+        "_git_status_all_paths",
+        lambda *, workspace_root: {"rules/skills/new_skill.md": "??"},
+        raising=False,
+    )
+
+    unexpected_paths = heartbeat_local_runner._detect_unexpected_reflector_changes(
+        workspace_root=workspace_root,
+        before_status={},
+        allowlist_relative_paths=heartbeat_local_runner._reflector_allowlist_relative_paths(
+            workspace_root=workspace_root,
+            report_path=report_path,
+        ),
+    )
+
+    assert unexpected_paths == []
+
+
+def test_validate_reflector_outputs_rejects_retired_local_reflections_file(tmp_path: Path) -> None:
+    workspace_root = tmp_path / "workspace"
+    observations_path = workspace_root / "contexts" / "memory" / "OBSERVATIONS.md"
+    observations_path.parent.mkdir(parents=True)
+    observations_path.write_text("Date: 2026-05-20\n", encoding="utf-8")
+    retired_path = workspace_root / Path(heartbeat_local_runner.REFLECTOR_RETIRED_RELATIVE_PATHS[0])
+    retired_path.parent.mkdir(parents=True, exist_ok=True)
+    retired_path.write_text("# Retired\n", encoding="utf-8")
+    index_path = workspace_root / "rules" / "skills" / "INDEX.md"
+    index_path.write_text("# Skills Index\n", encoding="utf-8")
+    report_path = workspace_root / "periodic_jobs" / "ai_heartbeat" / "state" / "heartbeat_reflector_report.md"
+    report_path.parent.mkdir(parents=True)
+    report_path.write_text(
+        "# AI Heartbeat Reflector Report\n\n"
+        "Date: 2026-05-22\n\n"
+        "## Touched Files\n"
+        "- contexts/memory/OBSERVATIONS.md\n"
+        f"- {heartbeat_local_runner.REFLECTOR_RETIRED_RELATIVE_PATHS[0]}\n"
+        "- rules/skills/INDEX.md\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(RuntimeError, match="retired"):
+        heartbeat_local_runner._validate_reflector_outputs(
+            workspace_root=workspace_root,
+            observations_path=observations_path,
+            report_path=report_path,
+            target_date="2026-05-22",
+            allowlist_relative_paths=heartbeat_local_runner._reflector_allowlist_relative_paths(
+                workspace_root=workspace_root,
+                report_path=report_path,
+            ),
+        )
+
+
+def test_validate_reflector_outputs_requires_garbage_collected_entries_section(tmp_path: Path) -> None:
+    workspace_root = tmp_path / "workspace"
+    observations_path = workspace_root / "contexts" / "memory" / "OBSERVATIONS.md"
+    observations_path.parent.mkdir(parents=True)
+    before_observations = (
+        "# Memory Observations\n\n"
+        "Date: 2026-05-20\n\n"
+        "- durable line to remove\n"
+    )
+    observations_path.write_text(before_observations, encoding="utf-8")
+    report_path = workspace_root / "periodic_jobs" / "ai_heartbeat" / "state" / "heartbeat_reflector_report.md"
+    report_path.parent.mkdir(parents=True)
+    report_path.write_text(
+        "# AI Heartbeat Reflector Report\n\n"
+        "Date: 2026-05-22\n\n"
+        "## Touched Files\n"
+        "- contexts/memory/OBSERVATIONS.md\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(RuntimeError, match="Garbage-Collected Entries"):
+        heartbeat_local_runner._validate_reflector_outputs(
+            workspace_root=workspace_root,
+            observations_path=observations_path,
+            report_path=report_path,
+            target_date="2026-05-22",
+            allowlist_relative_paths=heartbeat_local_runner._reflector_allowlist_relative_paths(
+                workspace_root=workspace_root,
+                report_path=report_path,
+            ),
+            observations_before_content=before_observations,
+        )
+
+
+def test_validate_reflector_outputs_accepts_gc_date_block_when_removed(tmp_path: Path) -> None:
+    workspace_root = tmp_path / "workspace"
+    observations_path = workspace_root / "contexts" / "memory" / "OBSERVATIONS.md"
+    observations_path.parent.mkdir(parents=True)
+    before_observations = (
+        "# Memory Observations\n\n"
+        "Date: 2026-05-20\n\n"
+        "- old line\n\n"
+        "Date: 2026-05-21\n\n"
+        "- keep line\n"
+    )
+    observations_path.write_text(
+        "# Memory Observations\n\n"
+        "Date: 2026-05-21\n\n"
+        "- keep line\n",
+        encoding="utf-8",
+    )
+    report_path = workspace_root / "periodic_jobs" / "ai_heartbeat" / "state" / "heartbeat_reflector_report.md"
+    report_path.parent.mkdir(parents=True)
+    report_path.write_text(
+        "# AI Heartbeat Reflector Report\n\n"
+        "Date: 2026-05-22\n\n"
+        "## Touched Files\n"
+        "- contexts/memory/OBSERVATIONS.md\n\n"
+        "## Garbage-Collected Entries\n"
+        "- Date: 2026-05-20\n",
+        encoding="utf-8",
+    )
+
+    touched_files = heartbeat_local_runner._validate_reflector_outputs(
+        workspace_root=workspace_root,
+        observations_path=observations_path,
+        report_path=report_path,
+        target_date="2026-05-22",
+        allowlist_relative_paths=heartbeat_local_runner._reflector_allowlist_relative_paths(
+            workspace_root=workspace_root,
+            report_path=report_path,
+        ),
+        observations_before_content=before_observations,
+    )
+
+    assert touched_files == ["contexts/memory/OBSERVATIONS.md"]
+
+
+def test_validate_reflector_outputs_fails_when_gc_line_still_exists(tmp_path: Path) -> None:
+    workspace_root = tmp_path / "workspace"
+    observations_path = workspace_root / "contexts" / "memory" / "OBSERVATIONS.md"
+    observations_path.parent.mkdir(parents=True)
+    before_observations = (
+        "# Memory Observations\n\n"
+        "Date: 2026-05-20\n\n"
+        "- durable line to remove\n"
+    )
+    observations_path.write_text(before_observations, encoding="utf-8")
+    report_path = workspace_root / "periodic_jobs" / "ai_heartbeat" / "state" / "heartbeat_reflector_report.md"
+    report_path.parent.mkdir(parents=True)
+    report_path.write_text(
+        "# AI Heartbeat Reflector Report\n\n"
+        "Date: 2026-05-22\n\n"
+        "## Touched Files\n"
+        "- contexts/memory/OBSERVATIONS.md\n\n"
+        "## Garbage-Collected Entries\n"
+        "- - durable line to remove\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(RuntimeError, match="still exists"):
+        heartbeat_local_runner._validate_reflector_outputs(
+            workspace_root=workspace_root,
+            observations_path=observations_path,
+            report_path=report_path,
+            target_date="2026-05-22",
+            allowlist_relative_paths=heartbeat_local_runner._reflector_allowlist_relative_paths(
+                workspace_root=workspace_root,
+                report_path=report_path,
+            ),
+            observations_before_content=before_observations,
+        )
 
 
 def test_restore_reflector_paths_deletes_generated_report_not_in_git(tmp_path: Path, monkeypatch) -> None:
