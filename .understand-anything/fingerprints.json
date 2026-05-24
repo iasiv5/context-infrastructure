@@ -1,0 +1,5194 @@
+{
+  "version": "1.0.0",
+  "gitCommitHash": "85e631716f193a597abdaed20fb51d4e823cf99c",
+  "generatedAt": "2026-05-24T16:02:54.009Z",
+  "files": {
+    ".env.example": {
+      "filePath": ".env.example",
+      "contentHash": "e9e8cb5143569f649a74de692fc7206ee2777c6701cbf30f8996a5ae8434f57a",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 46,
+      "hasStructuralAnalysis": true
+    },
+    ".github/copilot-instructions.md": {
+      "filePath": ".github/copilot-instructions.md",
+      "contentHash": "b9b63c31f096ddbeebbdcae1dfaea8af624f889be77971172dea9535ca302bab",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 5,
+      "hasStructuralAnalysis": true
+    },
+    ".github/hooks/ai-heartbeat.session-start.json": {
+      "filePath": ".github/hooks/ai-heartbeat.session-start.json",
+      "contentHash": "333929fb28812c36e03b4925fc8dbbacb8a21522e6954f6f147861b97f7ce342",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 13,
+      "hasStructuralAnalysis": true
+    },
+    ".github/hooks/pre-session.ps1": {
+      "filePath": ".github/hooks/pre-session.ps1",
+      "contentHash": "3143383c0506678ae3ef0a5d4f44baaea4dfccd36b437463b152c78278122956",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 483,
+      "hasStructuralAnalysis": false
+    },
+    ".understand-anything/.understandignore": {
+      "filePath": ".understand-anything/.understandignore",
+      "contentHash": "2f9a42f9595b4f6aad6275687b14b1b73d67fa76a7e340c91c23b06b3aab347b",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 16,
+      "hasStructuralAnalysis": false
+    },
+    "adhoc_jobs/.gitkeep": {
+      "filePath": "adhoc_jobs/.gitkeep",
+      "contentHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 1,
+      "hasStructuralAnalysis": false
+    },
+    "adhoc_jobs/articles_archive/20201012-QEMU usage in Vitual Machine.txt": {
+      "filePath": "adhoc_jobs/articles_archive/20201012-QEMU usage in Vitual Machine.txt",
+      "contentHash": "61c57af27ad506e0967e5179ee4495172336c46b65b632f275cea6e15c7d91fc",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 42,
+      "hasStructuralAnalysis": false
+    },
+    "adhoc_jobs/articles_archive/20251231-gemini3_pro_2025_comeback.md": {
+      "filePath": "adhoc_jobs/articles_archive/20251231-gemini3_pro_2025_comeback.md",
+      "contentHash": "428278b261288b4dc076e265ad34bee6b31927198398915c06def0abd5a2b859",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 67,
+      "hasStructuralAnalysis": true
+    },
+    "adhoc_jobs/articles_archive/20260131-openspec-1.0-opsx-guide.md": {
+      "filePath": "adhoc_jobs/articles_archive/20260131-openspec-1.0-opsx-guide.md",
+      "contentHash": "f70a48f13cc6e446defb3a80aadba799acf80b985d4d7e35bba0662b29ca3010",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 1100,
+      "hasStructuralAnalysis": true
+    },
+    "adhoc_jobs/articles_archive/20260131-openspec-1.0-wechat-article.md": {
+      "filePath": "adhoc_jobs/articles_archive/20260131-openspec-1.0-wechat-article.md",
+      "contentHash": "e94e738c5ad938ceae821e16cfdb84957434dd8f918d510a6964ad65128b5977",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 375,
+      "hasStructuralAnalysis": true
+    },
+    "adhoc_jobs/articles_archive/20260206-claude-opus-4.6-vs-gpt-5.3-codex-depth-review.md": {
+      "filePath": "adhoc_jobs/articles_archive/20260206-claude-opus-4.6-vs-gpt-5.3-codex-depth-review.md",
+      "contentHash": "96fc9bcb93cacf8ba62fb5e363d160beda1d5df3dc28239dafda34c05cc40937",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 72,
+      "hasStructuralAnalysis": true
+    },
+    "adhoc_jobs/articles_archive/20260318-pua_prompt_skill_comparison.md": {
+      "filePath": "adhoc_jobs/articles_archive/20260318-pua_prompt_skill_comparison.md",
+      "contentHash": "777a733b4834c04c0c75be5a385ccadb8528d0183915797540a510106a7be782",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 22,
+      "hasStructuralAnalysis": true
+    },
+    "adhoc_jobs/articles_archive/20260325-github-copilot-chronicle-tips.md": {
+      "filePath": "adhoc_jobs/articles_archive/20260325-github-copilot-chronicle-tips.md",
+      "contentHash": "b4b3231a89d5ef68cb8e3684a80d11376b5afb0d80c7bdda4aeb271bc8dd107c",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 77,
+      "hasStructuralAnalysis": true
+    },
+    "adhoc_jobs/articles_archive/20260405-karpathy-llm-wiki-reconstruct.md": {
+      "filePath": "adhoc_jobs/articles_archive/20260405-karpathy-llm-wiki-reconstruct.md",
+      "contentHash": "9d99751c3ccd657dd18ecb22e333b1e39ddd699137321705be510b67a21b2d4e",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 100,
+      "hasStructuralAnalysis": true
+    },
+    "adhoc_jobs/articles_archive/20260406-hermes-agent-wechat-article.md": {
+      "filePath": "adhoc_jobs/articles_archive/20260406-hermes-agent-wechat-article.md",
+      "contentHash": "37bedfb27e5422cf073eb16300594688cb876104a1ca125a7d18812c1f625a94",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 103,
+      "hasStructuralAnalysis": true
+    },
+    "adhoc_jobs/articles_archive/20260408-github-copilot-cli-rubber-duck.md": {
+      "filePath": "adhoc_jobs/articles_archive/20260408-github-copilot-cli-rubber-duck.md",
+      "contentHash": "37ef8d14388c3d2c5d42fe258dab49fa2154169df8fb863d120c4233a240e7d7",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 91,
+      "hasStructuralAnalysis": true
+    },
+    "adhoc_jobs/articles_archive/20260518-brainstorming-to-cleanup-wechat-article.md": {
+      "filePath": "adhoc_jobs/articles_archive/20260518-brainstorming-to-cleanup-wechat-article.md",
+      "contentHash": "5477f06f20794fae4e8062de1c4b6ac539b31fad614bc8ad43da3f354558e214",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 167,
+      "hasStructuralAnalysis": true
+    },
+    "adhoc_jobs/articles_archive/20260518-brainstorming+write-to-files.md": {
+      "filePath": "adhoc_jobs/articles_archive/20260518-brainstorming+write-to-files.md",
+      "contentHash": "8c49515857e246cf9073f7e25c580b9d80b76674d85e9f42db916d32cf088918",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 118,
+      "hasStructuralAnalysis": true
+    },
+    "adhoc_jobs/scripts_archive/wechat_mp_to_singlefile.py": {
+      "filePath": "adhoc_jobs/scripts_archive/wechat_mp_to_singlefile.py",
+      "contentHash": "985f061f1acbc45ff858e1c4f198baedd529c71257c65b4226b20acc03e12970",
+      "functions": [
+        {
+          "name": "safe_filename",
+          "params": [
+            "name"
+          ],
+          "returnType": "str",
+          "exported": true,
+          "lineCount": 2
+        },
+        {
+          "name": "capture",
+          "params": [
+            "url",
+            "output",
+            "inline_css",
+            "user_agent",
+            "wechat_mobile",
+            "android",
+            "add_mobile_suffix",
+            "second_pass",
+            "max_scroll",
+            "scroll_delay",
+            "upgrade_wechat_img",
+            "nav_timeout",
+            "wait_until",
+            "enlarge_images",
+            "img_max_width",
+            "enlarge_mode",
+            "min_natural_width"
+          ],
+          "returnType": "Path",
+          "exported": true,
+          "lineCount": 195
+        },
+        {
+          "name": "parse_args",
+          "params": [],
+          "exported": true,
+          "lineCount": 29
+        },
+        {
+          "name": "main",
+          "params": [],
+          "exported": true,
+          "lineCount": 35
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "argparse",
+          "specifiers": [
+            "argparse"
+          ]
+        },
+        {
+          "source": "asyncio",
+          "specifiers": [
+            "asyncio"
+          ]
+        },
+        {
+          "source": "datetime",
+          "specifiers": [
+            "dt"
+          ]
+        },
+        {
+          "source": "re",
+          "specifiers": [
+            "re"
+          ]
+        },
+        {
+          "source": "pathlib",
+          "specifiers": [
+            "Path"
+          ]
+        },
+        {
+          "source": "typing",
+          "specifiers": [
+            "Optional",
+            "Dict"
+          ]
+        },
+        {
+          "source": "playwright.async_api",
+          "specifiers": [
+            "async_playwright",
+            "Route",
+            "Request"
+          ]
+        }
+      ],
+      "exports": [
+        "safe_filename",
+        "capture",
+        "parse_args",
+        "main"
+      ],
+      "totalLines": 471,
+      "hasStructuralAnalysis": true
+    },
+    "adhoc_jobs/webpage/404.html": {
+      "filePath": "adhoc_jobs/webpage/404.html",
+      "contentHash": "cce1a3e826b24d16ccfa6fcdf464da1ae7e5252aeb3aeea00bebb5aa1f1ac93e",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 275,
+      "hasStructuralAnalysis": false
+    },
+    "adhoc_jobs/webpage/index.html": {
+      "filePath": "adhoc_jobs/webpage/index.html",
+      "contentHash": "a15a4fedfb667ef3aff3049e41189d87c089bb4bf471eaa455c7539a39b88ff5",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 536,
+      "hasStructuralAnalysis": false
+    },
+    "adhoc_jobs/webpage/snake.html": {
+      "filePath": "adhoc_jobs/webpage/snake.html",
+      "contentHash": "371e395c6492fdd17e71da845c62e4585ad4804c33715b556c4b9358a4b6dc24",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 1130,
+      "hasStructuralAnalysis": false
+    },
+    "AGENTS.md": {
+      "filePath": "AGENTS.md",
+      "contentHash": "00a56552230903558cf0a6c39bc5595aed957e22ab8e8c057744f96760d3aa51",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 80,
+      "hasStructuralAnalysis": true
+    },
+    "CLAUDE.md": {
+      "filePath": "CLAUDE.md",
+      "contentHash": "0f981d15dccc556c183093efe6d6f5b5e6c94dba03cc9a5dac17da0c4d880f5f",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 4,
+      "hasStructuralAnalysis": true
+    },
+    "contexts/daily_records/.gitkeep": {
+      "filePath": "contexts/daily_records/.gitkeep",
+      "contentHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 1,
+      "hasStructuralAnalysis": false
+    },
+    "contexts/memory/OBSERVATIONS.md": {
+      "filePath": "contexts/memory/OBSERVATIONS.md",
+      "contentHash": "9df79bfd63ff398ebfef6d51eac6ef4e8e2871afca5970a9cf610c5dbf34a426",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 45,
+      "hasStructuralAnalysis": true
+    },
+    "contexts/survey_sessions/.gitkeep": {
+      "filePath": "contexts/survey_sessions/.gitkeep",
+      "contentHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 1,
+      "hasStructuralAnalysis": false
+    },
+    "contexts/thought_review/.gitkeep": {
+      "filePath": "contexts/thought_review/.gitkeep",
+      "contentHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 1,
+      "hasStructuralAnalysis": false
+    },
+    "docs/CRONTAB.md": {
+      "filePath": "docs/CRONTAB.md",
+      "contentHash": "60e427becfb7b525357659d167a6d37e888402c416e8d93432085db2b1dcfb2e",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 96,
+      "hasStructuralAnalysis": true
+    },
+    "docs/plans/2026-05-15-plan-pro-max-implementation-plan.md": {
+      "filePath": "docs/plans/2026-05-15-plan-pro-max-implementation-plan.md",
+      "contentHash": "154ef4cba84e5e7cc583b599f1a51825949a2608dd4599cf51e48908d99818d2",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 145,
+      "hasStructuralAnalysis": true
+    },
+    "docs/plans/2026-05-18-cleanup-skill-implementation-plan.md": {
+      "filePath": "docs/plans/2026-05-18-cleanup-skill-implementation-plan.md",
+      "contentHash": "d55eeb3bceab462034407c27a81f4b105c300f80df6dff0c9d48783f6d61b843",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 155,
+      "hasStructuralAnalysis": true
+    },
+    "docs/plans/2026-05-22-ai-heartbeat-manual-reminder-implementation-plan.md": {
+      "filePath": "docs/plans/2026-05-22-ai-heartbeat-manual-reminder-implementation-plan.md",
+      "contentHash": "111e0078e73dd004df8e8af6734cc403d72ff05b1ad931c1b531a7b047e7f440",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 179,
+      "hasStructuralAnalysis": true
+    },
+    "docs/plans/2026-05-22-migrate-iasi-workspace-implementation-plan.md": {
+      "filePath": "docs/plans/2026-05-22-migrate-iasi-workspace-implementation-plan.md",
+      "contentHash": "0078a8f608f2b5fa93d5c72c0f454e58dce14ec508c212662b80f9ebd3e7ab93",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 118,
+      "hasStructuralAnalysis": true
+    },
+    "docs/plans/2026-05-23-repo-cleanup-implementation-plan.md": {
+      "filePath": "docs/plans/2026-05-23-repo-cleanup-implementation-plan.md",
+      "contentHash": "40b8d263002321c535c107c3947e82678eddfa983176e3e3196d99eb7468bba8",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 254,
+      "hasStructuralAnalysis": true
+    },
+    "docs/plans/2026-05-24-claude-code-smart-heartbeat-implementation-plan.md": {
+      "filePath": "docs/plans/2026-05-24-claude-code-smart-heartbeat-implementation-plan.md",
+      "contentHash": "e90193263c13ace0e4d9e7e19b86941857cc595e6f420549d27fc3f389cd7524",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 168,
+      "hasStructuralAnalysis": true
+    },
+    "docs/plans/2026-05-24-reflector-rules-promotion-restoration-implementation-plan.md": {
+      "filePath": "docs/plans/2026-05-24-reflector-rules-promotion-restoration-implementation-plan.md",
+      "contentHash": "14b7492724d63f99dab1c63f3da008810127891bbb675bb942de52b19eb7db43",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 324,
+      "hasStructuralAnalysis": true
+    },
+    "docs/specs/2026-05-15-plan-pro-max-design.md": {
+      "filePath": "docs/specs/2026-05-15-plan-pro-max-design.md",
+      "contentHash": "feb5c599b141fa3fe235e97258436eeeb22f64e9e378207c1ef4189e1672f949",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 117,
+      "hasStructuralAnalysis": true
+    },
+    "docs/specs/2026-05-18-cleanup-skill-design.md": {
+      "filePath": "docs/specs/2026-05-18-cleanup-skill-design.md",
+      "contentHash": "bc6ff1aa1ec294d5ebf17979c9f3a15f378ca53a602176f7f9c94b18754614d9",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 170,
+      "hasStructuralAnalysis": true
+    },
+    "docs/specs/2026-05-22-ai-heartbeat-manual-reminder-design.md": {
+      "filePath": "docs/specs/2026-05-22-ai-heartbeat-manual-reminder-design.md",
+      "contentHash": "e393f3c82fc5348ff6ec6d050746bf891b6b9d599fa1de69b09fa8478026621b",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 192,
+      "hasStructuralAnalysis": true
+    },
+    "docs/specs/2026-05-22-migrate-iasi-workspace-design.md": {
+      "filePath": "docs/specs/2026-05-22-migrate-iasi-workspace-design.md",
+      "contentHash": "e03dc30ea5d73c7cc4bd72fea600db2c45c282d11d2e96d00b6a5de0f39b12ff",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 91,
+      "hasStructuralAnalysis": true
+    },
+    "docs/specs/2026-05-23-copilot-cli-smart-heartbeat-design.md": {
+      "filePath": "docs/specs/2026-05-23-copilot-cli-smart-heartbeat-design.md",
+      "contentHash": "1285a1d172d1884a29d500e17203d534e23d4ad96bed685a109438c17f840f80",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 319,
+      "hasStructuralAnalysis": true
+    },
+    "docs/specs/2026-05-23-repo-cleanup-design.md": {
+      "filePath": "docs/specs/2026-05-23-repo-cleanup-design.md",
+      "contentHash": "fcc608a4aa0b87386dd83984c7939eb859cfd197e8446bc300c46f01ec97b24a",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 65,
+      "hasStructuralAnalysis": true
+    },
+    "docs/specs/2026-05-24-claude-code-smart-heartbeat-design.md": {
+      "filePath": "docs/specs/2026-05-24-claude-code-smart-heartbeat-design.md",
+      "contentHash": "6ad9b712ba64a4a8aeac635ac4c9da82aa4db2273b0469a6c1b3786cef2b3fd0",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 272,
+      "hasStructuralAnalysis": true
+    },
+    "docs/specs/2026-05-24-reflector-rules-promotion-restoration-design.md": {
+      "filePath": "docs/specs/2026-05-24-reflector-rules-promotion-restoration-design.md",
+      "contentHash": "b96c793ae3283c70ca0b4c0c827f5ffd42b02f2cf4a2ec2aaefb1d818396eadd",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 171,
+      "hasStructuralAnalysis": true
+    },
+    "periodic_jobs/ai_heartbeat/docs/KNOWLEDGE_BASE.md": {
+      "filePath": "periodic_jobs/ai_heartbeat/docs/KNOWLEDGE_BASE.md",
+      "contentHash": "6d9bb506e7fb848570cda7089a11ee55d16669dfcbaf28b0a8c2125ceda7c7a9",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 78,
+      "hasStructuralAnalysis": true
+    },
+    "periodic_jobs/ai_heartbeat/docs/PRD.md": {
+      "filePath": "periodic_jobs/ai_heartbeat/docs/PRD.md",
+      "contentHash": "82829c5408a6ff2f74cb937f44576e25b9fcc30b18a72eea8ab3bdb67b1f701b",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 71,
+      "hasStructuralAnalysis": true
+    },
+    "periodic_jobs/ai_heartbeat/src/v0/_legacy_opencode/observer.py": {
+      "filePath": "periodic_jobs/ai_heartbeat/src/v0/_legacy_opencode/observer.py",
+      "contentHash": "28625f4e7cb7f9c2e809f9b9bffbcd7e67de490fd793a5b07ecdce2f60d55ad1",
+      "functions": [
+        {
+          "name": "main",
+          "params": [],
+          "exported": true,
+          "lineCount": 66
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "sys",
+          "specifiers": [
+            "sys"
+          ]
+        },
+        {
+          "source": "time",
+          "specifiers": [
+            "time"
+          ]
+        },
+        {
+          "source": "datetime",
+          "specifiers": [
+            "datetime"
+          ]
+        },
+        {
+          "source": "heartbeat_state",
+          "specifiers": [
+            "heartbeat_state"
+          ]
+        }
+      ],
+      "exports": [
+        "main"
+      ],
+      "totalLines": 108,
+      "hasStructuralAnalysis": true
+    },
+    "periodic_jobs/ai_heartbeat/src/v0/_legacy_opencode/opencode_client.py": {
+      "filePath": "periodic_jobs/ai_heartbeat/src/v0/_legacy_opencode/opencode_client.py",
+      "contentHash": "7db55ae86dac5bdd9bdac4605edeea1040e4ec5a075b8c433f5349a3b5620f41",
+      "functions": [],
+      "classes": [
+        {
+          "name": "OpenCodeClient",
+          "methods": [
+            "__init__",
+            "list_sessions",
+            "create_session",
+            "_suggest_models",
+            "_wait_for_first_assistant_message",
+            "send_message",
+            "get_session_messages",
+            "delete_session",
+            "get_session_info",
+            "wait_for_session_complete"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 209
+        }
+      ],
+      "imports": [
+        {
+          "source": "requests",
+          "specifiers": [
+            "requests"
+          ]
+        },
+        {
+          "source": "json",
+          "specifiers": [
+            "json"
+          ]
+        },
+        {
+          "source": "base64",
+          "specifiers": [
+            "base64"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "time",
+          "specifiers": [
+            "time"
+          ]
+        },
+        {
+          "source": "pathlib",
+          "specifiers": [
+            "Path"
+          ]
+        },
+        {
+          "source": "dotenv",
+          "specifiers": [
+            "load_dotenv"
+          ]
+        }
+      ],
+      "exports": [
+        "OpenCodeClient"
+      ],
+      "totalLines": 229,
+      "hasStructuralAnalysis": true
+    },
+    "periodic_jobs/ai_heartbeat/src/v0/_legacy_opencode/reflector.py": {
+      "filePath": "periodic_jobs/ai_heartbeat/src/v0/_legacy_opencode/reflector.py",
+      "contentHash": "a8575b7975d6db5182cbf634cebee9e82fc7a7ddcf42c3d4ac33ed7d2b17bb94",
+      "functions": [
+        {
+          "name": "main",
+          "params": [],
+          "exported": true,
+          "lineCount": 44
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "sys",
+          "specifiers": [
+            "sys"
+          ]
+        },
+        {
+          "source": "datetime",
+          "specifiers": [
+            "datetime"
+          ]
+        },
+        {
+          "source": "heartbeat_state",
+          "specifiers": [
+            "heartbeat_state"
+          ]
+        }
+      ],
+      "exports": [
+        "main"
+      ],
+      "totalLines": 79,
+      "hasStructuralAnalysis": true
+    },
+    "periodic_jobs/ai_heartbeat/src/v0/heartbeat_local_runner.py": {
+      "filePath": "periodic_jobs/ai_heartbeat/src/v0/heartbeat_local_runner.py",
+      "contentHash": "9cc2e6db458c18fde4345ce20072d92ab35afea7aad40d1adf7b8a888a9a7e4a",
+      "functions": [
+        {
+          "name": "build_parser",
+          "params": [],
+          "returnType": "argparse.ArgumentParser",
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "_utc_now",
+          "params": [],
+          "returnType": "datetime",
+          "exported": true,
+          "lineCount": 2
+        },
+        {
+          "name": "_resolve_workspace_root",
+          "params": [
+            "path"
+          ],
+          "returnType": "Path",
+          "exported": true,
+          "lineCount": 2
+        },
+        {
+          "name": "_resolve_observations_path",
+          "params": [
+            "path",
+            "workspace_root"
+          ],
+          "returnType": "Path",
+          "exported": true,
+          "lineCount": 2
+        },
+        {
+          "name": "_resolve_report_path",
+          "params": [
+            "path",
+            "state_path"
+          ],
+          "returnType": "Path",
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "_resolve_claude_runs_dir",
+          "params": [
+            "state_path"
+          ],
+          "returnType": "Path",
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "_resolve_claude_timeout_seconds",
+          "params": [],
+          "returnType": "int",
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "_resolve_claude_command",
+          "params": [],
+          "returnType": "str",
+          "exported": true,
+          "lineCount": 28
+        },
+        {
+          "name": "_load_prompt_template",
+          "params": [
+            "prompt_path"
+          ],
+          "returnType": "str",
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "_coerce_text",
+          "params": [
+            "value"
+          ],
+          "returnType": "str",
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "_path_relative_to_workspace",
+          "params": [
+            "path",
+            "workspace_root"
+          ],
+          "returnType": "str | None",
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "_path_for_prompt",
+          "params": [
+            "path",
+            "workspace_root"
+          ],
+          "returnType": "str",
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "_normalize_relative_path",
+          "params": [
+            "relative_path"
+          ],
+          "returnType": "str",
+          "exported": true,
+          "lineCount": 2
+        },
+        {
+          "name": "_is_retired_reflector_path",
+          "params": [
+            "relative_path"
+          ],
+          "returnType": "bool",
+          "exported": true,
+          "lineCount": 2
+        },
+        {
+          "name": "_is_real_skill_doc_path",
+          "params": [
+            "relative_path"
+          ],
+          "returnType": "bool",
+          "exported": true,
+          "lineCount": 10
+        },
+        {
+          "name": "_is_allowed_reflector_path",
+          "params": [
+            "relative_path",
+            "allowlist_relative_paths"
+          ],
+          "returnType": "bool",
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "_reflector_allowlist_relative_paths",
+          "params": [
+            "workspace_root",
+            "report_path"
+          ],
+          "returnType": "tuple[str, ...]",
+          "exported": true,
+          "lineCount": 16
+        },
+        {
+          "name": "_render_observer_prompt",
+          "params": [
+            "prompt_path",
+            "workspace_root",
+            "observations_path",
+            "target_date"
+          ],
+          "returnType": "str",
+          "exported": true,
+          "lineCount": 21
+        },
+        {
+          "name": "_render_reflector_prompt",
+          "params": [
+            "prompt_path",
+            "workspace_root",
+            "observations_path",
+            "report_path",
+            "target_date"
+          ],
+          "returnType": "str",
+          "exported": true,
+          "lineCount": 39
+        },
+        {
+          "name": "_run_claude_cli",
+          "params": [
+            "task_name",
+            "prompt_text",
+            "workspace_root",
+            "target_date"
+          ],
+          "returnType": "dict[str, object]",
+          "exported": true,
+          "lineCount": 58
+        },
+        {
+          "name": "_raise_for_failed_claude_result",
+          "params": [
+            "task_name",
+            "result"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "_write_claude_run_artifacts",
+          "params": [
+            "task_name",
+            "target_date",
+            "state_path",
+            "prompt_text",
+            "result",
+            "status",
+            "error"
+          ],
+          "returnType": "Path",
+          "exported": true,
+          "lineCount": 30
+        },
+        {
+          "name": "_run_git_command",
+          "params": [
+            "workspace_root",
+            "args"
+          ],
+          "returnType": "subprocess.CompletedProcess[str]",
+          "exported": true,
+          "lineCount": 18
+        },
+        {
+          "name": "_parse_git_status",
+          "params": [
+            "stdout"
+          ],
+          "returnType": "dict[str, str]",
+          "exported": true,
+          "lineCount": 11
+        },
+        {
+          "name": "_git_status_for_paths",
+          "params": [
+            "workspace_root",
+            "relative_paths"
+          ],
+          "returnType": "dict[str, str]",
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "_git_status_all_paths",
+          "params": [
+            "workspace_root"
+          ],
+          "returnType": "dict[str, str]",
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "_create_reflector_checkpoint",
+          "params": [
+            "workspace_root"
+          ],
+          "returnType": "str",
+          "exported": true,
+          "lineCount": 10
+        },
+        {
+          "name": "_prepare_reflector_git_context",
+          "params": [
+            "workspace_root",
+            "allowlist_relative_paths"
+          ],
+          "returnType": "dict[str, object]",
+          "exported": true,
+          "lineCount": 16
+        },
+        {
+          "name": "_git_path_exists_in_ref",
+          "params": [
+            "workspace_root",
+            "ref",
+            "relative_path"
+          ],
+          "returnType": "bool",
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "_restore_reflector_paths",
+          "params": [
+            "workspace_root",
+            "baseline_ref",
+            "relative_paths",
+            "pre_run_status"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 33
+        },
+        {
+          "name": "_drop_reflector_checkpoint",
+          "params": [
+            "workspace_root",
+            "checkpoint_ref"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 2
+        },
+        {
+          "name": "_detect_unexpected_reflector_changes",
+          "params": [
+            "workspace_root",
+            "before_status",
+            "allowlist_relative_paths"
+          ],
+          "returnType": "list[str]",
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "_reflector_dynamic_restore_relative_paths",
+          "params": [
+            "workspace_root",
+            "before_status",
+            "report_path"
+          ],
+          "returnType": "tuple[str, ...]",
+          "exported": true,
+          "lineCount": 23
+        },
+        {
+          "name": "_extract_touched_files",
+          "params": [
+            "report_content"
+          ],
+          "returnType": "list[str]",
+          "exported": true,
+          "lineCount": 24
+        },
+        {
+          "name": "_extract_garbage_collected_entries",
+          "params": [
+            "report_content"
+          ],
+          "returnType": "list[str]",
+          "exported": true,
+          "lineCount": 18
+        },
+        {
+          "name": "_validate_reflector_gc_entries",
+          "params": [
+            "report_content",
+            "observations_before_content",
+            "observations_after_content"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 25
+        },
+        {
+          "name": "_validate_reflector_outputs",
+          "params": [
+            "workspace_root",
+            "observations_path",
+            "report_path",
+            "target_date",
+            "allowlist_relative_paths",
+            "observations_before_content"
+          ],
+          "returnType": "list[str]",
+          "exported": true,
+          "lineCount": 55
+        },
+        {
+          "name": "run_observer_local",
+          "params": [
+            "workspace_root",
+            "observations_path",
+            "state_path",
+            "target_date"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 58
+        },
+        {
+          "name": "run_reflector_local",
+          "params": [
+            "workspace_root",
+            "observations_path",
+            "report_path",
+            "state_path",
+            "target_date"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 109
+        },
+        {
+          "name": "main",
+          "params": [
+            "argv"
+          ],
+          "returnType": "int",
+          "exported": true,
+          "lineCount": 32
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "argparse",
+          "specifiers": [
+            "argparse"
+          ]
+        },
+        {
+          "source": "json",
+          "specifiers": [
+            "json"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "re",
+          "specifiers": [
+            "re"
+          ]
+        },
+        {
+          "source": "shutil",
+          "specifiers": [
+            "shutil"
+          ]
+        },
+        {
+          "source": "subprocess",
+          "specifiers": [
+            "subprocess"
+          ]
+        },
+        {
+          "source": "sys",
+          "specifiers": [
+            "sys"
+          ]
+        },
+        {
+          "source": "datetime",
+          "specifiers": [
+            "date",
+            "datetime",
+            "timedelta",
+            "timezone"
+          ]
+        },
+        {
+          "source": "pathlib",
+          "specifiers": [
+            "Path"
+          ]
+        },
+        {
+          "source": "typing",
+          "specifiers": [
+            "Sequence"
+          ]
+        },
+        {
+          "source": "heartbeat_state",
+          "specifiers": [
+            "heartbeat_state"
+          ]
+        }
+      ],
+      "exports": [
+        "build_parser",
+        "_utc_now",
+        "_resolve_workspace_root",
+        "_resolve_observations_path",
+        "_resolve_report_path",
+        "_resolve_claude_runs_dir",
+        "_resolve_claude_timeout_seconds",
+        "_resolve_claude_command",
+        "_load_prompt_template",
+        "_coerce_text",
+        "_path_relative_to_workspace",
+        "_path_for_prompt",
+        "_normalize_relative_path",
+        "_is_retired_reflector_path",
+        "_is_real_skill_doc_path",
+        "_is_allowed_reflector_path",
+        "_reflector_allowlist_relative_paths",
+        "_render_observer_prompt",
+        "_render_reflector_prompt",
+        "_run_claude_cli",
+        "_raise_for_failed_claude_result",
+        "_write_claude_run_artifacts",
+        "_run_git_command",
+        "_parse_git_status",
+        "_git_status_for_paths",
+        "_git_status_all_paths",
+        "_create_reflector_checkpoint",
+        "_prepare_reflector_git_context",
+        "_git_path_exists_in_ref",
+        "_restore_reflector_paths",
+        "_drop_reflector_checkpoint",
+        "_detect_unexpected_reflector_changes",
+        "_reflector_dynamic_restore_relative_paths",
+        "_extract_touched_files",
+        "_extract_garbage_collected_entries",
+        "_validate_reflector_gc_entries",
+        "_validate_reflector_outputs",
+        "run_observer_local",
+        "run_reflector_local",
+        "main"
+      ],
+      "totalLines": 876,
+      "hasStructuralAnalysis": true
+    },
+    "periodic_jobs/ai_heartbeat/src/v0/heartbeat_preflight.py": {
+      "filePath": "periodic_jobs/ai_heartbeat/src/v0/heartbeat_preflight.py",
+      "contentHash": "672f6ae85ec047855d57031aa72211f8b4bcc32f9a267b78adf7760a4712fb43",
+      "functions": [
+        {
+          "name": "_local_runner_command",
+          "params": [
+            "target_date"
+          ],
+          "returnType": "str",
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "_status_cli_command",
+          "params": [
+            "task_name",
+            "target_date",
+            "status"
+          ],
+          "returnType": "str",
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "build_parser",
+          "params": [],
+          "returnType": "argparse.ArgumentParser",
+          "exported": true,
+          "lineCount": 23
+        },
+        {
+          "name": "run_preflight",
+          "params": [
+            "state_path",
+            "now"
+          ],
+          "returnType": "list[dict[str, Any]]",
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "mark_prompted",
+          "params": [
+            "tasks",
+            "state_path",
+            "now"
+          ],
+          "returnType": "dict[str, Any]",
+          "exported": true,
+          "lineCount": 11
+        },
+        {
+          "name": "_format_elapsed",
+          "params": [
+            "delta"
+          ],
+          "returnType": "str",
+          "exported": true,
+          "lineCount": 13
+        },
+        {
+          "name": "format_reminder",
+          "params": [
+            "reminder"
+          ],
+          "returnType": "str",
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "build_dialog_spec",
+          "params": [
+            "reminders",
+            "now"
+          ],
+          "returnType": "dict[str, Any]",
+          "exported": true,
+          "lineCount": 53
+        },
+        {
+          "name": "build_hook_message",
+          "params": [
+            "reminders",
+            "now"
+          ],
+          "returnType": "str",
+          "exported": true,
+          "lineCount": 36
+        },
+        {
+          "name": "run_hook_dialog_spec",
+          "params": [
+            "state_path",
+            "now"
+          ],
+          "returnType": "dict[str, Any] | None",
+          "exported": true,
+          "lineCount": 13
+        },
+        {
+          "name": "run_hook",
+          "params": [
+            "state_path",
+            "now"
+          ],
+          "returnType": "str | None",
+          "exported": true,
+          "lineCount": 12
+        },
+        {
+          "name": "main",
+          "params": [
+            "argv"
+          ],
+          "returnType": "int",
+          "exported": true,
+          "lineCount": 30
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "argparse",
+          "specifiers": [
+            "argparse"
+          ]
+        },
+        {
+          "source": "json",
+          "specifiers": [
+            "json"
+          ]
+        },
+        {
+          "source": "sys",
+          "specifiers": [
+            "sys"
+          ]
+        },
+        {
+          "source": "datetime",
+          "specifiers": [
+            "datetime",
+            "timezone"
+          ]
+        },
+        {
+          "source": "pathlib",
+          "specifiers": [
+            "Path"
+          ]
+        },
+        {
+          "source": "typing",
+          "specifiers": [
+            "Any",
+            "Sequence"
+          ]
+        },
+        {
+          "source": "heartbeat_state",
+          "specifiers": [
+            "heartbeat_state"
+          ]
+        }
+      ],
+      "exports": [
+        "_local_runner_command",
+        "_status_cli_command",
+        "build_parser",
+        "run_preflight",
+        "mark_prompted",
+        "_format_elapsed",
+        "format_reminder",
+        "build_dialog_spec",
+        "build_hook_message",
+        "run_hook_dialog_spec",
+        "run_hook",
+        "main"
+      ],
+      "totalLines": 263,
+      "hasStructuralAnalysis": true
+    },
+    "periodic_jobs/ai_heartbeat/src/v0/heartbeat_state.py": {
+      "filePath": "periodic_jobs/ai_heartbeat/src/v0/heartbeat_state.py",
+      "contentHash": "c9e2d1bea64ab078bb92f32ff2b704111d47d5b1078fc59a6b05a386232d5b7d",
+      "functions": [
+        {
+          "name": "_default_task_state",
+          "params": [],
+          "returnType": "dict[str, Any]",
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "default_state",
+          "params": [],
+          "returnType": "dict[str, Any]",
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "utc_now",
+          "params": [],
+          "returnType": "datetime",
+          "exported": true,
+          "lineCount": 2
+        },
+        {
+          "name": "_resolve_path",
+          "params": [
+            "path"
+          ],
+          "returnType": "Path",
+          "exported": true,
+          "lineCount": 2
+        },
+        {
+          "name": "_ensure_parent",
+          "params": [
+            "path"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 2
+        },
+        {
+          "name": "_serialize_datetime",
+          "params": [
+            "value"
+          ],
+          "returnType": "str | None",
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "_deserialize_datetime",
+          "params": [
+            "value"
+          ],
+          "returnType": "datetime | None",
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "_atomic_write_json",
+          "params": [
+            "path",
+            "payload"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "save_state",
+          "params": [
+            "state",
+            "path"
+          ],
+          "returnType": "Path",
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "_backup_corrupt_file",
+          "params": [
+            "path"
+          ],
+          "returnType": "Path",
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "_normalize_state",
+          "params": [
+            "payload"
+          ],
+          "returnType": "dict[str, Any]",
+          "exported": true,
+          "lineCount": 19
+        },
+        {
+          "name": "load_or_init_state",
+          "params": [
+            "path"
+          ],
+          "returnType": "dict[str, Any]",
+          "exported": true,
+          "lineCount": 19
+        },
+        {
+          "name": "task_is_due",
+          "params": [
+            "state",
+            "task_name",
+            "now"
+          ],
+          "returnType": "bool",
+          "exported": true,
+          "lineCount": 10
+        },
+        {
+          "name": "collect_due_tasks",
+          "params": [
+            "state",
+            "now"
+          ],
+          "returnType": "list[dict[str, Any]]",
+          "exported": true,
+          "lineCount": 27
+        },
+        {
+          "name": "_mutate_task_state",
+          "params": [
+            "state",
+            "task_name",
+            "now",
+            "target_date"
+          ],
+          "returnType": "tuple[dict[str, Any], datetime]",
+          "exported": true,
+          "lineCount": 15
+        },
+        {
+          "name": "record_prompted",
+          "params": [
+            "state",
+            "task_name",
+            "now"
+          ],
+          "returnType": "dict[str, Any]",
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "record_failure",
+          "params": [
+            "state",
+            "task_name",
+            "now",
+            "error",
+            "target_date"
+          ],
+          "returnType": "dict[str, Any]",
+          "exported": true,
+          "lineCount": 13
+        },
+        {
+          "name": "record_success",
+          "params": [
+            "state",
+            "task_name",
+            "now",
+            "target_date"
+          ],
+          "returnType": "dict[str, Any]",
+          "exported": true,
+          "lineCount": 15
+        },
+        {
+          "name": "record_skipped",
+          "params": [
+            "state",
+            "task_name",
+            "now",
+            "target_date"
+          ],
+          "returnType": "dict[str, Any]",
+          "exported": true,
+          "lineCount": 12
+        },
+        {
+          "name": "persist_prompted",
+          "params": [
+            "task_name",
+            "path",
+            "now"
+          ],
+          "returnType": "dict[str, Any]",
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "persist_failure",
+          "params": [
+            "task_name",
+            "path",
+            "now",
+            "error",
+            "target_date"
+          ],
+          "returnType": "dict[str, Any]",
+          "exported": true,
+          "lineCount": 12
+        },
+        {
+          "name": "persist_success",
+          "params": [
+            "task_name",
+            "path",
+            "now",
+            "target_date"
+          ],
+          "returnType": "dict[str, Any]",
+          "exported": true,
+          "lineCount": 11
+        },
+        {
+          "name": "persist_skipped",
+          "params": [
+            "task_name",
+            "path",
+            "now",
+            "target_date"
+          ],
+          "returnType": "dict[str, Any]",
+          "exported": true,
+          "lineCount": 11
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "json",
+          "specifiers": [
+            "json"
+          ]
+        },
+        {
+          "source": "copy",
+          "specifiers": [
+            "deepcopy"
+          ]
+        },
+        {
+          "source": "datetime",
+          "specifiers": [
+            "datetime",
+            "timedelta",
+            "timezone"
+          ]
+        },
+        {
+          "source": "pathlib",
+          "specifiers": [
+            "Path"
+          ]
+        },
+        {
+          "source": "tempfile",
+          "specifiers": [
+            "NamedTemporaryFile"
+          ]
+        },
+        {
+          "source": "typing",
+          "specifiers": [
+            "Any"
+          ]
+        }
+      ],
+      "exports": [
+        "_default_task_state",
+        "default_state",
+        "utc_now",
+        "_resolve_path",
+        "_ensure_parent",
+        "_serialize_datetime",
+        "_deserialize_datetime",
+        "_atomic_write_json",
+        "save_state",
+        "_backup_corrupt_file",
+        "_normalize_state",
+        "load_or_init_state",
+        "task_is_due",
+        "collect_due_tasks",
+        "_mutate_task_state",
+        "record_prompted",
+        "record_failure",
+        "record_success",
+        "record_skipped",
+        "persist_prompted",
+        "persist_failure",
+        "persist_success",
+        "persist_skipped"
+      ],
+      "totalLines": 284,
+      "hasStructuralAnalysis": true
+    },
+    "periodic_jobs/ai_heartbeat/src/v0/heartbeat_status_cli.py": {
+      "filePath": "periodic_jobs/ai_heartbeat/src/v0/heartbeat_status_cli.py",
+      "contentHash": "1b5807c496db85de03dca150bc013cb89be2bfd439562a16686edc0575c98c72",
+      "functions": [
+        {
+          "name": "build_parser",
+          "params": [],
+          "returnType": "argparse.ArgumentParser",
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "main",
+          "params": [
+            "argv"
+          ],
+          "returnType": "int",
+          "exported": true,
+          "lineCount": 22
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "argparse",
+          "specifiers": [
+            "argparse"
+          ]
+        },
+        {
+          "source": "sys",
+          "specifiers": [
+            "sys"
+          ]
+        },
+        {
+          "source": "pathlib",
+          "specifiers": [
+            "Path"
+          ]
+        },
+        {
+          "source": "typing",
+          "specifiers": [
+            "Sequence"
+          ]
+        },
+        {
+          "source": "heartbeat_state",
+          "specifiers": [
+            "heartbeat_state"
+          ]
+        }
+      ],
+      "exports": [
+        "build_parser",
+        "main"
+      ],
+      "totalLines": 51,
+      "hasStructuralAnalysis": true
+    },
+    "periodic_jobs/ai_heartbeat/src/v0/jobs/ai_news_survey.py": {
+      "filePath": "periodic_jobs/ai_heartbeat/src/v0/jobs/ai_news_survey.py",
+      "contentHash": "e2d62cb5a0d53c1bd22bba24776cc0c64966835c923c9d2f39f94be4d59108f6",
+      "functions": [
+        {
+          "name": "run_ai_news_survey",
+          "params": [
+            "mode",
+            "model_id",
+            "publish_to_kit"
+          ],
+          "exported": true,
+          "lineCount": 202
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "time",
+          "specifiers": [
+            "time"
+          ]
+        },
+        {
+          "source": "argparse",
+          "specifiers": [
+            "argparse"
+          ]
+        },
+        {
+          "source": "datetime",
+          "specifiers": [
+            "datetime",
+            "timedelta"
+          ]
+        },
+        {
+          "source": "sys",
+          "specifiers": [
+            "sys"
+          ]
+        },
+        {
+          "source": "pathlib",
+          "specifiers": [
+            "Path"
+          ]
+        }
+      ],
+      "exports": [
+        "run_ai_news_survey"
+      ],
+      "totalLines": 232,
+      "hasStructuralAnalysis": true
+    },
+    "periodic_jobs/ai_heartbeat/src/v0/jobs/crontab_monitor.py": {
+      "filePath": "periodic_jobs/ai_heartbeat/src/v0/jobs/crontab_monitor.py",
+      "contentHash": "0da82ef79e157acc6da2a1f232619cc170a564fe46a645baceadd63d8f23c753",
+      "functions": [
+        {
+          "name": "run_ai_analysis",
+          "params": [],
+          "exported": true,
+          "lineCount": 54
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "time",
+          "specifiers": [
+            "time"
+          ]
+        },
+        {
+          "source": "datetime",
+          "specifiers": [
+            "datetime"
+          ]
+        },
+        {
+          "source": "sys",
+          "specifiers": [
+            "sys"
+          ]
+        },
+        {
+          "source": "pathlib",
+          "specifiers": [
+            "Path"
+          ]
+        }
+      ],
+      "exports": [
+        "run_ai_analysis"
+      ],
+      "totalLines": 75,
+      "hasStructuralAnalysis": true
+    },
+    "periodic_jobs/ai_heartbeat/src/v0/jobs/daily_newsletter.py": {
+      "filePath": "periodic_jobs/ai_heartbeat/src/v0/jobs/daily_newsletter.py",
+      "contentHash": "fde72cdaf6f8e841f57348f806824e3eec7a8539b73125899b49994a24194565",
+      "functions": [
+        {
+          "name": "run_daily_newsletter",
+          "params": [
+            "date_str",
+            "dry_run",
+            "model_id"
+          ],
+          "exported": true,
+          "lineCount": 302
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "argparse",
+          "specifiers": [
+            "argparse"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "sys",
+          "specifiers": [
+            "sys"
+          ]
+        },
+        {
+          "source": "datetime",
+          "specifiers": [
+            "datetime",
+            "timedelta"
+          ]
+        },
+        {
+          "source": "pathlib",
+          "specifiers": [
+            "Path"
+          ]
+        }
+      ],
+      "exports": [
+        "run_daily_newsletter"
+      ],
+      "totalLines": 357,
+      "hasStructuralAnalysis": true
+    },
+    "periodic_jobs/ai_heartbeat/src/v0/prompts/observer.md": {
+      "filePath": "periodic_jobs/ai_heartbeat/src/v0/prompts/observer.md",
+      "contentHash": "e5b9719d6fad8adf9e0465b8198aa18b6b14d9a907993e1bca290acc6ec319af",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 27,
+      "hasStructuralAnalysis": true
+    },
+    "periodic_jobs/ai_heartbeat/src/v0/prompts/reflector.md": {
+      "filePath": "periodic_jobs/ai_heartbeat/src/v0/prompts/reflector.md",
+      "contentHash": "190c8d975a7bf30c83084a69b59e5eed2fee7c88273e541547ad3ecca25cc491",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 48,
+      "hasStructuralAnalysis": true
+    },
+    "periodic_jobs/ai_heartbeat/tests/test_heartbeat_local_runner.py": {
+      "filePath": "periodic_jobs/ai_heartbeat/tests/test_heartbeat_local_runner.py",
+      "contentHash": "e8e04dd7b48948abc241584483b981db8e3a9b2ea90e767e879e0ae154690c8d",
+      "functions": [
+        {
+          "name": "_assert_claude_run_artifacts",
+          "params": [
+            "state_path",
+            "task_name",
+            "status"
+          ],
+          "returnType": "dict[str, object]",
+          "exported": true,
+          "lineCount": 21
+        },
+        {
+          "name": "test_local_observer_skips_existing_date",
+          "params": [
+            "tmp_path"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 26
+        },
+        {
+          "name": "test_local_observer_writes_observation_entry",
+          "params": [
+            "tmp_path",
+            "monkeypatch"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 49
+        },
+        {
+          "name": "test_local_observer_runs_claude_prompt_and_requires_target_date_entry",
+          "params": [
+            "tmp_path",
+            "monkeypatch"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 55
+        },
+        {
+          "name": "test_local_observer_fails_when_claude_does_not_write_target_date",
+          "params": [
+            "tmp_path",
+            "monkeypatch"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 41
+        },
+        {
+          "name": "test_local_observer_fails_when_claude_cli_is_unavailable",
+          "params": [
+            "tmp_path",
+            "monkeypatch"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 36
+        },
+        {
+          "name": "test_local_observer_persists_failure_artifacts_for_claude_runner_errors",
+          "params": [
+            "tmp_path",
+            "monkeypatch",
+            "runner_result",
+            "expected_error"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 41
+        },
+        {
+          "name": "test_reflector_parser_rejects_legacy_promotion_argument",
+          "params": [],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "test_local_reflector_runs_claude_and_validates_report_touched_files",
+          "params": [
+            "tmp_path",
+            "monkeypatch"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 106
+        },
+        {
+          "name": "test_local_reflector_fails_when_report_is_missing_target_date",
+          "params": [
+            "tmp_path",
+            "monkeypatch"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 77
+        },
+        {
+          "name": "test_local_reflector_fails_when_report_mentions_non_allowlist_file",
+          "params": [
+            "tmp_path",
+            "monkeypatch"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 78
+        },
+        {
+          "name": "test_resolve_reflector_git_context_uses_head_for_clean_surface",
+          "params": [
+            "tmp_path",
+            "monkeypatch"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 35
+        },
+        {
+          "name": "test_resolve_reflector_git_context_creates_checkpoint_for_dirty_surface",
+          "params": [
+            "tmp_path",
+            "monkeypatch"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 35
+        },
+        {
+          "name": "test_local_reflector_drops_temporary_checkpoint_on_success",
+          "params": [
+            "tmp_path",
+            "monkeypatch"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 74
+        },
+        {
+          "name": "test_reflector_allowlist_includes_report_path_inside_workspace",
+          "params": [
+            "tmp_path"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 13
+        },
+        {
+          "name": "test_reflector_allowlist_includes_existing_skill_and_excludes_retired_file",
+          "params": [
+            "tmp_path"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 19
+        },
+        {
+          "name": "test_validate_reflector_outputs_allows_existing_skill_when_index_is_touched",
+          "params": [
+            "tmp_path"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 39
+        },
+        {
+          "name": "test_validate_reflector_outputs_requires_index_when_skill_is_touched",
+          "params": [
+            "tmp_path"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 30
+        },
+        {
+          "name": "test_detect_unexpected_reflector_changes_allows_new_skill_doc",
+          "params": [
+            "tmp_path",
+            "monkeypatch"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 22
+        },
+        {
+          "name": "test_validate_reflector_outputs_rejects_retired_local_reflections_file",
+          "params": [
+            "tmp_path"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 33
+        },
+        {
+          "name": "test_validate_reflector_outputs_requires_garbage_collected_entries_section",
+          "params": [
+            "tmp_path"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 32
+        },
+        {
+          "name": "test_validate_reflector_outputs_accepts_gc_date_block_when_removed",
+          "params": [
+            "tmp_path"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 42
+        },
+        {
+          "name": "test_validate_reflector_outputs_fails_when_gc_line_still_exists",
+          "params": [
+            "tmp_path"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 34
+        },
+        {
+          "name": "test_restore_reflector_paths_deletes_generated_report_not_in_git",
+          "params": [
+            "tmp_path",
+            "monkeypatch"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 32
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "importlib.util",
+          "specifiers": [
+            "importlib.util"
+          ]
+        },
+        {
+          "source": "json",
+          "specifiers": [
+            "json"
+          ]
+        },
+        {
+          "source": "pathlib",
+          "specifiers": [
+            "Path"
+          ]
+        },
+        {
+          "source": "pytest",
+          "specifiers": [
+            "pytest"
+          ]
+        }
+      ],
+      "exports": [
+        "_assert_claude_run_artifacts",
+        "test_local_observer_skips_existing_date",
+        "test_local_observer_writes_observation_entry",
+        "test_local_observer_runs_claude_prompt_and_requires_target_date_entry",
+        "test_local_observer_fails_when_claude_does_not_write_target_date",
+        "test_local_observer_fails_when_claude_cli_is_unavailable",
+        "test_local_observer_persists_failure_artifacts_for_claude_runner_errors",
+        "test_reflector_parser_rejects_legacy_promotion_argument",
+        "test_local_reflector_runs_claude_and_validates_report_touched_files",
+        "test_local_reflector_fails_when_report_is_missing_target_date",
+        "test_local_reflector_fails_when_report_mentions_non_allowlist_file",
+        "test_resolve_reflector_git_context_uses_head_for_clean_surface",
+        "test_resolve_reflector_git_context_creates_checkpoint_for_dirty_surface",
+        "test_local_reflector_drops_temporary_checkpoint_on_success",
+        "test_reflector_allowlist_includes_report_path_inside_workspace",
+        "test_reflector_allowlist_includes_existing_skill_and_excludes_retired_file",
+        "test_validate_reflector_outputs_allows_existing_skill_when_index_is_touched",
+        "test_validate_reflector_outputs_requires_index_when_skill_is_touched",
+        "test_detect_unexpected_reflector_changes_allows_new_skill_doc",
+        "test_validate_reflector_outputs_rejects_retired_local_reflections_file",
+        "test_validate_reflector_outputs_requires_garbage_collected_entries_section",
+        "test_validate_reflector_outputs_accepts_gc_date_block_when_removed",
+        "test_validate_reflector_outputs_fails_when_gc_line_still_exists",
+        "test_restore_reflector_paths_deletes_generated_report_not_in_git"
+      ],
+      "totalLines": 1069,
+      "hasStructuralAnalysis": true
+    },
+    "periodic_jobs/ai_heartbeat/tests/test_heartbeat_preflight.py": {
+      "filePath": "periodic_jobs/ai_heartbeat/tests/test_heartbeat_preflight.py",
+      "contentHash": "c2fcc5523f286c6f3e146bf6bb199f028b9f024e6458a4ac06c6e0d5aacfbfc3",
+      "functions": [
+        {
+          "name": "_iso",
+          "params": [
+            "dt"
+          ],
+          "returnType": "str",
+          "exported": true,
+          "lineCount": 2
+        },
+        {
+          "name": "test_run_preflight_initializes_missing_state_and_reports_both_tasks",
+          "params": [
+            "tmp_path"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "test_run_preflight_respects_same_day_prompt_dedup",
+          "params": [
+            "tmp_path"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 11
+        },
+        {
+          "name": "test_mark_prompted_only_updates_prompt_date",
+          "params": [
+            "tmp_path"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 11
+        },
+        {
+          "name": "test_main_prints_human_readable_summary",
+          "params": [
+            "tmp_path"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 12
+        },
+        {
+          "name": "test_build_dialog_spec_shows_only_relevant_actions",
+          "params": [
+            "tmp_path"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "test_run_hook_marks_prompted_and_returns_message",
+          "params": [
+            "tmp_path"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 17
+        },
+        {
+          "name": "test_run_hook_dialog_spec_marks_prompted_and_returns_payload",
+          "params": [
+            "tmp_path"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 19
+        },
+        {
+          "name": "test_hook_dialog_spec_mode_dedups_same_day",
+          "params": [
+            "tmp_path"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 11
+        },
+        {
+          "name": "test_hook_message_omits_irrelevant_actions_for_single_due_task",
+          "params": [
+            "tmp_path"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 13
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "contextlib",
+          "specifiers": [
+            "contextlib"
+          ]
+        },
+        {
+          "source": "importlib.util",
+          "specifiers": [
+            "importlib.util"
+          ]
+        },
+        {
+          "source": "io",
+          "specifiers": [
+            "io"
+          ]
+        },
+        {
+          "source": "json",
+          "specifiers": [
+            "json"
+          ]
+        },
+        {
+          "source": "datetime",
+          "specifiers": [
+            "datetime",
+            "timedelta",
+            "timezone"
+          ]
+        },
+        {
+          "source": "pathlib",
+          "specifiers": [
+            "Path"
+          ]
+        }
+      ],
+      "exports": [
+        "_iso",
+        "test_run_preflight_initializes_missing_state_and_reports_both_tasks",
+        "test_run_preflight_respects_same_day_prompt_dedup",
+        "test_mark_prompted_only_updates_prompt_date",
+        "test_main_prints_human_readable_summary",
+        "test_build_dialog_spec_shows_only_relevant_actions",
+        "test_run_hook_marks_prompted_and_returns_message",
+        "test_run_hook_dialog_spec_marks_prompted_and_returns_payload",
+        "test_hook_dialog_spec_mode_dedups_same_day",
+        "test_hook_message_omits_irrelevant_actions_for_single_due_task"
+      ],
+      "totalLines": 163,
+      "hasStructuralAnalysis": true
+    },
+    "periodic_jobs/ai_heartbeat/tests/test_heartbeat_state.py": {
+      "filePath": "periodic_jobs/ai_heartbeat/tests/test_heartbeat_state.py",
+      "contentHash": "7612fd97e9c2c86518d9b52082ff41b4f0f68cba34f1ef2af47bae9329dddbdd",
+      "functions": [
+        {
+          "name": "_iso",
+          "params": [
+            "dt"
+          ],
+          "returnType": "str",
+          "exported": true,
+          "lineCount": 2
+        },
+        {
+          "name": "test_default_state_matches_schema",
+          "params": [],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "test_task_due_respects_intervals",
+          "params": [],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "test_collect_due_tasks_skips_same_day_prompt",
+          "params": [],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 10
+        },
+        {
+          "name": "test_load_state_recovers_from_corrupt_json",
+          "params": [
+            "tmp_path"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 10
+        },
+        {
+          "name": "test_record_status_updates_expected_fields",
+          "params": [],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 39
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "importlib.util",
+          "specifiers": [
+            "importlib.util"
+          ]
+        },
+        {
+          "source": "datetime",
+          "specifiers": [
+            "datetime",
+            "timedelta",
+            "timezone"
+          ]
+        },
+        {
+          "source": "pathlib",
+          "specifiers": [
+            "Path"
+          ]
+        }
+      ],
+      "exports": [
+        "_iso",
+        "test_default_state_matches_schema",
+        "test_task_due_respects_intervals",
+        "test_collect_due_tasks_skips_same_day_prompt",
+        "test_load_state_recovers_from_corrupt_json",
+        "test_record_status_updates_expected_fields"
+      ],
+      "totalLines": 108,
+      "hasStructuralAnalysis": true
+    },
+    "periodic_jobs/ai_heartbeat/tests/test_heartbeat_status_cli.py": {
+      "filePath": "periodic_jobs/ai_heartbeat/tests/test_heartbeat_status_cli.py",
+      "contentHash": "fd5fdc1fa6d1b408508c8e0c891814bf119270a1f512b74c7ddae6716326bd1f",
+      "functions": [
+        {
+          "name": "test_cli_records_success",
+          "params": [
+            "tmp_path"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 19
+        },
+        {
+          "name": "test_cli_records_failure",
+          "params": [
+            "tmp_path"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 22
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "importlib.util",
+          "specifiers": [
+            "importlib.util"
+          ]
+        },
+        {
+          "source": "json",
+          "specifiers": [
+            "json"
+          ]
+        },
+        {
+          "source": "pathlib",
+          "specifiers": [
+            "Path"
+          ]
+        }
+      ],
+      "exports": [
+        "test_cli_records_success",
+        "test_cli_records_failure"
+      ],
+      "totalLines": 60,
+      "hasStructuralAnalysis": true
+    },
+    "periodic_jobs/ai_heartbeat/tests/test_observer_reflector_status.py": {
+      "filePath": "periodic_jobs/ai_heartbeat/tests/test_observer_reflector_status.py",
+      "contentHash": "f5d7835d11799f0cba06a0058314be5e2783243780f975f029dadbdf4a82b49b",
+      "functions": [
+        {
+          "name": "_load_heartbeat_state",
+          "params": [
+            "state_path"
+          ],
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "_loaded_script",
+          "params": [
+            "module_name",
+            "module_path",
+            "client_cls",
+            "state_path"
+          ],
+          "exported": true,
+          "lineCount": 24
+        },
+        {
+          "name": "_patched_argv",
+          "params": [],
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "test_observer_skip_records_skipped_status",
+          "params": [
+            "tmp_path"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "test_observer_success_records_success_status",
+          "params": [
+            "tmp_path"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "test_reflector_success_records_success_status",
+          "params": [
+            "tmp_path"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 10
+        },
+        {
+          "name": "test_reflector_failure_records_failed_status",
+          "params": [
+            "tmp_path"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 10
+        }
+      ],
+      "classes": [
+        {
+          "name": "_SuccessfulClient",
+          "methods": [
+            "create_session",
+            "send_message",
+            "wait_for_session_complete",
+            "delete_session"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 12
+        },
+        {
+          "name": "_NullSessionClient",
+          "methods": [
+            "create_session"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 3
+        }
+      ],
+      "imports": [
+        {
+          "source": "importlib.util",
+          "specifiers": [
+            "importlib.util"
+          ]
+        },
+        {
+          "source": "json",
+          "specifiers": [
+            "json"
+          ]
+        },
+        {
+          "source": "sys",
+          "specifiers": [
+            "sys"
+          ]
+        },
+        {
+          "source": "types",
+          "specifiers": [
+            "types"
+          ]
+        },
+        {
+          "source": "contextlib",
+          "specifiers": [
+            "contextmanager"
+          ]
+        },
+        {
+          "source": "pathlib",
+          "specifiers": [
+            "Path"
+          ]
+        }
+      ],
+      "exports": [
+        "_SuccessfulClient",
+        "_NullSessionClient",
+        "_load_heartbeat_state",
+        "_loaded_script",
+        "_patched_argv",
+        "test_observer_skip_records_skipped_status",
+        "test_observer_success_records_success_status",
+        "test_reflector_success_records_success_status",
+        "test_reflector_failure_records_failed_status"
+      ],
+      "totalLines": 137,
+      "hasStructuralAnalysis": true
+    },
+    "pyrightconfig.json": {
+      "filePath": "pyrightconfig.json",
+      "contentHash": "39db65a19d9c655a1f0ba4f23c0aa02fa07c693923291d5d22201431dc602a9a",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 8,
+      "hasStructuralAnalysis": true
+    },
+    "README.md": {
+      "filePath": "README.md",
+      "contentHash": "4a83b4f4bce96b4f615b5e67df6fd33ba415d1d494fbf0d987eff101ee433cb0",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 93,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/a01_ask_do_paradigm.md": {
+      "filePath": "rules/axioms/a01_ask_do_paradigm.md",
+      "contentHash": "583fcf3023b3f85f96178e190cb5619159cb5bf876fe442a3b98f544a690f9e5",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 108,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/a02_multiplier_not_replacement.md": {
+      "filePath": "rules/axioms/a02_multiplier_not_replacement.md",
+      "contentHash": "b641f8379037c9eb63f12fdc1a64f955eb50d3e5a39fceb263ea53f3dbe23000",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 67,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/a03_ic_to_manager.md": {
+      "filePath": "rules/axioms/a03_ic_to_manager.md",
+      "contentHash": "79d4ccd1259a8388ffb877d3ec7c604e4cd17c5bf76d91a5024de5a0c738052a",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 104,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/a04_reliability_management.md": {
+      "filePath": "rules/axioms/a04_reliability_management.md",
+      "contentHash": "aea64860bcd6ed58e32fcf39e561253482a523facca6c1b1c3ea59e497207412",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 213,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/a05_docs_long_term_memory.md": {
+      "filePath": "rules/axioms/a05_docs_long_term_memory.md",
+      "contentHash": "fc1f232a6647b261652b586fdecaef66d409d94a163dbf3da166f7d5ce4cb332",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 96,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/a06_framework_worldview.md": {
+      "filePath": "rules/axioms/a06_framework_worldview.md",
+      "contentHash": "410aabe7f871e1fc23bb3026a43a6cc1e639d2d69eea5b2701b16de41c4dea31",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 136,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/a07_design_philosophy_ceiling.md": {
+      "filePath": "rules/axioms/a07_design_philosophy_ceiling.md",
+      "contentHash": "293752bc76ba046b85bf5c25c7bf73393123e3a86d8396c8582ae8d8399f2806",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 91,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/a08_prompt_quality_lever.md": {
+      "filePath": "rules/axioms/a08_prompt_quality_lever.md",
+      "contentHash": "07853e2f364ff412cc80e6f9b756110e7b5644d571ed6a1b4cb17f936b0a5841",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 97,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/a09_builders_mindset_moat.md": {
+      "filePath": "rules/axioms/a09_builders_mindset_moat.md",
+      "contentHash": "23573bec66496ef72a956f4a047d19400f8bfc8504562487276053b85ad0892b",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 58,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/a10_rapport_over_raw_intelligence.md": {
+      "filePath": "rules/axioms/a10_rapport_over_raw_intelligence.md",
+      "contentHash": "5552877b7153c0c9b711d9ee915f47b0d8ee77994cf6536d9255313ff9dc4872",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 103,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/a11_tool_composition_as_capability_expansion.md": {
+      "filePath": "rules/axioms/a11_tool_composition_as_capability_expansion.md",
+      "contentHash": "73615a9707c7ddf0810b7699291337ce1c32297647475b5ef64a37b7d11e9407",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 76,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/a12_ai_native_development_paradigm.md": {
+      "filePath": "rules/axioms/a12_ai_native_development_paradigm.md",
+      "contentHash": "e593c535fe55bbb355116e3f9582c048911e4a63deeea8070e68491755495fee",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 83,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/a13_tech_adoption_stages.md": {
+      "filePath": "rules/axioms/a13_tech_adoption_stages.md",
+      "contentHash": "7ef1528ddfa0daea443e33523c901a30125e774cb92db3935e51bf83b697f537",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 53,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/INDEX.md": {
+      "filePath": "rules/axioms/INDEX.md",
+      "contentHash": "e7ffd3177300eb66d7dcd5b55480dc0de605f77cd1be9d78a1d650816dace5df",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 132,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/m01_closed_loop_calibration.md": {
+      "filePath": "rules/axioms/m01_closed_loop_calibration.md",
+      "contentHash": "2cc6263dd713186fc8adb1944c3ccf72115ad6b46067e3fd4a3c22f61874601c",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 122,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/m02_reverse_debug_mindset.md": {
+      "filePath": "rules/axioms/m02_reverse_debug_mindset.md",
+      "contentHash": "b3cc9615e011e638f839b20384d41b5f185f9a7772ca71ee749f3017494af964",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 68,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/m03_quantified_prioritization.md": {
+      "filePath": "rules/axioms/m03_quantified_prioritization.md",
+      "contentHash": "cabf04c5ee4e637d85ec135f890592256491d1f38a9e2e8de8dec2466992cbb4",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 74,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/m04_active_management_over_tool_mentality.md": {
+      "filePath": "rules/axioms/m04_active_management_over_tool_mentality.md",
+      "contentHash": "7acf748fb03cc0a4248a64f3afd10c9f8c0683eeddab88c7e965f5e871ddfe22",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 69,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/m05_simplicity_cognitive_efficiency.md": {
+      "filePath": "rules/axioms/m05_simplicity_cognitive_efficiency.md",
+      "contentHash": "7e22edb2c93bf78c8dd37b624881dfb26cee1e57295a1c28161c77cef367dbdd",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 161,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/m06_connection_making.md": {
+      "filePath": "rules/axioms/m06_connection_making.md",
+      "contentHash": "78dc70f089df27a5f39a27d71a1003e4b657404e6a5257fbd65fc01d1437a599",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 107,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/m07_multi_threading_energy.md": {
+      "filePath": "rules/axioms/m07_multi_threading_energy.md",
+      "contentHash": "305bf7c907bdad5d4e427de9aa45c6c29a39d0ccd57d8251d29cac1e02ed33e1",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 81,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/m08_self_systematization.md": {
+      "filePath": "rules/axioms/m08_self_systematization.md",
+      "contentHash": "48ebca4b9146388ab99c534c1baebb162fa512f9625fba7f7568ae7bedeb6481",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 51,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/m09_ai_era_management_paradigm.md": {
+      "filePath": "rules/axioms/m09_ai_era_management_paradigm.md",
+      "contentHash": "93124a7b80b1e1b00cc193fcbb715b5588519dd2320a1139df0c97595164b9af",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 51,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/m10_education_retention_ladder.md": {
+      "filePath": "rules/axioms/m10_education_retention_ladder.md",
+      "contentHash": "c25dd5759db59159b2f4fe77819233cb5d113bb1832a64a2ad8ac32ab0d1bf04",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 39,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/t01_infrastructure_over_components.md": {
+      "filePath": "rules/axioms/t01_infrastructure_over_components.md",
+      "contentHash": "1abdba4ef48f22ef1d8dec049152ba9c2d0c5efb30bd059e3b8fd9b684be5f39",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 99,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/t02_results_certainty.md": {
+      "filePath": "rules/axioms/t02_results_certainty.md",
+      "contentHash": "cd9425d71135105a1aec4b84c57d03bcb9e4794ce0f68288787042fea9aa1f0e",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 93,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/t03_context_isolation.md": {
+      "filePath": "rules/axioms/t03_context_isolation.md",
+      "contentHash": "e291446681253b071f2cbc19b48aa30f47796ab5813a1b0d535a3e215e73ee76",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 69,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/t04_data_over_opinion.md": {
+      "filePath": "rules/axioms/t04_data_over_opinion.md",
+      "contentHash": "45ef52e3fa67a5da1c109e332895cd9da76d54f85fb5bb0d72c103e96c3ef647",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 79,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/t05_cognition_asset.md": {
+      "filePath": "rules/axioms/t05_cognition_asset.md",
+      "contentHash": "876e7d8267c0efff4e795ef815fe0e51b6b56d8cf0b44baeffe83e72b442026c",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 117,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/t06_dependency_topology.md": {
+      "filePath": "rules/axioms/t06_dependency_topology.md",
+      "contentHash": "5cc1689ffc5986abf0bdb076f13f03235edc84ec613d5ec1c6b013cd8c5e2af3",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 73,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/t07_isolation_processing_verification.md": {
+      "filePath": "rules/axioms/t07_isolation_processing_verification.md",
+      "contentHash": "bcc32a48ed0d51437361d166b614e1b755c09296e53b3097015acc29a044861d",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 103,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/t08_first_principles_methodology.md": {
+      "filePath": "rules/axioms/t08_first_principles_methodology.md",
+      "contentHash": "a24840774ce7d4bd2019c9dbc701439905fe02a524bbb9146854f779090d7f35",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 108,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/t09_data_strategy_mdp.md": {
+      "filePath": "rules/axioms/t09_data_strategy_mdp.md",
+      "contentHash": "13e3b101119bc7fa5c4c0a37855cb261bc22e2a7cd20fb0b4c9bebab2ce34f4a",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 45,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/v01_responsibility.md": {
+      "filePath": "rules/axioms/v01_responsibility.md",
+      "contentHash": "13fdcd6945f9cce66b2674c5e2e0ffb3c0aa012a376512c91422a66318d0ba43",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 129,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/v02_verifiability.md": {
+      "filePath": "rules/axioms/v02_verifiability.md",
+      "contentHash": "9fff704dc4630b15a5fd94ac9626fe2641fa958d2d6acd2e238e4d9b177f4577",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 68,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/v03_attribution_shapes_perception.md": {
+      "filePath": "rules/axioms/v03_attribution_shapes_perception.md",
+      "contentHash": "3072d540a3a3c50f5ae965e1aad6faceba9c99cf4c2679e0cf73b7b8ad979db2",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 162,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/v04_temporal_grounding_prevents_hallucination.md": {
+      "filePath": "rules/axioms/v04_temporal_grounding_prevents_hallucination.md",
+      "contentHash": "738618d9df73c0f241cdd2d69866acec515d9c5591517a802be6b527114167b8",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 130,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/v05_trust_attribution_dual_dimension.md": {
+      "filePath": "rules/axioms/v05_trust_attribution_dual_dimension.md",
+      "contentHash": "b483ce60e7390a09bb9d6d7029afeb2fb2328ebe71616970237d776874d8119e",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 49,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/x01_constraint_paradox.md": {
+      "filePath": "rules/axioms/x01_constraint_paradox.md",
+      "contentHash": "75041658466099282cd373a4f35273639633090f4aba909d526d68e8995dff8e",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 65,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/x02_systematic_debugging_hypothesis_testing.md": {
+      "filePath": "rules/axioms/x02_systematic_debugging_hypothesis_testing.md",
+      "contentHash": "e8fdc0e8f7e625a8bdcaff11a99a5e15f42c17a8a96da08b7dda6316e2df0b21",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 101,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/x03_efficiency_determined_by_bottlenecks.md": {
+      "filePath": "rules/axioms/x03_efficiency_determined_by_bottlenecks.md",
+      "contentHash": "95d9d3431c721fb7e54e162879f5a01de8eba648f4d175531e7b3b4d55c9e598",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 86,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/x04_design_for_actual_use_case.md": {
+      "filePath": "rules/axioms/x04_design_for_actual_use_case.md",
+      "contentHash": "109e624bbc358711d98c13fa3d99a9933289e5a59a9a5a9cad856da2776ef060",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 83,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/x05_precision_cascades_through_systems.md": {
+      "filePath": "rules/axioms/x05_precision_cascades_through_systems.md",
+      "contentHash": "798f509d855bd7c54e14ce3cbcb1637d82f7bc286c5c74c7981af1de91428975",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 91,
+      "hasStructuralAnalysis": true
+    },
+    "rules/axioms/x06_big_picture_system_analysis.md": {
+      "filePath": "rules/axioms/x06_big_picture_system_analysis.md",
+      "contentHash": "053b6b81bb61cfabea1dc80a24d66f101ad13e46122d3dd650ab34a16b7dd324",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 43,
+      "hasStructuralAnalysis": true
+    },
+    "rules/COMMUNICATION.md": {
+      "filePath": "rules/COMMUNICATION.md",
+      "contentHash": "44c7d61856a5bb44233b9027978db838cf50922c9c50784d20870e6a5145e7df",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 126,
+      "hasStructuralAnalysis": true
+    },
+    "rules/skills/ai_agent_cli_guide.md": {
+      "filePath": "rules/skills/ai_agent_cli_guide.md",
+      "contentHash": "35052c26d59268c3bc5137b4ba7845f5316f9f322d84a972ab0f42fe53d1eae9",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 277,
+      "hasStructuralAnalysis": true
+    },
+    "rules/skills/bestpractice_ai_debugging_diagnosis.md": {
+      "filePath": "rules/skills/bestpractice_ai_debugging_diagnosis.md",
+      "contentHash": "cdeca9481bc81b26ba391ca2215f0c432716b310b58047f5ec102e6651451a0e",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 117,
+      "hasStructuralAnalysis": true
+    },
+    "rules/skills/bestpractice_ai_product_design.md": {
+      "filePath": "rules/skills/bestpractice_ai_product_design.md",
+      "contentHash": "e7ebea9b753b6b825c7dd0fc930ae4ad7af784286f632e4bc029cbd64542b83d",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 170,
+      "hasStructuralAnalysis": true
+    },
+    "rules/skills/bestpractice_ai_programming_mindset.md": {
+      "filePath": "rules/skills/bestpractice_ai_programming_mindset.md",
+      "contentHash": "27dc9f63745198fb2d0e12183f3e65b5c1461417b5b3a7d1ead21d0abffce140",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 159,
+      "hasStructuralAnalysis": true
+    },
+    "rules/skills/bestpractice_api_key_management_1password_cli.md": {
+      "filePath": "rules/skills/bestpractice_api_key_management_1password_cli.md",
+      "contentHash": "5bab0e9b2655c46ce18a8c5458c7dfa225eb280aa2cbf676f2b9edcd3f6d1cb2",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 118,
+      "hasStructuralAnalysis": true
+    },
+    "rules/skills/bestpractice_interview_evaluation.md": {
+      "filePath": "rules/skills/bestpractice_interview_evaluation.md",
+      "contentHash": "58b27f66d6b17bf2ffd45630dd2a0f6ea65665955f69628ec45c46954dd02267",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 62,
+      "hasStructuralAnalysis": true
+    },
+    "rules/skills/bestpractice_markdown_html_conversion.md": {
+      "filePath": "rules/skills/bestpractice_markdown_html_conversion.md",
+      "contentHash": "f1bd81e09ebf7501fb315f734f2acfa9c2515aca718f4e5edfd96e6fa4b1c913",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 60,
+      "hasStructuralAnalysis": true
+    },
+    "rules/skills/bestpractice_multi_agent_analysis.md": {
+      "filePath": "rules/skills/bestpractice_multi_agent_analysis.md",
+      "contentHash": "0d00abdfd893abb8bdd50249d92e65d1af1f69a3902372da9efc65f8e64c3761",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 120,
+      "hasStructuralAnalysis": true
+    },
+    "rules/skills/bestpractice_skill_writing.md": {
+      "filePath": "rules/skills/bestpractice_skill_writing.md",
+      "contentHash": "c1f31bbda5b47c3efaeb8ecea515436abd4df38c3ae61627f69171a428550d17",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 93,
+      "hasStructuralAnalysis": true
+    },
+    "rules/skills/bestpractice_staged_approach.md": {
+      "filePath": "rules/skills/bestpractice_staged_approach.md",
+      "contentHash": "37228834f8b09d26d442b7ed32fc1ff058eedc8f07e41d61beaf4e8656f25061",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 105,
+      "hasStructuralAnalysis": true
+    },
+    "rules/skills/bestpractice_temporal_info_verification.md": {
+      "filePath": "rules/skills/bestpractice_temporal_info_verification.md",
+      "contentHash": "384584c5b1b4ad456a256b26dc86f2d9418e6c47d094d53b1c4a05ca7c66d06b",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 62,
+      "hasStructuralAnalysis": true
+    },
+    "rules/skills/delayed_execution.md": {
+      "filePath": "rules/skills/delayed_execution.md",
+      "contentHash": "e148595bfd94c466bfcbd21d21bf4fce7d0363d90a23214665d2b02f495fbe26",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 109,
+      "hasStructuralAnalysis": true
+    },
+    "rules/skills/generate_image.md": {
+      "filePath": "rules/skills/generate_image.md",
+      "contentHash": "abecfbe01e38d6d4fb6a582c80b16e12ab0407dfbb18ee457b8307c82f14d615",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 125,
+      "hasStructuralAnalysis": true
+    },
+    "rules/skills/google_docs.md": {
+      "filePath": "rules/skills/google_docs.md",
+      "contentHash": "826a915efc5912bd95453c1d4d953fd5be67842aafcc9509d4f4adf7d5da2814",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 227,
+      "hasStructuralAnalysis": true
+    },
+    "rules/skills/growth_analytics.md": {
+      "filePath": "rules/skills/growth_analytics.md",
+      "contentHash": "80bc31ffc3bfa6fdf46a229d0652e6bbfa1405b5e54c954953378a30ef911ba4",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 142,
+      "hasStructuralAnalysis": true
+    },
+    "rules/skills/INDEX.md": {
+      "filePath": "rules/skills/INDEX.md",
+      "contentHash": "02cba0945ae7e1caadff474dc6120105533f09e4eabff65eb17de3e14f7449b1",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 95,
+      "hasStructuralAnalysis": true
+    },
+    "rules/skills/project_scaffold.md": {
+      "filePath": "rules/skills/project_scaffold.md",
+      "contentHash": "340159b65d813f6ad019073b9d7503cb9af4923715f796fa77963f2e85315a9e",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 310,
+      "hasStructuralAnalysis": true
+    },
+    "rules/skills/semantic_search.md": {
+      "filePath": "rules/skills/semantic_search.md",
+      "contentHash": "a1dd040322b7f5a53c49f961f6b693f91196cc279467993df28b1115f2c8bbab",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 112,
+      "hasStructuralAnalysis": true
+    },
+    "rules/skills/send_email.md": {
+      "filePath": "rules/skills/send_email.md",
+      "contentHash": "656edcfaca4ab119605d20da2ea3f5f5da3e54570c43f45aa730b7491a1bdfba",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 73,
+      "hasStructuralAnalysis": true
+    },
+    "rules/skills/share_report.md": {
+      "filePath": "rules/skills/share_report.md",
+      "contentHash": "132f54537559c6b285b2df8dd92ea1317f4838058c4fd71572245ccb3587e8a4",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 206,
+      "hasStructuralAnalysis": true
+    },
+    "rules/skills/typefully_metrics.md": {
+      "filePath": "rules/skills/typefully_metrics.md",
+      "contentHash": "d47c46083f637e6a0eda752782cf4066483371415f850af0fa3f9914208a2326",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 66,
+      "hasStructuralAnalysis": true
+    },
+    "rules/skills/typefully_post.md": {
+      "filePath": "rules/skills/typefully_post.md",
+      "contentHash": "0aaf065b3fb343a843c402f257f900bf5acf137dd02496ccbd0edd69a80f6f2a",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 106,
+      "hasStructuralAnalysis": true
+    },
+    "rules/skills/workflow_analytical_writing.md": {
+      "filePath": "rules/skills/workflow_analytical_writing.md",
+      "contentHash": "81aa36a60a4f8a731c9d76224b0c6f6ae850934b3a2c87b66df973fa69493a41",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 209,
+      "hasStructuralAnalysis": true
+    },
+    "rules/skills/workflow_bilibili_whisper_transcription.md": {
+      "filePath": "rules/skills/workflow_bilibili_whisper_transcription.md",
+      "contentHash": "764204169b167a62470e9c51d23617934ff078cce474471df9286f77cb608498",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 79,
+      "hasStructuralAnalysis": true
+    },
+    "rules/skills/workflow_cognitive_profile_extraction.md": {
+      "filePath": "rules/skills/workflow_cognitive_profile_extraction.md",
+      "contentHash": "b4ae77a10510f2a79cf66609650f2f80e91e59c8568fffd2550a86697448e82b",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 384,
+      "hasStructuralAnalysis": true
+    },
+    "rules/skills/workflow_deep_research_survey.md": {
+      "filePath": "rules/skills/workflow_deep_research_survey.md",
+      "contentHash": "4a38dd0878b93f5a4186941dc4f79809bda3f45afb79729abc99e363a10396b5",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 267,
+      "hasStructuralAnalysis": true
+    },
+    "rules/skills/workflow_knowledge_flywheel.md": {
+      "filePath": "rules/skills/workflow_knowledge_flywheel.md",
+      "contentHash": "336f21f7ca299d02a685750411ba43947deed7aabd85e509860b8bd6cc39f65e",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 173,
+      "hasStructuralAnalysis": true
+    },
+    "rules/skills/workflow_parallel_subagents.md": {
+      "filePath": "rules/skills/workflow_parallel_subagents.md",
+      "contentHash": "52529b898b05f18910f3780830679f842ea7181ce683ca2e140373605b691372",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 106,
+      "hasStructuralAnalysis": true
+    },
+    "rules/skills/workflow_presentation_slides.md": {
+      "filePath": "rules/skills/workflow_presentation_slides.md",
+      "contentHash": "b8deb2452993f7cd56acda3b19600d72ec5f762b010d54597051c3fc152b88dd",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 233,
+      "hasStructuralAnalysis": true
+    },
+    "rules/SOUL.md": {
+      "filePath": "rules/SOUL.md",
+      "contentHash": "f4b4b16fb923cb008606f7993d110efb360e8e3c9ad5550eb0b65fbff8344919",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 47,
+      "hasStructuralAnalysis": true
+    },
+    "rules/USER.md": {
+      "filePath": "rules/USER.md",
+      "contentHash": "1ad97bc42c8a7e0708c3786ac6b854e98485e428ad4f0f8cc972a921cf75ce56",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 55,
+      "hasStructuralAnalysis": true
+    },
+    "rules/WORKSPACE.md": {
+      "filePath": "rules/WORKSPACE.md",
+      "contentHash": "6dcac64107c7875e3c6893788c67a4ed6c3c06d90438a1b4ae46caf4f60f48c8",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 39,
+      "hasStructuralAnalysis": true
+    },
+    "setup_guide.md": {
+      "filePath": "setup_guide.md",
+      "contentHash": "ecf582a3bed1d8a02f55b0796db681f6f9dbf1a512e461aff4d94650ef38b2e4",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 200,
+      "hasStructuralAnalysis": true
+    },
+    "tools/ga4_metrics.py": {
+      "filePath": "tools/ga4_metrics.py",
+      "contentHash": "df8036d4e0f445886bade0d9c4fb1199295f3045968ff55be2f863251be8c008",
+      "functions": [
+        {
+          "name": "_load_env_file",
+          "params": [
+            "env_file"
+          ],
+          "returnType": "bool",
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "load_dotenv",
+          "params": [
+            "explicit_env_file"
+          ],
+          "returnType": "Path | None",
+          "exported": true,
+          "lineCount": 20
+        },
+        {
+          "name": "setup_credentials",
+          "params": [],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "date_range_str",
+          "params": [
+            "days"
+          ],
+          "returnType": "tuple[str, str]",
+          "exported": true,
+          "lineCount": 2
+        },
+        {
+          "name": "rows_to_dicts",
+          "params": [
+            "response"
+          ],
+          "returnType": "list[dict[str, str]]",
+          "exported": true,
+          "lineCount": 12
+        },
+        {
+          "name": "print_json",
+          "params": [
+            "data"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 2
+        },
+        {
+          "name": "build_parser",
+          "params": [],
+          "returnType": "argparse.ArgumentParser",
+          "exported": true,
+          "lineCount": 31
+        },
+        {
+          "name": "main",
+          "params": [],
+          "returnType": "int",
+          "exported": true,
+          "lineCount": 49
+        }
+      ],
+      "classes": [
+        {
+          "name": "GA4Client",
+          "methods": [
+            "__init__",
+            "_run",
+            "daily",
+            "weekly",
+            "top_pages",
+            "sources",
+            "channels",
+            "campaigns",
+            "snapshot"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 151
+        }
+      ],
+      "imports": [
+        {
+          "source": "argparse",
+          "specifiers": [
+            "argparse"
+          ]
+        },
+        {
+          "source": "json",
+          "specifiers": [
+            "json"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "datetime",
+          "specifiers": [
+            "date",
+            "timedelta"
+          ]
+        },
+        {
+          "source": "pathlib",
+          "specifiers": [
+            "Path"
+          ]
+        },
+        {
+          "source": "typing",
+          "specifiers": [
+            "Any"
+          ]
+        }
+      ],
+      "exports": [
+        "_load_env_file",
+        "load_dotenv",
+        "setup_credentials",
+        "date_range_str",
+        "rows_to_dicts",
+        "GA4Client",
+        "print_json",
+        "build_parser",
+        "main"
+      ],
+      "totalLines": 319,
+      "hasStructuralAnalysis": true
+    },
+    "tools/generate_image.py": {
+      "filePath": "tools/generate_image.py",
+      "contentHash": "16d40642746d65a3973b0034208132953bd3d67d01ff5638894e6c4727e1fb14",
+      "functions": [
+        {
+          "name": "_get_api_key_from_1password",
+          "params": [
+            "vault",
+            "item",
+            "field"
+          ],
+          "returnType": "str | None",
+          "exported": true,
+          "lineCount": 17
+        },
+        {
+          "name": "_get_gemini_api_key",
+          "params": [],
+          "returnType": "str",
+          "exported": true,
+          "lineCount": 12
+        },
+        {
+          "name": "_get_openai_api_key",
+          "params": [],
+          "returnType": "str",
+          "exported": true,
+          "lineCount": 12
+        },
+        {
+          "name": "_normalize_model_choice",
+          "params": [
+            "choice"
+          ],
+          "returnType": "str",
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "_get_default_model_choice",
+          "params": [],
+          "returnType": "str",
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "_resolve_generate_model",
+          "params": [
+            "requested_model"
+          ],
+          "returnType": "tuple[str, str]",
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "_resolve_upscale_model",
+          "params": [
+            "requested_model"
+          ],
+          "returnType": "tuple[str, str]",
+          "exported": true,
+          "lineCount": 20
+        },
+        {
+          "name": "_map_size_for_openai",
+          "params": [
+            "image_size",
+            "aspect_ratio"
+          ],
+          "returnType": "str",
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "_save_binary",
+          "params": [
+            "path",
+            "data"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "_convert_to_jpeg",
+          "params": [
+            "source",
+            "target"
+          ],
+          "returnType": "bool",
+          "exported": true,
+          "lineCount": 10
+        },
+        {
+          "name": "_save_image_part",
+          "params": [
+            "inline_data",
+            "output_path"
+          ],
+          "returnType": "bool",
+          "exported": true,
+          "lineCount": 15
+        },
+        {
+          "name": "_save_openai_b64_image",
+          "params": [
+            "image_base64",
+            "output_path"
+          ],
+          "returnType": "bool",
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "_build_output_path",
+          "params": [
+            "output_spec",
+            "index"
+          ],
+          "returnType": "str",
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "_require_existing_files",
+          "params": [
+            "image_paths"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "_part_to_dict",
+          "params": [
+            "part"
+          ],
+          "returnType": "types.PartDict",
+          "exported": true,
+          "lineCount": 11
+        },
+        {
+          "name": "_generate_gemini",
+          "params": [
+            "model",
+            "prompt",
+            "image_paths",
+            "output_prefix",
+            "image_size",
+            "aspect_ratio"
+          ],
+          "returnType": "str | None",
+          "exported": true,
+          "lineCount": 39
+        },
+        {
+          "name": "_generate_openai",
+          "params": [
+            "model",
+            "prompt",
+            "image_paths",
+            "output_prefix",
+            "image_size",
+            "aspect_ratio"
+          ],
+          "returnType": "str | None",
+          "exported": true,
+          "lineCount": 41
+        },
+        {
+          "name": "generate",
+          "params": [
+            "prompt",
+            "image_paths",
+            "output_prefix",
+            "image_size",
+            "aspect_ratio",
+            "model"
+          ],
+          "returnType": "str | None",
+          "exported": true,
+          "lineCount": 12
+        },
+        {
+          "name": "upscale",
+          "params": [
+            "image_path",
+            "output_path",
+            "aspect_ratio",
+            "model"
+          ],
+          "returnType": "str | None",
+          "exported": true,
+          "lineCount": 45
+        },
+        {
+          "name": "build_parser",
+          "params": [],
+          "returnType": "argparse.ArgumentParser",
+          "exported": true,
+          "lineCount": 22
+        },
+        {
+          "name": "_validate_args",
+          "params": [
+            "parser",
+            "args"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 17
+        },
+        {
+          "name": "main",
+          "params": [],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 8
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "argparse",
+          "specifiers": [
+            "argparse"
+          ]
+        },
+        {
+          "source": "base64",
+          "specifiers": [
+            "base64"
+          ]
+        },
+        {
+          "source": "mimetypes",
+          "specifiers": [
+            "mimetypes"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "subprocess",
+          "specifiers": [
+            "subprocess"
+          ]
+        },
+        {
+          "source": "sys",
+          "specifiers": [
+            "sys"
+          ]
+        },
+        {
+          "source": "pathlib",
+          "specifiers": [
+            "Path"
+          ]
+        },
+        {
+          "source": "dotenv",
+          "specifiers": [
+            "load_dotenv"
+          ]
+        },
+        {
+          "source": "google",
+          "specifiers": [
+            "genai"
+          ]
+        },
+        {
+          "source": "google.genai",
+          "specifiers": [
+            "types"
+          ]
+        },
+        {
+          "source": "openai",
+          "specifiers": [
+            "OpenAI"
+          ]
+        }
+      ],
+      "exports": [
+        "_get_api_key_from_1password",
+        "_get_gemini_api_key",
+        "_get_openai_api_key",
+        "_normalize_model_choice",
+        "_get_default_model_choice",
+        "_resolve_generate_model",
+        "_resolve_upscale_model",
+        "_map_size_for_openai",
+        "_save_binary",
+        "_convert_to_jpeg",
+        "_save_image_part",
+        "_save_openai_b64_image",
+        "_build_output_path",
+        "_require_existing_files",
+        "_part_to_dict",
+        "_generate_gemini",
+        "_generate_openai",
+        "generate",
+        "upscale",
+        "build_parser",
+        "_validate_args",
+        "main"
+      ],
+      "totalLines": 438,
+      "hasStructuralAnalysis": true
+    },
+    "tools/kit_metrics.py": {
+      "filePath": "tools/kit_metrics.py",
+      "contentHash": "3c2bd5abc9e46ff13fab5f5c4a59030bb79ea6baad42f2f6fa667bdf51662d89",
+      "functions": [
+        {
+          "name": "_load_env_file",
+          "params": [
+            "env_file"
+          ],
+          "returnType": "bool",
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "load_dotenv",
+          "params": [
+            "explicit_env_file"
+          ],
+          "returnType": "Path | None",
+          "exported": true,
+          "lineCount": 24
+        },
+        {
+          "name": "default_date_range",
+          "params": [],
+          "returnType": "tuple[str, str]",
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "print_json",
+          "params": [
+            "data"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 2
+        },
+        {
+          "name": "build_parser",
+          "params": [],
+          "returnType": "argparse.ArgumentParser",
+          "exported": true,
+          "lineCount": 29
+        },
+        {
+          "name": "main",
+          "params": [],
+          "returnType": "int",
+          "exported": true,
+          "lineCount": 101
+        }
+      ],
+      "classes": [
+        {
+          "name": "KitClient",
+          "methods": [
+            "__init__",
+            "_headers",
+            "_get",
+            "account",
+            "growth_stats",
+            "email_stats",
+            "subscribers",
+            "subscriber_count",
+            "broadcasts",
+            "broadcast_stats",
+            "snapshot"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 88
+        }
+      ],
+      "imports": [
+        {
+          "source": "argparse",
+          "specifiers": [
+            "argparse"
+          ]
+        },
+        {
+          "source": "json",
+          "specifiers": [
+            "json"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "datetime",
+          "specifiers": [
+            "date",
+            "timedelta"
+          ]
+        },
+        {
+          "source": "pathlib",
+          "specifiers": [
+            "Path"
+          ]
+        },
+        {
+          "source": "typing",
+          "specifiers": [
+            "Any"
+          ]
+        },
+        {
+          "source": "requests",
+          "specifiers": [
+            "requests"
+          ]
+        }
+      ],
+      "exports": [
+        "_load_env_file",
+        "load_dotenv",
+        "default_date_range",
+        "KitClient",
+        "print_json",
+        "build_parser",
+        "main"
+      ],
+      "totalLines": 295,
+      "hasStructuralAnalysis": true
+    },
+    "tools/opencode_job.py": {
+      "filePath": "tools/opencode_job.py",
+      "contentHash": "9479537eccba6ad6d5f91129ae49329da7c3d67a49e99ceb4384a65b15878e36",
+      "functions": [
+        {
+          "name": "load_dotenv",
+          "params": [],
+          "exported": true,
+          "lineCount": 16
+        },
+        {
+          "name": "main",
+          "params": [],
+          "exported": true,
+          "lineCount": 40
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "sys",
+          "specifiers": [
+            "sys"
+          ]
+        },
+        {
+          "source": "argparse",
+          "specifiers": [
+            "argparse"
+          ]
+        },
+        {
+          "source": "pathlib",
+          "specifiers": [
+            "Path"
+          ]
+        }
+      ],
+      "exports": [
+        "load_dotenv",
+        "main"
+      ],
+      "totalLines": 75,
+      "hasStructuralAnalysis": true
+    },
+    "tools/pytest.ini": {
+      "filePath": "tools/pytest.ini",
+      "contentHash": "7d93c4ca80b08d755e730f44666433da1b5d8a5b4164b5e02bae23e9d58d9543",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 4,
+      "hasStructuralAnalysis": false
+    },
+    "tools/requirements.txt": {
+      "filePath": "tools/requirements.txt",
+      "contentHash": "ac46f1672ea968535cf8e16631f4406a924ba3bac80aa83c157765d285498e62",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 6,
+      "hasStructuralAnalysis": false
+    },
+    "tools/semantic_search/main.py": {
+      "filePath": "tools/semantic_search/main.py",
+      "contentHash": "8e245f16d2c42f7663d93ab764bc861c8570b496cc3bbed2965d36813d3439fc",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "sys",
+          "specifiers": [
+            "sys"
+          ]
+        },
+        {
+          "source": "search.cli",
+          "specifiers": [
+            "main"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 12,
+      "hasStructuralAnalysis": true
+    },
+    "tools/semantic_search/search/__init__.py": {
+      "filePath": "tools/semantic_search/search/__init__.py",
+      "contentHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 1,
+      "hasStructuralAnalysis": true
+    },
+    "tools/semantic_search/search/chunker.py": {
+      "filePath": "tools/semantic_search/search/chunker.py",
+      "contentHash": "7b50163b2af67240704a8eaa291269a36711e313ce00e737c59e5374cdf4908b",
+      "functions": [],
+      "classes": [
+        {
+          "name": "MarkdownChunker",
+          "methods": [
+            "__init__",
+            "parse_yaml_frontmatter",
+            "chunk"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 76
+        }
+      ],
+      "imports": [
+        {
+          "source": "yaml",
+          "specifiers": [
+            "yaml"
+          ]
+        },
+        {
+          "source": "re",
+          "specifiers": [
+            "re"
+          ]
+        },
+        {
+          "source": "typing",
+          "specifiers": [
+            "List",
+            "Dict",
+            "Any"
+          ]
+        },
+        {
+          "source": ".models",
+          "specifiers": [
+            "Chunk"
+          ]
+        }
+      ],
+      "exports": [
+        "MarkdownChunker"
+      ],
+      "totalLines": 82,
+      "hasStructuralAnalysis": true
+    },
+    "tools/semantic_search/search/cli.py": {
+      "filePath": "tools/semantic_search/search/cli.py",
+      "contentHash": "e7c080d397fa1a74f93e220e1f89de9540e6bd33b3b9b57a2b3473daf98184a2",
+      "functions": [
+        {
+          "name": "extract_features_parallel",
+          "params": [
+            "file_paths",
+            "chunker",
+            "embedder",
+            "index",
+            "num_workers"
+          ],
+          "returnType": "List[Chunk]",
+          "exported": true,
+          "lineCount": 50
+        },
+        {
+          "name": "main",
+          "params": [],
+          "exported": true,
+          "lineCount": 69
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "argparse",
+          "specifiers": [
+            "argparse"
+          ]
+        },
+        {
+          "source": "sys",
+          "specifiers": [
+            "sys"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "json",
+          "specifiers": [
+            "json"
+          ]
+        },
+        {
+          "source": "time",
+          "specifiers": [
+            "time"
+          ]
+        },
+        {
+          "source": "numpy",
+          "specifiers": [
+            "np"
+          ]
+        },
+        {
+          "source": "pathlib",
+          "specifiers": [
+            "Path"
+          ]
+        },
+        {
+          "source": "typing",
+          "specifiers": [
+            "List",
+            "Dict",
+            "Any"
+          ]
+        },
+        {
+          "source": "concurrent.futures",
+          "specifiers": [
+            "ThreadPoolExecutor"
+          ]
+        },
+        {
+          "source": "tqdm",
+          "specifiers": [
+            "tqdm"
+          ]
+        },
+        {
+          "source": ".models",
+          "specifiers": [
+            "Chunk",
+            "SearchResult"
+          ]
+        },
+        {
+          "source": ".chunker",
+          "specifiers": [
+            "MarkdownChunker"
+          ]
+        },
+        {
+          "source": ".embedding",
+          "specifiers": [
+            "EmbeddingClient"
+          ]
+        },
+        {
+          "source": ".index",
+          "specifiers": [
+            "ForwardIndex"
+          ]
+        }
+      ],
+      "exports": [
+        "extract_features_parallel",
+        "main"
+      ],
+      "totalLines": 140,
+      "hasStructuralAnalysis": true
+    },
+    "tools/semantic_search/search/embedding.py": {
+      "filePath": "tools/semantic_search/search/embedding.py",
+      "contentHash": "8462ad89ae6cf2009effb1fb0155d64e2909cfa5218497717bb61e0530c9c3b9",
+      "functions": [],
+      "classes": [
+        {
+          "name": "EmbeddingClient",
+          "methods": [
+            "__init__",
+            "embed",
+            "embed_batch"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 27
+        }
+      ],
+      "imports": [
+        {
+          "source": "openai",
+          "specifiers": [
+            "OpenAI"
+          ]
+        },
+        {
+          "source": "typing",
+          "specifiers": [
+            "List"
+          ]
+        },
+        {
+          "source": "time",
+          "specifiers": [
+            "time"
+          ]
+        }
+      ],
+      "exports": [
+        "EmbeddingClient"
+      ],
+      "totalLines": 32,
+      "hasStructuralAnalysis": true
+    },
+    "tools/semantic_search/search/index.py": {
+      "filePath": "tools/semantic_search/search/index.py",
+      "contentHash": "f206db35028e92c925c438ac77d965d867c708e890be827092b604a44890accf",
+      "functions": [],
+      "classes": [
+        {
+          "name": "ForwardIndex",
+          "methods": [
+            "__init__",
+            "_get_lock",
+            "load",
+            "save",
+            "get_subset",
+            "needs_update"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 109
+        }
+      ],
+      "imports": [
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "numpy",
+          "specifiers": [
+            "np"
+          ]
+        },
+        {
+          "source": "pickle",
+          "specifiers": [
+            "pickle"
+          ]
+        },
+        {
+          "source": "json",
+          "specifiers": [
+            "json"
+          ]
+        },
+        {
+          "source": "fcntl",
+          "specifiers": [
+            "fcntl"
+          ]
+        },
+        {
+          "source": "pathlib",
+          "specifiers": [
+            "Path"
+          ]
+        },
+        {
+          "source": "typing",
+          "specifiers": [
+            "List",
+            "Dict",
+            "Any",
+            "Optional",
+            "Tuple"
+          ]
+        },
+        {
+          "source": "dataclasses",
+          "specifiers": [
+            "asdict"
+          ]
+        },
+        {
+          "source": ".models",
+          "specifiers": [
+            "Chunk",
+            "SearchResult"
+          ]
+        }
+      ],
+      "exports": [
+        "ForwardIndex"
+      ],
+      "totalLines": 120,
+      "hasStructuralAnalysis": true
+    },
+    "tools/semantic_search/search/models.py": {
+      "filePath": "tools/semantic_search/search/models.py",
+      "contentHash": "621f522736bf062766fcf9470a21ff9376913c1d3ce1350282822a30fb82b3bb",
+      "functions": [],
+      "classes": [
+        {
+          "name": "Chunk",
+          "methods": [
+            "to_dict"
+          ],
+          "properties": [
+            "id",
+            "text",
+            "embedding",
+            "source_file",
+            "header",
+            "position",
+            "metadata"
+          ],
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "SearchResult",
+          "methods": [
+            "to_dict"
+          ],
+          "properties": [
+            "chunk",
+            "score"
+          ],
+          "exported": true,
+          "lineCount": 9
+        }
+      ],
+      "imports": [
+        {
+          "source": "dataclasses",
+          "specifiers": [
+            "dataclass",
+            "asdict"
+          ]
+        },
+        {
+          "source": "typing",
+          "specifiers": [
+            "Optional",
+            "List",
+            "Dict",
+            "Any",
+            "Tuple"
+          ]
+        },
+        {
+          "source": "numpy",
+          "specifiers": [
+            "np"
+          ]
+        }
+      ],
+      "exports": [
+        "Chunk",
+        "SearchResult"
+      ],
+      "totalLines": 31,
+      "hasStructuralAnalysis": true
+    },
+    "tools/send_email_to_myself.py": {
+      "filePath": "tools/send_email_to_myself.py",
+      "contentHash": "07655c510fbe745059a987594b01818655cb676aa9318d0c4162a5973372c159",
+      "functions": [
+        {
+          "name": "load_dotenv",
+          "params": [],
+          "exported": true,
+          "lineCount": 15
+        },
+        {
+          "name": "md_to_html",
+          "params": [
+            "md_content",
+            "title",
+            "css"
+          ],
+          "exported": true,
+          "lineCount": 57
+        },
+        {
+          "name": "send_email",
+          "params": [
+            "subject",
+            "body",
+            "to_addr",
+            "cc_addr",
+            "is_html"
+          ],
+          "exported": true,
+          "lineCount": 36
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "re",
+          "specifiers": [
+            "re"
+          ]
+        },
+        {
+          "source": "smtplib",
+          "specifiers": [
+            "smtplib"
+          ]
+        },
+        {
+          "source": "argparse",
+          "specifiers": [
+            "argparse"
+          ]
+        },
+        {
+          "source": "email.mime.text",
+          "specifiers": [
+            "MIMEText"
+          ]
+        },
+        {
+          "source": "email.mime.multipart",
+          "specifiers": [
+            "MIMEMultipart"
+          ]
+        },
+        {
+          "source": "pathlib",
+          "specifiers": [
+            "Path"
+          ]
+        }
+      ],
+      "exports": [
+        "load_dotenv",
+        "md_to_html",
+        "send_email"
+      ],
+      "totalLines": 181,
+      "hasStructuralAnalysis": true
+    },
+    "tools/share_report_ga4.html": {
+      "filePath": "tools/share_report_ga4.html",
+      "contentHash": "43775a4820c428c95fcbb8dba2a1479234958a3c092b5d4d71742e8f4fb20c61",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 9,
+      "hasStructuralAnalysis": false
+    },
+    "tools/share_report_tts.html": {
+      "filePath": "tools/share_report_tts.html",
+      "contentHash": "6c23ed21431c369ee593cd5740b15596ff35cacb59faa621d078c7e9f8c49d57",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 135,
+      "hasStructuralAnalysis": false
+    },
+    "tools/share_report.css": {
+      "filePath": "tools/share_report.css",
+      "contentHash": "6ec80165833a2616114d2bc2c1c7509746aa8c204dcd196f655f9558a96c69ae",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 108,
+      "hasStructuralAnalysis": false
+    },
+    "tools/tests/test_generate_image.py": {
+      "filePath": "tools/tests/test_generate_image.py",
+      "contentHash": "75d6376db37423ba9805ead5aed86e01a3142c1098cf81e5ccead3b3f7021f13",
+      "functions": [
+        {
+          "name": "_build_parser",
+          "params": [],
+          "exported": true,
+          "lineCount": 2
+        },
+        {
+          "name": "test_parser_defaults",
+          "params": [],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "test_resolve_generate_model_defaults_to_gemini_flash",
+          "params": [
+            "monkeypatch"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "test_resolve_generate_model_supports_exact_ids",
+          "params": [
+            "monkeypatch"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "test_resolve_generate_model_supports_gpt_image_2",
+          "params": [
+            "monkeypatch"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "test_image_generation_model_env_overrides_default",
+          "params": [
+            "monkeypatch"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "test_resolve_upscale_model_rejects_gpt",
+          "params": [
+            "monkeypatch"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "test_map_size_for_openai",
+          "params": [
+            "image_size",
+            "aspect_ratio",
+            "expected"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 2
+        },
+        {
+          "name": "test_map_size_for_openai_rejects_unknown_aspect_ratio",
+          "params": [],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "test_build_output_path_with_jpg_suffix",
+          "params": [],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "test_build_output_path_without_suffix",
+          "params": [],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 2
+        },
+        {
+          "name": "test_validate_args_requires_prompt_in_generate_mode",
+          "params": [],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "test_validate_args_rejects_upscale_with_prompt",
+          "params": [],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "test_validate_args_rejects_upscale_with_gpt",
+          "params": [],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "test_validate_args_accepts_exact_model_id",
+          "params": [],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "test_validate_args_rejects_unknown_model",
+          "params": [],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 5
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "importlib.util",
+          "specifiers": [
+            "importlib.util"
+          ]
+        },
+        {
+          "source": "pathlib",
+          "specifiers": [
+            "Path"
+          ]
+        },
+        {
+          "source": "pytest",
+          "specifiers": [
+            "pytest"
+          ]
+        }
+      ],
+      "exports": [
+        "_build_parser",
+        "test_parser_defaults",
+        "test_resolve_generate_model_defaults_to_gemini_flash",
+        "test_resolve_generate_model_supports_exact_ids",
+        "test_resolve_generate_model_supports_gpt_image_2",
+        "test_image_generation_model_env_overrides_default",
+        "test_resolve_upscale_model_rejects_gpt",
+        "test_map_size_for_openai",
+        "test_map_size_for_openai_rejects_unknown_aspect_ratio",
+        "test_build_output_path_with_jpg_suffix",
+        "test_build_output_path_without_suffix",
+        "test_validate_args_requires_prompt_in_generate_mode",
+        "test_validate_args_rejects_upscale_with_prompt",
+        "test_validate_args_rejects_upscale_with_gpt",
+        "test_validate_args_accepts_exact_model_id",
+        "test_validate_args_rejects_unknown_model"
+      ],
+      "totalLines": 126,
+      "hasStructuralAnalysis": true
+    },
+    "tools/typefully_metrics.py": {
+      "filePath": "tools/typefully_metrics.py",
+      "contentHash": "63df2d83b03e80d4367e3882a637efd3ce0b2688c20e6b49842270a737ca2bb5",
+      "functions": [
+        {
+          "name": "_load_env_file",
+          "params": [
+            "env_file"
+          ],
+          "returnType": "bool",
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "load_dotenv",
+          "params": [
+            "explicit_env_file"
+          ],
+          "returnType": "Path | None",
+          "exported": true,
+          "lineCount": 24
+        },
+        {
+          "name": "default_date_range",
+          "params": [],
+          "returnType": "tuple[str, str]",
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "print_json",
+          "params": [
+            "data"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 2
+        },
+        {
+          "name": "build_parser",
+          "params": [],
+          "returnType": "argparse.ArgumentParser",
+          "exported": true,
+          "lineCount": 18
+        },
+        {
+          "name": "main",
+          "params": [],
+          "returnType": "int",
+          "exported": true,
+          "lineCount": 51
+        }
+      ],
+      "classes": [
+        {
+          "name": "TypefullyClient",
+          "methods": [
+            "__init__",
+            "_headers",
+            "_get",
+            "accounts_v2",
+            "metric",
+            "metric_by_name",
+            "snapshot"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 61
+        }
+      ],
+      "imports": [
+        {
+          "source": "argparse",
+          "specifiers": [
+            "argparse"
+          ]
+        },
+        {
+          "source": "json",
+          "specifiers": [
+            "json"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "datetime",
+          "specifiers": [
+            "date",
+            "timedelta"
+          ]
+        },
+        {
+          "source": "pathlib",
+          "specifiers": [
+            "Path"
+          ]
+        },
+        {
+          "source": "typing",
+          "specifiers": [
+            "Any"
+          ]
+        },
+        {
+          "source": "requests",
+          "specifiers": [
+            "requests"
+          ]
+        }
+      ],
+      "exports": [
+        "_load_env_file",
+        "load_dotenv",
+        "default_date_range",
+        "TypefullyClient",
+        "print_json",
+        "build_parser",
+        "main"
+      ],
+      "totalLines": 219,
+      "hasStructuralAnalysis": true
+    },
+    "tools/typefully_post.py": {
+      "filePath": "tools/typefully_post.py",
+      "contentHash": "19fe44755bcaf96dcec2607fa75329fe09581aa38e176e0cecb941f125aaf79d",
+      "functions": [
+        {
+          "name": "_load_env_file",
+          "params": [
+            "env_file"
+          ],
+          "returnType": "bool",
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "load_dotenv",
+          "params": [
+            "explicit_env_file"
+          ],
+          "returnType": "Path | None",
+          "exported": true,
+          "lineCount": 24
+        },
+        {
+          "name": "parse_thread_file",
+          "params": [
+            "path"
+          ],
+          "returnType": "list[str]",
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "parse_thread_stdin",
+          "params": [],
+          "returnType": "list[str]",
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "resolve_tweets",
+          "params": [
+            "text",
+            "thread_file",
+            "thread_stdin"
+          ],
+          "returnType": "list[str] | None",
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "_char_weight",
+          "params": [
+            "ch"
+          ],
+          "returnType": "int",
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "weighted_tweet_length",
+          "params": [
+            "text"
+          ],
+          "returnType": "int",
+          "exported": true,
+          "lineCount": 10
+        },
+        {
+          "name": "validate_tweets_fit_limit",
+          "params": [
+            "tweets"
+          ],
+          "returnType": "list[tuple[int, int, str]]",
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "print_json",
+          "params": [
+            "data"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 2
+        },
+        {
+          "name": "summarize_draft",
+          "params": [
+            "data"
+          ],
+          "returnType": "str",
+          "exported": true,
+          "lineCount": 21
+        },
+        {
+          "name": "build_parser",
+          "params": [],
+          "returnType": "argparse.ArgumentParser",
+          "exported": true,
+          "lineCount": 65
+        },
+        {
+          "name": "main",
+          "params": [],
+          "returnType": "int",
+          "exported": true,
+          "lineCount": 153
+        }
+      ],
+      "classes": [
+        {
+          "name": "TypefullyPostClient",
+          "methods": [
+            "__init__",
+            "_headers",
+            "_url",
+            "create_draft",
+            "update_draft",
+            "get_draft",
+            "list_drafts",
+            "delete_draft"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 117
+        }
+      ],
+      "imports": [
+        {
+          "source": "argparse",
+          "specifiers": [
+            "argparse"
+          ]
+        },
+        {
+          "source": "json",
+          "specifiers": [
+            "json"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "re",
+          "specifiers": [
+            "re"
+          ]
+        },
+        {
+          "source": "sys",
+          "specifiers": [
+            "sys"
+          ]
+        },
+        {
+          "source": "pathlib",
+          "specifiers": [
+            "Path"
+          ]
+        },
+        {
+          "source": "typing",
+          "specifiers": [
+            "Any"
+          ]
+        },
+        {
+          "source": "requests",
+          "specifiers": [
+            "requests"
+          ]
+        }
+      ],
+      "exports": [
+        "_load_env_file",
+        "load_dotenv",
+        "TypefullyPostClient",
+        "parse_thread_file",
+        "parse_thread_stdin",
+        "resolve_tweets",
+        "_char_weight",
+        "weighted_tweet_length",
+        "validate_tweets_fit_limit",
+        "print_json",
+        "summarize_draft",
+        "build_parser",
+        "main"
+      ],
+      "totalLines": 514,
+      "hasStructuralAnalysis": true
+    }
+  }
+}
