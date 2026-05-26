@@ -54,6 +54,10 @@
 
 5. **如果项目包含 skill**，必须拆成两层。公开 repo 里放技术实现（CLI、测试、API contract、skill 的工作流文档），私有联系人、私有路由、私有 handle 放在 workspace 全局 skill 目录（如 `rules/skills/`）或私有 `.env` 中。公开 repo 的 skill 文档里要写清楚「私有 alias 在哪找」。参考 `adhoc_jobs/resend_email_skill/`（公开技术 skill）和 `rules/skills/imessage.md`（私有联系人路由）的拆分方式。
 
+   Public skill repos should assume loose Markdown-based installation, not vendor-specific skill packaging. The README must explain how a human can hand the GitHub URL to Codex, Claude Code, Cursor, OpenCode, or another coding agent and ask it to install the skill. The AI installer should start from the target workspace's `AGENTS.md` or `CLAUDE.md`, follow any routing file such as `WORKSPACE.md`, and then add the public repo's root skill to the workspace discovery chain. If the workspace has `rules/skills/INDEX.md` or `skills/INDEX.md`, update that index; otherwise add a short pointer in `AGENTS.md` or `CLAUDE.md`.
+
+   If the public repo contains multiple skills, expose exactly one root/router skill to the global workspace level. Use that root skill to link to focused local files inside the repo. Do not symlink every focused skill globally; that makes discovery noisy and makes private/public overlays harder to reason about.
+
 6. **完成后的隐私检查**。在最终验证阶段（Phase 4），必须跑一次隐私扫描：
 
    ```bash
