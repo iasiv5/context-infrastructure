@@ -24,7 +24,7 @@
 - 现有执行器：[periodic_jobs/ai_heartbeat/src/v0/observer.py](periodic_jobs/ai_heartbeat/src/v0/observer.py)、[periodic_jobs/ai_heartbeat/src/v0/reflector.py](periodic_jobs/ai_heartbeat/src/v0/reflector.py)
 - 现有 OpenCode 客户端：[periodic_jobs/ai_heartbeat/src/v0/opencode_client.py](periodic_jobs/ai_heartbeat/src/v0/opencode_client.py)
 - 当前用户文档：[README.md](README.md)、[setup_guide.md](setup_guide.md)、[docs/CRONTAB.md](docs/CRONTAB.md)
-- 当前测试约定：[tools/pytest.ini](tools/pytest.ini) 和样例 [tools/tests/test_generate_image.py](tools/tests/test_generate_image.py)
+- 当前测试约定：[tools/pytest.ini](tools/pytest.ini) 和样例 [periodic_jobs/ai_heartbeat/tests/test_heartbeat_state.py](periodic_jobs/ai_heartbeat/tests/test_heartbeat_state.py)
 
 ## 文件结构与职责
 
@@ -55,7 +55,7 @@
 
 - [setup_guide.md](setup_guide.md) 是 notebook-backed markdown。若普通文本编辑没有落盘，执行者必须立即改用 notebook-aware 编辑方式或 PowerShell UTF-8 fallback，并在同一步完成 read-back 验证。
 - 当前 Windows 工具链对 markdown 新增 / 改写存在被写成 0 字节的风险。对新增或改动的 markdown 文件，第一次写入后必须立即做文件长度和 read-back 验证。
-- 新测试文件应沿用 [tools/tests/test_generate_image.py](tools/tests/test_generate_image.py) 的导入方式，通过 `importlib.util.spec_from_file_location` 直接按路径加载模块，避免把 `periodic_jobs/ai_heartbeat/src/v0` 强行改造成 package。
+- 新测试文件应沿用 [periodic_jobs/ai_heartbeat/tests/test_heartbeat_state.py](periodic_jobs/ai_heartbeat/tests/test_heartbeat_state.py) 的导入方式，通过 `importlib.util.spec_from_file_location` 直接按路径加载模块，避免把 `periodic_jobs/ai_heartbeat/src/v0` 强行改造成 package。
 
 ## 任务清单
 
