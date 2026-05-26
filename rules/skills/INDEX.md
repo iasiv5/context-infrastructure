@@ -4,6 +4,7 @@
 
 - **想使用某个能力** → 浏览下方分类，找到对应的 skill 文件
 - **想添加新 skill** → 参考现有文件格式，添加到对应分类
+- **想安装更多工具型能力** → 看 [`../../docs/SKILL_ECOSYSTEM.md`](../../docs/SKILL_ECOSYSTEM.md)，那里列出可单独安装的 public skill repo
 
 ---
 
@@ -21,9 +22,13 @@
 - ⚙️ Send Email — 需要 Gmail App Password
 - ⚙️ Delayed Execution — 适配你自己的工具路径
 
+### Tier 3: 独立 public skill repos（按需安装）
+- 🔧 Tavily、Google Docs、Outlook、Resend、OpenCode、Process Launcher、PPTX、Typefully、Stripe 等能力见 [`docs/SKILL_ECOSYSTEM.md`](../../docs/SKILL_ECOSYSTEM.md)
+
 ### 说明
 ✅ = 最多 15 分钟即可使用
 ⚙️ = 需要额外配置，不配不影响核心功能
+🔧 = 独立 repo，按需安装到你的 workspace
 
 ---
 

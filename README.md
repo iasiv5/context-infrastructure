@@ -20,6 +20,8 @@ cd context-infrastructure
 
 详细步骤见 [`setup_guide.md`](setup_guide.md)。
 
+如果你想把它扩展成更完整的工作系统，可以看 [`docs/SKILL_ECOSYSTEM.md`](docs/SKILL_ECOSYSTEM.md)。那里列了一组可单独安装的 public skill repo，例如 Web 搜索、邮件、OpenCode、PPTX、社交媒体、支付分析和本地 process launcher。`context-infrastructure` 保持轻量；完整能力通过独立 repo 按需安装。
+
 ---
 
 ## 目录结构
@@ -37,7 +39,8 @@ context-infrastructure/
 │       └── pre-session.ps1      # GitHub Copilot 会话前 hook（调用 heartbeat_preflight）
 │
 ├── docs/
-│   └── CRONTAB.md               # 定时任务配置指南（时间线 + 示例 crontab）
+│   ├── CRONTAB.md               # 定时任务配置指南（时间线 + 示例 crontab）
+│   └── SKILL_ECOSYSTEM.md       # 可单独安装的 public skill repo 目录
 │
 ├── rules/
 │   ├── SOUL.md                  # AI 的身份和行为基调（模板）
