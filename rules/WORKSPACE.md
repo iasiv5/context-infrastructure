@@ -29,8 +29,9 @@
 
 ## 快速查询
 
-### 历史归档（从旧工作区迁入）
-- 旧公众号文章 → `adhoc_jobs/articles_archive/`
+### 文章归档
+- 2026年新文章 → `adhoc_jobs/2026/`
+- 历史归档（2026年5月22号之前） → `adhoc_jobs/articles_archive/`
 - 旧 Python 脚本 → `adhoc_jobs/scripts_archive/`
 - 旧网页 → `adhoc_jobs/webpage/`
 
