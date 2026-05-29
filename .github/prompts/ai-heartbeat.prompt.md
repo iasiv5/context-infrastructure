@@ -1,5 +1,5 @@
 ---
-mode: agent
+agent: agent
 description: 智能执行 AI Heartbeat 的 observer / reflector，并自动回写状态。
 ---
 
@@ -10,9 +10,9 @@ description: 智能执行 AI Heartbeat 的 observer / reflector，并自动回�
 ## 启动约束
 
 1. 先读取以下文件，再决定执行路径：
-   - [AGENTS.md](AGENTS.md)
-   - [periodic_jobs/ai_heartbeat/docs/KNOWLEDGE_BASE.md](periodic_jobs/ai_heartbeat/docs/KNOWLEDGE_BASE.md)
-   - [periodic_jobs/ai_heartbeat/docs/PRD.md](periodic_jobs/ai_heartbeat/docs/PRD.md)
+   - [AGENTS.md](../../AGENTS.md)
+   - [periodic_jobs/ai_heartbeat/docs/KNOWLEDGE_BASE.md](../../periodic_jobs/ai_heartbeat/docs/KNOWLEDGE_BASE.md)
+   - [periodic_jobs/ai_heartbeat/docs/PRD.md](../../periodic_jobs/ai_heartbeat/docs/PRD.md)
 2. 不要调用或恢复任何本地 runner、legacy opencode 或 hidden hook execution。
 3. observer / reflector 的状态记账必须自动完成，不要要求用户手工补记。
 
@@ -51,7 +51,7 @@ override 优先级高于默认决策：
 
 ## observer 合同
 
-1. 先读取 [contexts/memory/OBSERVATIONS.md](contexts/memory/OBSERVATIONS.md)。
+1. 先读取 [contexts/memory/OBSERVATIONS.md](../../contexts/memory/OBSERVATIONS.md)。
 2. 检查是否已存在当前 `target_date` 对应的 `Date: YYYY-MM-DD` 条目。
 3. 如果当天条目已存在：
    - 不要重复写入。
@@ -63,7 +63,7 @@ override 优先级高于默认决策：
 
    - 然后把 observer 视为 `skipped`，允许 `force both` 或默认双任务路径继续进入 reflector。
 4. 如果当天条目不存在：
-   - 按 [periodic_jobs/ai_heartbeat/docs/KNOWLEDGE_BASE.md](periodic_jobs/ai_heartbeat/docs/KNOWLEDGE_BASE.md) 与 [periodic_jobs/ai_heartbeat/docs/PRD.md](periodic_jobs/ai_heartbeat/docs/PRD.md) 定义的 observer 语义，扫描、过滤、归纳并写入 [contexts/memory/OBSERVATIONS.md](contexts/memory/OBSERVATIONS.md)。
+   - 按 [periodic_jobs/ai_heartbeat/docs/KNOWLEDGE_BASE.md](../../periodic_jobs/ai_heartbeat/docs/KNOWLEDGE_BASE.md) 与 [periodic_jobs/ai_heartbeat/docs/PRD.md](../../periodic_jobs/ai_heartbeat/docs/PRD.md) 定义的 observer 语义，扫描、过滤、归纳并写入 [contexts/memory/OBSERVATIONS.md](../../contexts/memory/OBSERVATIONS.md)。
    - observer 只更新观测层，不要在这一步修改 `rules/`。
    - 成功后立即运行：
 
@@ -82,8 +82,8 @@ override 优先级高于默认决策：
 
 ## reflector 合同
 
-1. 读取 [contexts/memory/OBSERVATIONS.md](contexts/memory/OBSERVATIONS.md) 与相关规则面。
-2. 按 [periodic_jobs/ai_heartbeat/docs/KNOWLEDGE_BASE.md](periodic_jobs/ai_heartbeat/docs/KNOWLEDGE_BASE.md) 与 [periodic_jobs/ai_heartbeat/docs/PRD.md](periodic_jobs/ai_heartbeat/docs/PRD.md) 定义的 reflector 语义执行晋升、整理和 GC。
+1. 读取 [contexts/memory/OBSERVATIONS.md](../../contexts/memory/OBSERVATIONS.md) 与相关规则面。
+2. 按 [periodic_jobs/ai_heartbeat/docs/KNOWLEDGE_BASE.md](../../periodic_jobs/ai_heartbeat/docs/KNOWLEDGE_BASE.md) 与 [periodic_jobs/ai_heartbeat/docs/PRD.md](../../periodic_jobs/ai_heartbeat/docs/PRD.md) 定义的 reflector 语义执行晋升、整理和 GC。
 3. 成功后立即运行：
 
 ```powershell
