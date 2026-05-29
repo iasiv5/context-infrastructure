@@ -85,6 +85,7 @@ def test_record_status_updates_expected_fields() -> None:
     assert state["observer"]["last_status"] == "failed"
     assert state["observer"]["last_error"] == "network timeout"
     assert state["observer"]["last_target_date"] == "2026-05-22"
+    assert state["observer"]["last_prompted_on"] == "2026-05-22"
 
     heartbeat_state.record_success(
         state,
@@ -95,7 +96,7 @@ def test_record_status_updates_expected_fields() -> None:
     assert state["observer"]["last_status"] == "success"
     assert state["observer"]["last_success_at"] == _iso(now)
     assert state["observer"]["last_error"] is None
-    assert state["observer"]["last_prompted_on"] is None
+    assert state["observer"]["last_prompted_on"] == "2026-05-22"
 
     heartbeat_state.record_skipped(
         state,
@@ -106,3 +107,4 @@ def test_record_status_updates_expected_fields() -> None:
     assert state["reflector"]["last_status"] == "skipped"
     assert state["reflector"]["last_success_at"] is None
     assert state["reflector"]["last_target_date"] == "2026-05-22"
+    assert state["reflector"]["last_prompted_on"] == "2026-05-22"

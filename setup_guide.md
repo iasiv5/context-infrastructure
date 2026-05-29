@@ -94,50 +94,53 @@ L1/L2（动态记忆）: contexts/memory/OBSERVATIONS.md → agent 主动检索
 
 L3 你已经配置好了（Step 1）。L1/L2 现在有两种运行方式：
 
-1. **手动提醒模式（默认推荐）**：每次会话前检查 observer / reflector 是否过期，再按提示手动执行。
-2. **Cron 增强模式（可选）**：如果你愿意配置后台定时任务，再接入系统级调度。
+1. **手动提醒模式（默认推荐）**：每次会话前检查 observer / reflector 是否过期，再在当前 chat 中运行 `/ai-heartbeat`。
+2. **Cron 增强模式（可选）**：如果你愿意配置后台定时审计，再接入系统级调度。
 
 ### 3b. 手动提醒模式（默认）
 
-`periodic_jobs/ai_heartbeat/src/v0/heartbeat_preflight.py` 会读取本地状态文件，判断 observer 是否超过 24 小时、reflector 是否超过 7 天，并给出提醒。
+`periodic_jobs/ai_heartbeat/src/v0/heartbeat_preflight.py` 会读取本地状态文件，判断 observer 是否超过 24 小时、reflector 是否超过 7 天，并给出提醒。真正执行 observer / reflector 的统一入口是当前 chat 中的 `/ai-heartbeat`。
 
 先确认这两个入口都能正常响应：
 1. `python periodic_jobs/ai_heartbeat/src/v0/heartbeat_preflight.py --help`
-2. `python periodic_jobs/ai_heartbeat/src/v0/heartbeat_local_runner.py --help`
+2. 确认 `.github/prompts/ai-heartbeat.prompt.md` 已存在，并能在 chat 中作为 `/ai-heartbeat` 使用
 
-如果你在 GitHub Copilot 里启用了 hooks，这个 workspace 已自带 `.github/hooks/ai-heartbeat.session-start.json`；它会在 SessionStart 时调用 `.github/hooks/pre-session.ps1`，后者内部执行 `heartbeat_preflight.py --hook-dialog-spec`，并直接弹出原生的 observer / reflector 选择框。
+如果你在 GitHub Copilot 里启用了 hooks，这个 workspace 已自带 `.github/hooks/ai-heartbeat.session-start.json`；它会在 SessionStart 时调用 `.github/hooks/pre-session.ps1`，后者内部执行 `heartbeat_preflight.py --hook-dialog-spec`，并弹出提醒，建议你在当前 chat 中运行 `/ai-heartbeat`。
 
-### 3c. 兼容性说明
+### 3c. 默认执行入口
 
-默认推荐使用 `heartbeat_local_runner.py` 做本地 direct-exec。`observer.py` / `reflector.py` 保留在目录中作为兼容参考，日常使用不需要关注。
+默认推荐使用 `/ai-heartbeat` 做显式执行。hook 只负责提醒，不直接执行 observer / reflector。
+
 ```bash
 # 查看当前是否需要执行 observer / reflector
 python periodic_jobs/ai_heartbeat/src/v0/heartbeat_preflight.py
 
-# 如果这次只提醒、不执行，记录“今天已经提醒过”
-python periodic_jobs/ai_heartbeat/src/v0/heartbeat_preflight.py --mark-prompted observer reflector
-
-# 手动执行 observer
-python periodic_jobs/ai_heartbeat/src/v0/heartbeat_local_runner.py observer --target-date 2026-05-22
-
-# 手动执行 reflector
-python periodic_jobs/ai_heartbeat/src/v0/heartbeat_local_runner.py reflector --target-date 2026-05-22
-
-# 一次执行 observer + reflector
-python periodic_jobs/ai_heartbeat/src/v0/heartbeat_local_runner.py observer reflector --target-date 2026-05-22
+# 查看 machine-readable 决策结果
+python periodic_jobs/ai_heartbeat/src/v0/heartbeat_preflight.py --command-spec
 ```
+
+在当前 chat 中运行主命令：
+
+- `/ai-heartbeat`
+- `/ai-heartbeat force observer`
+- `/ai-heartbeat force reflector`
+- `/ai-heartbeat force both`
+
 
 ### 3e. 可选：配置 Cron
 
-如果你希望把手动提醒模式升级为后台自动执行，再去看 `docs/CRONTAB.md`。这一步不是必需的。
+如果你希望把手动提醒模式升级为系统级定时审计或提醒集成，再去看 `docs/CRONTAB.md`。真正的 observer / reflector 仍建议在当前 chat 中通过 `/ai-heartbeat` 执行。这一步不是必需的。
 
 ### 3f. 验证
 
-先跑一次会前检查：
+先跑一次会前检查，再在当前 chat 中试一次主命令：
 
 ```bash
 python periodic_jobs/ai_heartbeat/src/v0/heartbeat_preflight.py
 ```
+
+然后在当前 chat 中运行 `/ai-heartbeat`，确认它能根据当前状态做出默认决策；如需覆盖默认决策，再试一次 `force observer`、`force reflector` 或 `force both`。
+
 
 查看 `periodic_jobs/ai_heartbeat/state/heartbeat_status.json` 是否已创建，并确认命令输出能说明 observer / reflector 的当前状态。
 
@@ -192,11 +195,11 @@ A：可以用来理解系统的结构，但核心内容代表原作者的视角�
 **Q：skills 能直接用吗？**  
 A：✅ 标记的可以直接用。⚙️ 标记的需要替换配置（endpoint、API key、域名等）。BestPractice 类基本都可以直接用。更完整的工具型能力放在独立 public repo 里，见 [`docs/SKILL_ECOSYSTEM.md`](docs/SKILL_ECOSYSTEM.md)。
 
-**Q：heartbeat_local_runner.py 需要什么依赖？**  
-A：默认只依赖本地 Python 环境和 workspace 文件读写能力。observer / reflector 的状态回写和本地落盘都由它直接完成。
+**Q：`/ai-heartbeat` 需要什么依赖？**  
+A：需要本地 Python 环境、workspace 文件读写权限，以及 `.github/prompts/ai-heartbeat.prompt.md`、`heartbeat_preflight.py`、`heartbeat_status_cli.py` 这条提醒与状态链可用。
 
-**Q：observer.py / reflector.py 还能用吗？**  
-A：保留在目录中作为兼容参考，默认推荐使用 `heartbeat_local_runner.py`。
+**Q：旧兼容入口还能用吗？**  
+A：当前方案不再保留这些兼容入口。默认且唯一的执行路径是当前 chat 中的 `/ai-heartbeat`。
 
 ---
 

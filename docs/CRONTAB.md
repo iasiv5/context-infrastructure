@@ -24,28 +24,20 @@ Daily     → Crontab Monitor: 健康审计，发现异常则发告警邮件
 
 ## 核心任务说明
 
-### AI Heartbeat Observer（每日）
+### AI Heartbeat Due Check（每日 / 每周）
 
-扫描 workspace 文件变动，提取有价值的观察写入 `contexts/memory/OBSERVATIONS.md`。这是三层记忆系统的"输入端"。
+定时检查 observer / reflector 是否到期，并把结果写入日志或接入你自己的提醒系统。这一步只做审计和提醒，不直接执行 observer / reflector；真正处理仍在当前 chat 中运行 `/ai-heartbeat`。
 
-- **脚本**：`periodic_jobs/ai_heartbeat/src/v0/heartbeat_local_runner.py observer --target-date <当天日期>`
+- **脚本**：`periodic_jobs/ai_heartbeat/src/v0/heartbeat_preflight.py`
 - **依赖**：本地 Python 环境、workspace 文件读写权限
-- **建议时间**：每日 8:00 AM（在 daily briefing 之后）
-
-### AI Heartbeat Reflector（每周）
-
-合并、提升、清理 OBSERVATIONS.md 中积累的观察，蒸馏为更高层次的认知。
-
-- **脚本**：`periodic_jobs/ai_heartbeat/src/v0/heartbeat_local_runner.py reflector --target-date <执行日期>`
-- **依赖**：本地 Python 环境、workspace 文件读写权限
-- **建议时间**：每周日 9:00 AM
+- **建议时间**：每日 8:00 AM（observer 审计）与每周日 9:00 AM（reflector 审计）
 
 ### Crontab Monitor（每日）
 
 自主审计所有 crontab 任务的健康状态，发现异常时发送告警邮件。
 
 - **脚本**：`periodic_jobs/ai_heartbeat/src/v0/jobs/crontab_monitor.py`
-- **依赖**：OpenCode Server API、Gmail（`GMAIL_USERNAME` / `GMAIL_APP_PASSWORD`）
+- **依赖**：已配置的 AI backend、Gmail（`GMAIL_USERNAME` / `GMAIL_APP_PASSWORD`）
 - **建议时间**：每日 9:00 AM
 
 ### AI News Survey（每日/每周）
@@ -53,7 +45,7 @@ Daily     → Crontab Monitor: 健康审计，发现异常则发告警邮件
 调用 AI Agent 生成 AI 行业日报或周报，可发布到 Kit 订阅者或发送个人邮件。
 
 - **脚本**：`periodic_jobs/ai_heartbeat/src/v0/jobs/ai_news_survey.py`
-- **依赖**：OpenCode Server API、Gmail 或 Kit API
+- **依赖**：已配置的 AI backend、Gmail 或 Kit API
 - **建议时间**：每日 8:00 AM（日报）或每周一 8:00 AM（周报）
 
 ---
@@ -67,11 +59,13 @@ Daily     → Crontab Monitor: 健康审计，发现异常则发告警邮件
 # 以下时间均为本地时间。如需指定时区，在 crontab 顶部添加：
 # TZ=America/Los_Angeles
 
-# AI Heartbeat Observer — 每日 8:00 AM
-0 8 * * * cd /path/to/your/workspace && /path/to/your/workspace/.venv/bin/python periodic_jobs/ai_heartbeat/src/v0/heartbeat_local_runner.py observer --target-date $(date +\%F) >> /tmp/observer.log 2>&1
+# AI Heartbeat Observer Due Check — 每日 8:00 AM
+# 如果日志提示 observer 已到期，请在当前 chat 中运行 /ai-heartbeat
+0 8 * * * cd /path/to/your/workspace && /path/to/your/workspace/.venv/bin/python periodic_jobs/ai_heartbeat/src/v0/heartbeat_preflight.py >> /tmp/heartbeat_observer_check.log 2>&1
 
-# AI Heartbeat Reflector — 每周日 9:00 AM
-0 9 * * 0 cd /path/to/your/workspace && /path/to/your/workspace/.venv/bin/python periodic_jobs/ai_heartbeat/src/v0/heartbeat_local_runner.py reflector --target-date $(date +\%F) >> /tmp/reflector.log 2>&1
+# AI Heartbeat Reflector Due Check — 每周日 9:00 AM
+# 如果日志提示 reflector 已到期，请在当前 chat 中运行 /ai-heartbeat
+0 9 * * 0 cd /path/to/your/workspace && /path/to/your/workspace/.venv/bin/python periodic_jobs/ai_heartbeat/src/v0/heartbeat_preflight.py >> /tmp/heartbeat_reflector_check.log 2>&1
 
 # Crontab Monitor — 每日 9:00 AM
 0 9 * * * cd /path/to/your/workspace && /path/to/your/workspace/.venv/bin/python periodic_jobs/ai_heartbeat/src/v0/jobs/crontab_monitor.py >> /tmp/crontab_monitor.log 2>&1

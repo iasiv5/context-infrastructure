@@ -3,10 +3,10 @@
 ## 1. 产品概述
 
 ### 1.1 愿景
-构建一个**Agentic 驱动的、全局统一但按需披露的观测记忆系统**。彻底摆脱由外部脚本“拼凑 Prompt 并喂给 AI”的低级模式，转而让 AI 引擎（OpenCode-Builder）在接收到简单的“路径与目标”后，自主探索文件系统、分配子任务并提纯观测结果。系统遵循 **Progressive Disclosure** 理念：记忆池是全局的，但 Agent 接收到的上下文始终保持稀疏（Sparse）和高密度（High Density）。
+构建一个**Agentic 驱动的、全局统一但按需披露的观测记忆系统**。彻底摆脱由外部脚本“拼凑 Prompt 并喂给 AI”的低级模式，转而让当前 chat 中的 Agent 在接收到简单的“路径与目标”后，自主探索文件系统、分配子任务并提纯观测结果。系统遵循 **Progressive Disclosure** 理念：记忆池是全局的，但 Agent 接收到的上下文始终保持稀疏（Sparse）和高密度（High Density）。
 
 ### 1.2 核心价值主张
-- **Agentic 自主探索**: 脚本只负责触发任务和提供线索（文件路径），AI 负责阅读、过滤（如排除仅格式变动的 Blog）和总结。
+- **Agentic 自主探索**: 自动化层只负责到期审计和会前提醒；真正的 observer / reflector 由当前 chat 中显式运行 `/ai-heartbeat` 后自主完成。
 - **渐进式披露 (Progressive Disclosure)**: 默认不加载详细记忆，仅由 Agent 根据当前任务逻辑主动检索相关的 L1/L2 观测点。
 - **全局分层架构**: 
   - **L3**: 全局硬性约束（存放在 `rules/`，全局被动加载）。
@@ -14,7 +14,7 @@
 - **抗噪设计**: 利用 AI 的语义理解能力识别真正的“新内容”。例如，针对 300+ 篇 Blog 的格式变动，AI 应通过检查元数据（Metadata）中的创建日期来识别真正的新文章。
 
 ### 1.3 目标用户
-- **OpenCode-Builder**: 作为记忆的生产者和核心消费者。
+- **当前 chat 中的 Agent**: 作为记忆的生产者和核心消费者。
 - **开发者**: 仅作为系统边界的定义者和记忆日志的最终审计者。
 
 ---
@@ -22,7 +22,7 @@
 ## 2. 核心设计原则 (The Agentic Way)
 
 ### 2.1 拒绝 Push 模式，拥抱 Pull 模式
-传统的系统试图把所有 Context “推送”给模型。本系统要求 Agent 具备“拉取”意识。脚本告诉 Agent：“这些文件变了，去把有价值的 lessons 学回来”，Agent 应该自己决定读什么、读多少。
+传统的系统试图把所有 Context “推送”给模型。本系统要求 Agent 具备“拉取”意识。提醒层只负责说“该做心跳了”，真正的执行命令 `/ai-heartbeat` 负责让 Agent 自己决定读什么、读多少。
 
 ### 2.2 记忆稀疏性假设 (Sparse Context Assumption)
 我们假设：对于任何给定任务，真正相关的记忆是极少数的。因此，全局记忆池（OBSERVATIONS.md）允许不断增长，但 Agent 必须能够通过标签（Tags）或关键字进行高效的局部加载。
@@ -42,7 +42,7 @@
 ### 3.2 L1: 每日观测与心跳 (Daily Observation)
 - **内容**: 过去 24 小时的关键事件、技术决策、真实的错误修复经验。
 - **打标格式**: `🔴 High (方法论/约束)`、`🟡 Medium (项目状态/决策)`、`🟢 Low (任务流水)`。
-- **产生方式**: 脚本仅提供 `find` 命令找出的文件路径集合，交给 OpenCode-Builder。Agent 自主处理（包括调用 Sub-agent 读文件、检查 Metadata）。
+- **产生方式**: 用户在当前 chat 中运行 `/ai-heartbeat`。命令先读取 `heartbeat_preflight.py --command-spec` 的结果，再由 Agent 自主处理（包括读文件、检查 Metadata、过滤噪音和写入观测）。
 
 ### 3.3 L2: 记忆蒸馏与反思 (Weekly Reflection)
 - **职责**: 垃圾回收。
@@ -52,19 +52,19 @@
 
 ## 4. 关键业务流 (User Story)
 
-### 4.1 智能体自发的心跳任务
-1. **触发**: 系统 Cron Job 触发脚本。
-2. **输入**: 脚本执行 `find -mtime -1`，获得一个长路径列表（可能包含 300+ 篇变动的 Blog）。
-3. **分配**: 脚本启动一个 OpenCode-Builder Session。
-4. **指令**: “这是过去 24 小时变动的文件列表。你的目标是生成观测记录。注意：对于 blog/ 目录下的文章，请检查其 Metadata 中的 Date 字段，仅处理真正今天创作的内容。如果是格式重排，请忽略。”
-5. **执行**: Agent 看到任务后，自主启动 sub-agents (librarian/explore) 分头读取文件，最后汇总输出。
-6. **产出**: 结果 Append 到全局 `contexts/memory/OBSERVATIONS.md`。
+### 4.1 显式触发的心跳任务
+1. **触发**: SessionStart hook 自动检查 observer / reflector 是否到期，并在需要时提醒用户。
+2. **入口**: 用户在当前 chat 中显式运行 `/ai-heartbeat`。
+3. **决策**: 命令先读取 `heartbeat_preflight.py --command-spec`，判断本次应执行 observer、reflector、两者串行，还是无需执行。
+4. **执行**: Agent 按目标自主读取文件、过滤噪音、生成观测或执行反思。
+5. **幂等**: 若 observer 对应逻辑日期已存在条目，则本次记为 `skipped`，不重复写入。
+6. **状态回写**: observer / reflector 的 `success`、`failed`、`skipped` 由 `heartbeat_status_cli.py` 自动记录。
 
 ---
 
 ## 5. 技术约束与集成
 
-- **执行引擎**: 本地 OpenCode Server (localhost:<your-port>)。
-- **核心模型**: `<your-model>`。
-- **Agent Identity**: `<your-agent>`。
+- **主执行入口**: 仓库级自定义命令 `/ai-heartbeat`。
+- **会前提醒挂载点**: `.github/hooks/ai-heartbeat.session-start.json` -> `.github/hooks/pre-session.ps1`。
+- **提醒与状态链**: `heartbeat_preflight.py`、`heartbeat_state.py`、`heartbeat_status_cli.py`。
 - **记忆存储**: Markdown 文件（支持 Git 版本控制）。

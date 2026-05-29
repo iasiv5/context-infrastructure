@@ -49,163 +49,6 @@ function Resolve-Python {
     return $null
 }
 
-function Get-HeartbeatSelectedTasks {
-    param([string]$SelectedAction)
-
-    switch ($SelectedAction) {
-        'run_observer' { return @('observer') }
-        'run_reflector' { return @('reflector') }
-        'run_observer_and_reflector' { return @('observer', 'reflector') }
-        default { return @() }
-    }
-}
-
-function Get-HeartbeatPythonHint {
-    param(
-        [string]$Root,
-        [string]$ResolvedPython
-    )
-
-    $localPython = Join-Path $Root '.venv\Scripts\python.exe'
-    if (Test-Path $localPython) {
-        return '.\.venv\Scripts\python.exe'
-    }
-
-    if ($ResolvedPython) {
-        return $ResolvedPython
-    }
-
-    return 'python'
-}
-
-function Clear-LegacyHeartbeatPendingPayload {
-    param(
-        [string]$Root
-    )
-
-    $legacyPath = Join-Path $Root 'periodic_jobs\ai_heartbeat\state\heartbeat_local_tasks.json'
-    if (Test-Path $legacyPath) {
-        Remove-Item -Path $legacyPath -Force -ErrorAction SilentlyContinue
-    }
-}
-
-function ConvertTo-HeartbeatQuotedArgument {
-    param([string]$Value)
-
-    return "'$($Value.Replace("'", "''"))'"
-}
-
-function Start-HeartbeatLocalExecution {
-    param(
-        [string[]]$Tasks,
-        [string]$Root,
-        [string]$ResolvedPython,
-        [string]$StatePath,
-        [string]$TargetDate,
-        [string]$HostPath
-    )
-
-    if (-not $Tasks -or $Tasks.Count -eq 0) {
-        return $false
-    }
-
-    $runnerPath = Join-Path $Root 'periodic_jobs\ai_heartbeat\src\v0\heartbeat_local_runner.py'
-    if (-not (Test-Path $runnerPath)) {
-        return $false
-    }
-
-    $pythonPath = if ($ResolvedPython) { $ResolvedPython } else { Get-HeartbeatPythonHint -Root $Root -ResolvedPython $ResolvedPython }
-    $segments = @(
-        '&',
-        (ConvertTo-HeartbeatQuotedArgument -Value $pythonPath),
-        (ConvertTo-HeartbeatQuotedArgument -Value $runnerPath)
-    )
-
-    foreach ($taskName in $Tasks) {
-        $segments += (ConvertTo-HeartbeatQuotedArgument -Value $taskName)
-    }
-
-    if ($TargetDate) {
-        $segments += (ConvertTo-HeartbeatQuotedArgument -Value '--target-date')
-        $segments += (ConvertTo-HeartbeatQuotedArgument -Value $TargetDate)
-    }
-
-    if ($StatePath) {
-        $segments += (ConvertTo-HeartbeatQuotedArgument -Value '--state-path')
-        $segments += (ConvertTo-HeartbeatQuotedArgument -Value $StatePath)
-    }
-
-    $segments += (ConvertTo-HeartbeatQuotedArgument -Value '--workspace-root')
-    $segments += (ConvertTo-HeartbeatQuotedArgument -Value $Root)
-
-    $executionCommand = $segments -join ' '
-    $shellCommand = @(
-        "Set-Location $(ConvertTo-HeartbeatQuotedArgument -Value $Root)",
-        "Write-Host 'AI Heartbeat 本地任务开始执行...' -ForegroundColor Cyan",
-        $executionCommand,
-        '$exitCode = $LASTEXITCODE',
-        'Write-Host ""',
-        'if ($exitCode -eq 0) { Write-Host "AI Heartbeat 本地任务执行完成。" -ForegroundColor Green } else { Write-Host ("AI Heartbeat 本地任务执行失败，退出码: " + $exitCode) -ForegroundColor Red }',
-        'Read-Host "AI Heartbeat 任务已结束，按回车关闭窗口" | Out-Null'
-    ) -join '; '
-
-    Start-Process -FilePath $HostPath -WorkingDirectory $Root -ArgumentList @(
-        '-NoExit',
-        '-NoProfile',
-        '-ExecutionPolicy',
-        'Bypass',
-        '-Command',
-        $shellCommand
-    ) | Out-Null
-
-    return $true
-}
-
-function Show-HeartbeatExecutionError {
-    param([string]$Message)
-
-    Add-Type -AssemblyName System.Windows.Forms
-    [void][System.Windows.Forms.MessageBox]::Show(
-        $Message,
-        'AI Heartbeat',
-        [System.Windows.Forms.MessageBoxButtons]::OK,
-        [System.Windows.Forms.MessageBoxIcon]::Error
-    )
-}
-
-function Show-HeartbeatExecutionStarted {
-    Add-Type -AssemblyName System.Windows.Forms
-    [void][System.Windows.Forms.MessageBox]::Show(
-        'AI Heartbeat 本地任务已在新窗口启动。窗口内会显示 observer / reflector 的执行结果。',
-        'AI Heartbeat',
-        [System.Windows.Forms.MessageBoxButtons]::OK,
-        [System.Windows.Forms.MessageBoxIcon]::Information
-    )
-}
-
-function Start-HeartbeatSelectionExecution {
-    param(
-        [string[]]$Tasks,
-        [string]$Root,
-        [string]$ResolvedPython,
-        [string]$StatePath,
-        [string]$TargetDate
-    )
-
-    $hostPath = (Get-Process -Id $PID).Path
-    if (-not $hostPath) {
-        Show-HeartbeatExecutionError -Message '无法定位当前 PowerShell 主程序，AI Heartbeat 本地任务未启动。'
-        return $false
-    }
-
-    $started = Start-HeartbeatLocalExecution -Tasks $Tasks -Root $Root -ResolvedPython $ResolvedPython -StatePath $StatePath -TargetDate $TargetDate -HostPath $hostPath
-    if ($started) {
-        Show-HeartbeatExecutionStarted
-    }
-
-    return $started
-}
-
 function Ensure-HeartbeatDialogInterop {
     if (-not ('HeartbeatDialogInterop' -as [type])) {
         Add-Type -TypeDefinition @"
@@ -454,8 +297,6 @@ try {
         $StatePath = Join-Path $root 'periodic_jobs\ai_heartbeat\state\heartbeat_status.json'
     }
 
-    Clear-LegacyHeartbeatPendingPayload -Root $root
-
     $dialogSpecOutput = & $python $preflight --hook-dialog-spec --state-path $StatePath 2>$null
     if ($LASTEXITCODE -ne 0) {
         exit 0
@@ -464,13 +305,13 @@ try {
     if ($dialogSpecOutput) {
         try {
             $payload = ($dialogSpecOutput | Out-String).Trim() | ConvertFrom-Json
-            $selectedAction = Show-HeartbeatDialog -Payload $payload
-            $selectedTasks = Get-HeartbeatSelectedTasks -SelectedAction $selectedAction
-            if ($selectedTasks.Count -gt 0) {
-                $targetDate = if ($payload.target_date) { [string]$payload.target_date } else { $null }
-                $null = Start-HeartbeatSelectionExecution -Tasks $selectedTasks -Root $root -ResolvedPython $python -StatePath $StatePath -TargetDate $targetDate
+            $selection = Show-HeartbeatDialog -Payload $payload
+            if ($selection -eq 'snooze_today') {
+                $dueTasks = @($payload.due_tasks | ForEach-Object { [string]$_ } | Where-Object { $_ })
+                if ($dueTasks.Count -gt 0) {
+                    $null = & $python $preflight --mark-prompted @dueTasks --state-path $StatePath 2>$null
+                }
             }
-
             exit 0
         }
         catch {

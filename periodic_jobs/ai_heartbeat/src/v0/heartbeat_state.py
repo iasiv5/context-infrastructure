@@ -40,6 +40,17 @@ def utc_now() -> datetime:
     return datetime.now(timezone.utc)
 
 
+def local_now() -> datetime:
+    return datetime.now().astimezone()
+
+
+def _coerce_now(now: datetime | None = None) -> datetime:
+    current_time = now or local_now()
+    if current_time.tzinfo is None:
+        return current_time.astimezone()
+    return current_time
+
+
 def _resolve_path(path: str | Path | None = None) -> Path:
     return Path(path) if path is not None else STATE_PATH
 
@@ -131,7 +142,7 @@ def task_is_due(state: dict[str, Any], task_name: str, now: datetime | None = No
     if task_name not in TASK_INTERVALS:
         raise KeyError(f"Unknown heartbeat task: {task_name}")
 
-    current_time = now or utc_now()
+    current_time = _coerce_now(now)
     last_success_at = _deserialize_datetime(state[task_name].get("last_success_at"))
     if last_success_at is None:
         return True
@@ -139,18 +150,26 @@ def task_is_due(state: dict[str, Any], task_name: str, now: datetime | None = No
     return current_time - last_success_at > TASK_INTERVALS[task_name]
 
 
-def collect_due_tasks(state: dict[str, Any], now: datetime | None = None) -> list[dict[str, Any]]:
-    current_time = now or utc_now()
+def collect_due_tasks(
+    state: dict[str, Any],
+    now: datetime | None = None,
+    *,
+    respect_prompted: bool = True,
+) -> list[dict[str, Any]]:
+    current_time = _coerce_now(now)
     today = current_time.date().isoformat()
     reminders: list[dict[str, Any]] = []
 
     for task_name in TASK_INTERVALS:
+        task_state = state[task_name]
+        if task_state.get("last_target_date") == today and task_state.get("last_status") in {"success", "skipped"}:
+            continue
         if not task_is_due(state, task_name, now=current_time):
             continue
-        if state[task_name].get("last_prompted_on") == today:
+        if respect_prompted and task_state.get("last_prompted_on") == today:
             continue
 
-        last_success_at = _deserialize_datetime(state[task_name].get("last_success_at"))
+        last_success_at = _deserialize_datetime(task_state.get("last_success_at"))
         due_after = TASK_INTERVALS[task_name]
         overdue_by = None
         if last_success_at is not None:
@@ -159,8 +178,8 @@ def collect_due_tasks(state: dict[str, Any], now: datetime | None = None) -> lis
         reminders.append(
             {
                 "task": task_name,
-                "last_success_at": state[task_name].get("last_success_at"),
-                "last_prompted_on": state[task_name].get("last_prompted_on"),
+                "last_success_at": task_state.get("last_success_at"),
+                "last_prompted_on": task_state.get("last_prompted_on"),
                 "overdue_by": overdue_by,
             }
         )
@@ -178,11 +197,15 @@ def _mutate_task_state(
     if task_name not in TASK_INTERVALS:
         raise KeyError(f"Unknown heartbeat task: {task_name}")
 
-    current_time = now or utc_now()
+    current_time = _coerce_now(now)
     task_state = state[task_name]
     if target_date is not None:
         task_state["last_target_date"] = target_date
     return task_state, current_time
+
+
+def _resolve_prompted_on(current_time: datetime, target_date: str | None = None) -> str:
+    return target_date or current_time.date().isoformat()
 
 
 def record_prompted(state: dict[str, Any], task_name: str, now: datetime | None = None) -> dict[str, Any]:
@@ -203,6 +226,7 @@ def record_failure(
     task_state["last_attempt_at"] = _serialize_datetime(current_time)
     task_state["last_status"] = "failed"
     task_state["last_error"] = error
+    task_state["last_prompted_on"] = _resolve_prompted_on(current_time, target_date)
     return state
 
 
@@ -219,7 +243,7 @@ def record_success(
     task_state["last_success_at"] = serialized_now
     task_state["last_status"] = "success"
     task_state["last_error"] = None
-    task_state["last_prompted_on"] = None
+    task_state["last_prompted_on"] = _resolve_prompted_on(current_time, target_date)
     return state
 
 
@@ -234,6 +258,7 @@ def record_skipped(
     task_state["last_attempt_at"] = _serialize_datetime(current_time)
     task_state["last_status"] = "skipped"
     task_state["last_error"] = None
+    task_state["last_prompted_on"] = _resolve_prompted_on(current_time, target_date)
     return state
 
 

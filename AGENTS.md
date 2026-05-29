@@ -16,7 +16,7 @@ Don't ask permission. Just do it.
 
 ## SessionStart Hook: AI Heartbeat
 
-AI Heartbeat 的会前选择框和本地执行现在都由 `.github/hooks/pre-session.ps1` 直接处理。SessionStart hook 会在新会话开始时自动执行 `heartbeat_preflight.py`，检查 observer / reflector 是否到期并给出提醒。
+AI Heartbeat 的会前提醒由 `.github/hooks/pre-session.ps1` 直接处理。SessionStart hook 会在新会话开始时自动执行 `heartbeat_preflight.py`，检查 observer / reflector 是否到期并给出提醒；如果需要处理，在当前 chat 中运行 `/ai-heartbeat`。
 
 ## File Routing
 
@@ -70,7 +70,7 @@ AI Heartbeat 的会前选择框和本地执行现在都由 `.github/hooks/pre-se
 三层记忆架构：
 - **L3（全局约束）**：`rules/` 下的所有文件，每次 session 被动加载
 - **L1/L2（动态记忆）**：`contexts/memory/OBSERVATIONS.md`，agent 主动检索
-- **自动积累**：`periodic_jobs/ai_heartbeat/` 保留 observer（L1，当天观测）与 reflector（L2，每周反思）两种任务；默认由 SessionStart hook 按到期状态提醒并触发，cron 只是可选增强
+- **自动积累**：`periodic_jobs/ai_heartbeat/` 保留 observer（L1，当天观测）与 reflector（L2，每周反思）两种任务；默认由 SessionStart hook 按到期状态提醒，真正的执行入口是当前 chat 中的 `/ai-heartbeat`，cron 只是可选增强
 
 ## Safety
 
