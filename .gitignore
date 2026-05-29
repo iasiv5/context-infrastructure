@@ -5,3 +5,8 @@ __pycache__/
 periodic_jobs/ai_heartbeat/state/heartbeat_status.json
 periodic_jobs/ai_heartbeat/state/heartbeat_reflector_report.md
 periodic_jobs/ai_heartbeat/state/claude_runs/
+openbmc-aware-harness/
+uefi-aware-harness/
+bios-aware-harness/
+bmc-aware-harness/
+m/
