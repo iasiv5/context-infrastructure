@@ -51,3 +51,9 @@ Date: 2026-05-29
 Date: 2026-05-30
 
 🔴 High: AI Heartbeat 已完成架构收口：当前 chat 中的 `/ai-heartbeat` 是唯一主执行入口，SessionStart hook 仅做 reminder，observer / reflector 的 due 判定与状态回写统一收敛到 `heartbeat_preflight.py` 和 `heartbeat_status_cli.py`；相关实现与 `AGENTS.md`、`README.md`、`setup_guide.md`、`docs/CRONTAB.md`、`periodic_jobs/ai_heartbeat/docs/KNOWLEDGE_BASE.md`、`periodic_jobs/ai_heartbeat/docs/PRD.md` 已对齐。
+
+Date: 2026-05-31
+
+🔴 High: AI Heartbeat 的执行合同从“架构收口”继续落到状态语义闭环：`.github/prompts/ai-heartbeat.prompt.md` 现在是唯一执行入口，`heartbeat_preflight.py --command-spec` 在命令侧显式忽略 `last_prompted_on`，所以 SessionStart hook 的同日提醒去重不会屏蔽用户手动运行 `/ai-heartbeat`；同时 `heartbeat_state.collect_due_tasks()` 把同一 `target_date` 的 `skipped` 视为已处理，observer 因幂等跳过后不会继续被判定为 due。
+🟡 Medium: AI Heartbeat 的逻辑日期已切到本地时区，`target_date` 与 `last_prompted_on` 以本地日期记账，UTC 只保留给 attempt/success 时间戳；相关测试已经覆盖本地逻辑日期、same-day skipped、以及 reminder-only hook 的命令侧合同。
+🟡 Medium: SessionStart hook 现在稳定为 reminder-only 的两步语义：`知道了` 不改状态，`今天不再提醒` 才写 `last_prompted_on`。提醒去重与执行状态因此解耦，用户同一天手动补跑 `/ai-heartbeat` 不会被错误地判成 `none`。
