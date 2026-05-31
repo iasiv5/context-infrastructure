@@ -16,7 +16,7 @@ Don't ask permission. Just do it.
 
 ## SessionStart Hook: AI Heartbeat
 
-AI Heartbeat 的会前提醒由 `.github/hooks/pre-session.ps1` 直接处理。SessionStart hook 会在新会话开始时自动执行 `heartbeat_preflight.py`，检查 observer / reflector 是否到期并给出提醒；如果需要处理，在当前 chat 中运行 `/ai-heartbeat`。
+AI Heartbeat 的会前提醒由 `.github/hooks/pre-session.ps1` 直接处理。SessionStart hook 会在新会话开始时自动执行 `heartbeat_preflight.py`，检查 observer / reflector 是否到期并给出提醒。Windows 默认弹窗提醒；若仓库 policy 关闭弹窗，则显示一个 8.88 秒自动消失的轻提醒窗，点击后复制 `/ai-heartbeat`。如果需要处理，在当前 chat 中运行 `/ai-heartbeat`。
 
 ## File Routing
 
@@ -49,31 +49,3 @@ AI Heartbeat 的会前提醒由 `.github/hooks/pre-session.ps1` 直接处理。S
 ## Sub-agent 模型路由
 
 不同工具有各自的 subagent 机制和模型选择策略。当前主用 GitHub Copilot，偶尔用 Claude Code：
-
-- **GitHub Copilot**：subagent 由 Copilot 自动调度，无需手动配置路由
-- **Claude Code**：如需指定模型或并行 subagent，参考自身配置文件
-
-创意性工作（brainstorm、文章结构、观点碰撞）可考虑在后台跑一个独立 agent，与主线程并行推进。
-
-## 高能力模型工作模式
-
-当使用高能力模型（如 Opus、Sonnet 等）时，注意 token 预算的合理分配：
-
-- **设计**：拆分问题、设计计划、分配 sub-agent 任务
-- **质量把关与写作**：最终文本自己写，sub-agent 结果自己验证
-- **调研和数据处理**：交给 sub-agent 执行
-
-核心原则：把 token 预算集中在只有高能力模型才能做好的事情上，常规执行类工作交给 sub-agent。
-
-## Memory System（记忆系统）
-
-三层记忆架构：
-- **L3（全局约束）**：`rules/` 下的所有文件，每次 session 被动加载
-- **L1/L2（动态记忆）**：`contexts/memory/OBSERVATIONS.md`，agent 主动检索
-- **自动积累**：`periodic_jobs/ai_heartbeat/` 保留 observer（L1，当天观测）与 reflector（L2，每周反思）两种任务；默认由 SessionStart hook 按到期状态提醒，真正的执行入口是当前 chat 中的 `/ai-heartbeat`，cron 只是可选增强
-
-## Safety
-
-- Don't exfiltrate private data. Ever.
-- Don't run destructive commands without asking.
-- When in doubt, ask.

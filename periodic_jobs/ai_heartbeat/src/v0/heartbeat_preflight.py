@@ -15,12 +15,64 @@ if str(MODULE_DIR) not in sys.path:
 import heartbeat_state
 
 
+REMINDER_POLICY_PATH = MODULE_DIR.parent.parent / "config" / "reminder_policy.json"
+
+
+def _default_reminder_policy() -> dict[str, Any]:
+    return {"windows_popup_enabled": True}
+
+
+def load_reminder_policy(policy_path: str | Path | None = None) -> dict[str, Any]:
+    policy = _default_reminder_policy()
+    candidate = Path(policy_path) if policy_path is not None else REMINDER_POLICY_PATH
+
+    try:
+        payload = json.loads(candidate.read_text(encoding="utf-8"))
+    except (FileNotFoundError, OSError, json.JSONDecodeError):
+        return policy
+
+    if not isinstance(payload, dict):
+        return policy
+
+    popup_enabled = payload.get("windows_popup_enabled")
+    if isinstance(popup_enabled, bool):
+        policy["windows_popup_enabled"] = popup_enabled
+
+    return policy
+
+
 def _resolve_now(now: datetime | None = None) -> datetime:
     if now is None:
         return datetime.now().astimezone()
     if now.tzinfo is None:
         return now.astimezone()
     return now
+
+
+def _resolve_reminder_surface(policy: dict[str, Any]) -> str:
+    if policy.get("windows_popup_enabled", True):
+        return "modal"
+    return "text"
+
+
+def _describe_due_task_action(due_tasks: Sequence[str]) -> str:
+    if list(due_tasks) == ["observer"]:
+        return "补记今天的新变化，记录到观察日志 OBSERVATIONS.md。"
+    if list(due_tasks) == ["reflector"]:
+        return "整理近期变化，沉淀长期记忆。"
+    return "补记今天的新变化，整理近期记忆。"
+
+
+def _build_dialog_question(due_tasks: Sequence[str], *, surface: str) -> str:
+    due_text = "、".join(due_tasks)
+    if surface == "text":
+        action_summary = _describe_due_task_action(due_tasks)
+        return (
+            f"AI Heartbeat 提醒：{due_text} 已过期。\n"
+            f"\n【推荐】在当前会话窗口运行 /ai-heartbeat 命令\n"
+            f"\n【作用】{action_summary} "
+        )
+    return f"检测到 AI Heartbeat 的 {due_text} 已过期，请在当前 chat 中运行 /ai-heartbeat。"
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -136,31 +188,35 @@ def build_dialog_spec(
     reminders: Sequence[dict[str, Any]],
     *,
     now: datetime | None = None,
+    policy: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     current_time = _resolve_now(now)
     due_tasks = [item["task"] for item in reminders]
-
-    due_text = "、".join(due_tasks)
-    question = f"检测到 AI Heartbeat 的 {due_text} 已过期，请在当前 chat 中运行 /ai-heartbeat。"
+    policy = load_reminder_policy() if policy is None else policy
+    surface = _resolve_reminder_surface(policy)
+    question = _build_dialog_question(due_tasks, surface=surface)
+    options = [
+        {
+            "action": "dismiss",
+            "label": "知道了",
+            "description": "先关闭提醒；如果今天后面还有新会话，仍可能再次提醒",
+        },
+        {
+            "action": "snooze_today",
+            "label": "今天不再提醒",
+            "description": "把这些任务记为今天已提醒，今天后续会话不再重复提醒",
+        },
+    ] if surface == "modal" else []
 
     return {
         "title": "AI Heartbeat 会前提醒",
         "question": question,
+        "message": question,
         "due_tasks": due_tasks,
         "target_date": current_time.date().isoformat(),
         "recommended_command": "/ai-heartbeat",
-        "options": [
-            {
-                "action": "dismiss",
-                "label": "知道了",
-                "description": "先关闭提醒；如果今天后面还有新会话，仍可能再次提醒",
-            },
-            {
-                "action": "snooze_today",
-                "label": "今天不再提醒",
-                "description": "把这些任务记为今天已提醒，今天后续会话不再重复提醒",
-            }
-        ],
+        "surface": surface,
+        "options": options,
     }
 
 
@@ -195,7 +251,7 @@ def run_hook_dialog_spec(
     if not reminders:
         return None
 
-    return build_dialog_spec(reminders, now=current_time)
+    return build_dialog_spec(reminders, now=current_time, policy=load_reminder_policy())
 
 
 def run_hook(

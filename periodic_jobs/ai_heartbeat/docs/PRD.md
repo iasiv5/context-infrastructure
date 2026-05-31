@@ -7,6 +7,7 @@
 
 ### 1.2 核心价值主张
 - **Agentic 自主探索**: 自动化层只负责到期审计和会前提醒；真正的 observer / reflector 由当前 chat 中显式运行 `/ai-heartbeat` 后自主完成。
+- **版本化提醒策略**: 仓库通过 `periodic_jobs/ai_heartbeat/config/reminder_policy.json` 定义默认 reminder policy；当前 schema 只保留 `windows_popup_enabled`，不把 UI 偏好混进本地运行态。
 - **渐进式披露 (Progressive Disclosure)**: 默认不加载详细记忆，仅由 Agent 根据当前任务逻辑主动检索相关的 L1/L2 观测点。
 - **全局分层架构**: 
   - **L3**: 全局硬性约束（存放在 `rules/`，全局被动加载）。
@@ -53,12 +54,13 @@
 ## 4. 关键业务流 (User Story)
 
 ### 4.1 显式触发的心跳任务
-1. **触发**: SessionStart hook 自动检查 observer / reflector 是否到期，并在需要时提醒用户。
+1. **触发**: SessionStart hook 自动检查 observer / reflector 是否到期，并按仓库 policy 决定提醒 surface。Windows 默认弹出 modal；若 policy 关闭弹窗，则显示一个 8.88 秒自动消失的轻提醒窗。
 2. **入口**: 用户在当前 chat 中显式运行 `/ai-heartbeat`。
 3. **决策**: 命令先读取 `heartbeat_preflight.py --command-spec`，判断本次应执行 observer、reflector、两者串行，还是无需执行。
 4. **执行**: Agent 按目标自主读取文件、过滤噪音、生成观测或执行反思。
 5. **幂等**: 若 observer 对应逻辑日期已存在条目，则本次记为 `skipped`，不重复写入。
 6. **状态回写**: observer / reflector 的 `success`、`failed`、`skipped` 由 `heartbeat_status_cli.py` 自动记录。
+7. **轻提醒窗语义**: 轻提醒窗不写 `last_prompted_on`，不提供“今天不再提醒”；用户点击轻提醒窗时，把 `/ai-heartbeat` 复制到剪贴板。
 
 ---
 
@@ -67,4 +69,6 @@
 - **主执行入口**: 仓库级自定义命令 `/ai-heartbeat`。
 - **会前提醒挂载点**: `.github/hooks/ai-heartbeat.session-start.json` -> `.github/hooks/pre-session.ps1`。
 - **提醒与状态链**: `heartbeat_preflight.py`、`heartbeat_state.py`、`heartbeat_status_cli.py`。
+- **提醒策略文件**: `periodic_jobs/ai_heartbeat/config/reminder_policy.json`，schema 只保留 `windows_popup_enabled`。
+- **运行态边界**: `heartbeat_status.json` 继续只记录 observer / reflector 的运行态与 prompted 去重，不承载 popup policy。
 - **记忆存储**: Markdown 文件（支持 Git 版本控制）。

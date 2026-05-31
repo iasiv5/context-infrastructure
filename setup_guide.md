@@ -105,12 +105,11 @@ L3 你已经配置好了（Step 1）。L1/L2 现在有两种运行方式：
 1. `python periodic_jobs/ai_heartbeat/src/v0/heartbeat_preflight.py --help`
 2. 确认 `.github/prompts/ai-heartbeat.prompt.md` 已存在，并能在 chat 中作为 `/ai-heartbeat` 使用
 
-如果你在 GitHub Copilot 里启用了 hooks，这个 workspace 已自带 `.github/hooks/ai-heartbeat.session-start.json`；它会在 SessionStart 时调用 `.github/hooks/pre-session.ps1`，后者内部执行 `heartbeat_preflight.py --hook-dialog-spec`，并弹出提醒，建议你在当前 chat 中运行 `/ai-heartbeat`。
+如果你在 GitHub Copilot 里启用了 hooks，这个 workspace 已自带 `.github/hooks/ai-heartbeat.session-start.json`；它会在 SessionStart 时调用 `.github/hooks/pre-session.ps1`，后者内部执行 `heartbeat_preflight.py --hook-dialog-spec`。Windows 默认弹窗提醒；若仓库 policy 关闭弹窗，则显示一个 8.88 秒自动消失的轻提醒窗，点击后复制 `/ai-heartbeat`，仍建议你在当前 chat 中运行 `/ai-heartbeat`。默认 policy 位于 `periodic_jobs/ai_heartbeat/config/reminder_policy.json`。
 
 ### 3c. 默认执行入口
 
 默认推荐使用 `/ai-heartbeat` 做显式执行。hook 只负责提醒，不直接执行 observer / reflector。
-
 ```bash
 # 查看当前是否需要执行 observer / reflector
 python periodic_jobs/ai_heartbeat/src/v0/heartbeat_preflight.py

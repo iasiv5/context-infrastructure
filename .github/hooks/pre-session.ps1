@@ -281,6 +281,168 @@ function Show-HeartbeatDialog {
     return 'ignore'
 }
 
+function Write-HeartbeatTestEvent {
+    param(
+        [string]$EventName
+    )
+
+    $eventLogPath = $env:AI_HEARTBEAT_TEST_EVENT_LOG
+    if (-not $eventLogPath) {
+        return
+    }
+
+    try {
+        Add-Content -Path $eventLogPath -Value $EventName -Encoding UTF8
+    }
+    catch {
+    }
+}
+
+function Set-HeartbeatClipboardText {
+    param(
+        [string]$Text
+    )
+
+    try {
+        Set-Clipboard -Value $Text -ErrorAction Stop
+    }
+    catch {
+        try {
+            Add-Type -AssemblyName System.Windows.Forms
+            [System.Windows.Forms.Clipboard]::SetText($Text)
+        }
+        catch {
+        }
+    }
+
+    $clipboardLogPath = $env:AI_HEARTBEAT_TEST_CLIPBOARD_LOG
+    if ($clipboardLogPath) {
+        try {
+            [System.IO.File]::WriteAllText($clipboardLogPath, $Text, $utf8NoBom)
+        }
+        catch {
+        }
+    }
+}
+
+function Get-HeartbeatReminderDurationMs {
+    $durationOverride = $env:AI_HEARTBEAT_TEST_AUTO_CLOSE_MS
+    $durationMs = 0
+    if ($durationOverride -and [int]::TryParse([string]$durationOverride, [ref]$durationMs) -and $durationMs -gt 0) {
+        return $durationMs
+    }
+
+    return 8880
+}
+
+function Show-HeartbeatTextReminder {
+    param(
+        [psobject]$Payload
+    )
+
+    $title = if ($Payload.title) { [string]$Payload.title } else { 'AI Heartbeat 会前提醒' }
+    if ($Payload.message) {
+        $message = [string]$Payload.message
+    }
+    elseif ($Payload.question) {
+        $message = [string]$Payload.question
+    }
+    else {
+        $message = '如需处理，请在当前 chat 中运行 /ai-heartbeat。'
+    }
+    $commandText = if ($Payload.recommended_command) { [string]$Payload.recommended_command } else { '/ai-heartbeat' }
+    $reminderDurationMs = Get-HeartbeatReminderDurationMs
+
+    if ($env:AI_HEARTBEAT_TEST_DISABLE_UI -eq '1') {
+        Write-HeartbeatTestEvent -EventName 'text_reminder_shown'
+        Write-HeartbeatTestEvent -EventName ("text_reminder_duration_ms:{0}" -f $reminderDurationMs)
+        if ($env:AI_HEARTBEAT_TEST_SIMULATE_CLICK -eq '1') {
+            Set-HeartbeatClipboardText -Text $commandText
+            Write-HeartbeatTestEvent -EventName 'text_reminder_clicked'
+        }
+        else {
+            Write-HeartbeatTestEvent -EventName 'text_reminder_auto_closed'
+        }
+        return
+    }
+
+    Add-Type -AssemblyName System.Windows.Forms
+    Add-Type -AssemblyName System.Drawing
+    [System.Windows.Forms.Application]::EnableVisualStyles()
+
+    $screen = [System.Windows.Forms.Screen]::PrimaryScreen.WorkingArea
+    $form = New-Object System.Windows.Forms.Form
+    $form.Text = $title
+    $form.StartPosition = 'Manual'
+    $form.ShowInTaskbar = $false
+    $form.TopMost = $true
+    $form.FormBorderStyle = 'FixedToolWindow'
+    $form.MaximizeBox = $false
+    $form.MinimizeBox = $false
+    $form.ClientSize = New-Object System.Drawing.Size(452, 156)
+    $form.BackColor = [System.Drawing.ColorTranslator]::FromHtml('#1E1E1E')
+    $form.ForeColor = [System.Drawing.ColorTranslator]::FromHtml('#D4D4D4')
+    $form.Font = New-Object System.Drawing.Font('Microsoft YaHei UI', 10)
+    $form.Location = New-Object System.Drawing.Point(($screen.Right - 468), ($screen.Bottom - 172))
+
+    $titleLabel = New-Object System.Windows.Forms.Label
+    $titleLabel.Location = New-Object System.Drawing.Point(14, 12)
+    $titleLabel.Size = New-Object System.Drawing.Size(424, 24)
+    $titleLabel.Text = $title
+    $titleLabel.Font = New-Object System.Drawing.Font('Microsoft YaHei UI', 11, [System.Drawing.FontStyle]::Bold)
+    $titleLabel.ForeColor = [System.Drawing.ColorTranslator]::FromHtml('#D4D4D4')
+    $titleLabel.BackColor = $form.BackColor
+    $form.Controls.Add($titleLabel)
+
+    $messageLabel = New-Object System.Windows.Forms.Label
+    $messageLabel.Location = New-Object System.Drawing.Point(14, 40)
+    $messageLabel.Size = New-Object System.Drawing.Size(424, 98)
+    $messageLabel.Text = $message
+    $messageLabel.Font = New-Object System.Drawing.Font('Microsoft YaHei UI', 9.5)
+    $messageLabel.ForeColor = [System.Drawing.ColorTranslator]::FromHtml('#9DA5B4')
+    $messageLabel.BackColor = $form.BackColor
+    $form.Controls.Add($messageLabel)
+
+    $autoCloseTimer = New-Object System.Windows.Forms.Timer
+    $autoCloseTimer.Interval = $reminderDurationMs
+
+    $copyAndClose = {
+        Set-HeartbeatClipboardText -Text $commandText
+        Write-HeartbeatTestEvent -EventName 'text_reminder_clicked'
+        if ($autoCloseTimer.Enabled) {
+            $autoCloseTimer.Stop()
+        }
+        $form.Close()
+    }
+
+    $autoCloseTimer.Add_Tick({
+        $autoCloseTimer.Stop()
+        Write-HeartbeatTestEvent -EventName 'text_reminder_auto_closed'
+        $form.Close()
+    })
+
+    $form.Add_Shown({
+        Write-HeartbeatTestEvent -EventName 'text_reminder_shown'
+        Write-HeartbeatTestEvent -EventName ("text_reminder_duration_ms:{0}" -f $reminderDurationMs)
+        $autoCloseTimer.Start()
+        if ($env:AI_HEARTBEAT_TEST_SIMULATE_CLICK -eq '1') {
+            $simulateClickTimer = New-Object System.Windows.Forms.Timer
+            $simulateClickTimer.Interval = 50
+            $simulateClickTimer.Add_Tick({
+                $simulateClickTimer.Stop()
+                & $copyAndClose
+            })
+            $simulateClickTimer.Start()
+        }
+    })
+
+    $form.Add_Click($copyAndClose)
+    $titleLabel.Add_Click($copyAndClose)
+    $messageLabel.Add_Click($copyAndClose)
+
+    [System.Windows.Forms.Application]::Run($form)
+}
+
 try {
     $root = Resolve-WorkspaceRoot -ExplicitRoot $WorkspaceRoot
     $python = Resolve-Python -ExplicitPython $PythonPath -Root $root
@@ -305,18 +467,32 @@ try {
     if ($dialogSpecOutput) {
         try {
             $payload = ($dialogSpecOutput | Out-String).Trim() | ConvertFrom-Json
-            $selection = Show-HeartbeatDialog -Payload $payload
-            if ($selection -eq 'snooze_today') {
-                $dueTasks = @($payload.due_tasks | ForEach-Object { [string]$_ } | Where-Object { $_ })
-                if ($dueTasks.Count -gt 0) {
-                    $null = & $python $preflight --mark-prompted @dueTasks --state-path $StatePath 2>$null
-                }
-            }
-            exit 0
         }
         catch {
             exit 0
         }
+
+        $surface = if ($payload.surface) { [string]$payload.surface } else { 'modal' }
+        if ($surface -eq 'text') {
+            Show-HeartbeatTextReminder -Payload $payload
+            exit 0
+        }
+
+        try {
+            $selection = Show-HeartbeatDialog -Payload $payload
+        }
+        catch {
+            exit 0
+        }
+
+        if ($selection -eq 'snooze_today') {
+            $dueTasks = @($payload.due_tasks | ForEach-Object { [string]$_ } | Where-Object { $_ })
+            if ($dueTasks.Count -gt 0) {
+                $null = & $python $preflight --mark-prompted @dueTasks --state-path $StatePath 2>$null
+            }
+        }
+
+        exit 0
     }
 }
 catch {

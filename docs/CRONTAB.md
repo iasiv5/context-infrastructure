@@ -2,7 +2,7 @@
 
 本文档描述 context infrastructure 系统所需的定时任务。
 
-如果你只想使用 AI Heartbeat 的手动提醒模式，先运行 `python periodic_jobs/ai_heartbeat/src/v0/heartbeat_preflight.py` 即可；这份文档只覆盖仍然选择 cron 或其他系统级调度的场景。
+如果你只想使用 AI Heartbeat 的手动提醒模式，先运行 `python periodic_jobs/ai_heartbeat/src/v0/heartbeat_preflight.py` 即可；这份文档只覆盖仍然选择 cron 或其他系统级调度的场景。workspace 内建 SessionStart hook 会按单字段 reminder policy 决定 Windows modal 或 8.88 秒轻提醒窗。
 
 ---
 
@@ -26,7 +26,7 @@ Daily     → Crontab Monitor: 健康审计，发现异常则发告警邮件
 
 ### AI Heartbeat Due Check（每日 / 每周）
 
-定时检查 observer / reflector 是否到期，并把结果写入日志或接入你自己的提醒系统。这一步只做审计和提醒，不直接执行 observer / reflector；真正处理仍在当前 chat 中运行 `/ai-heartbeat`。
+定时检查 observer / reflector 是否到期，并把结果写入日志或接入你自己的提醒系统。这一步只做审计和提醒，不直接执行 observer / reflector；真正处理仍在当前 chat 中运行 `/ai-heartbeat`。如果你同时启用了 workspace 自带的 SessionStart hook，它会按仓库 policy 决定 Windows modal 或 8.88 秒轻提醒窗；cron 本身仍只负责审计和日志。
 
 - **脚本**：`periodic_jobs/ai_heartbeat/src/v0/heartbeat_preflight.py`
 - **依赖**：本地 Python 环境、workspace 文件读写权限
@@ -41,19 +41,6 @@ Daily     → Crontab Monitor: 健康审计，发现异常则发告警邮件
 - **建议时间**：每日 9:00 AM
 
 ### AI News Survey（每日/每周）
-
-调用 AI Agent 生成 AI 行业日报或周报，可发布到 Kit 订阅者或发送个人邮件。
-
-- **脚本**：`periodic_jobs/ai_heartbeat/src/v0/jobs/ai_news_survey.py`
-- **依赖**：已配置的 AI backend、Gmail 或 Kit API
-- **建议时间**：每日 8:00 AM（日报）或每周一 8:00 AM（周报）
-
----
-
-## 示例 crontab 配置
-
-将以下内容添加到 `crontab -e`。**使用前请将 `/path/to/your/workspace` 替换为实际路径。**
-
 ```cron
 # ── 时区说明 ──────────────────────────────────────────────
 # 以下时间均为本地时间。如需指定时区，在 crontab 顶部添加：

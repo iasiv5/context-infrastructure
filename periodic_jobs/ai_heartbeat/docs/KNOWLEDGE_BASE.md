@@ -12,6 +12,7 @@
   - `AGENTS.md` (工作区全局视图)
   - `rules/` 目录下的所有规范 (L3 约束)
 - **当前执行入口**: SessionStart hook 只负责检查是否到期并提醒；真正的 observer / reflector 执行必须由当前 chat 中显式运行 `/ai-heartbeat` 触发。
+- **提醒策略**: `periodic_jobs/ai_heartbeat/config/reminder_policy.json` 定义仓库级 versioned reminder policy。它的 schema 只保留 `windows_popup_enabled` 一个开关：开关打开时显示 modal；开关关闭时显示 8.88 秒自动消失的轻提醒窗，点击后复制 `/ai-heartbeat`。
 - **状态链**: due-task 判断由 `heartbeat_preflight.py` 和 `heartbeat_state.py` 负责；observer / reflector 的 `success`、`failed`、`skipped` 由 `heartbeat_status_cli.py` 自动回写。
 
 ## 2. 扫描与过滤规则 (L1 Observer)
@@ -71,6 +72,8 @@
 ### 4.3 状态回写与执行边界
 - **自动记账**: `/ai-heartbeat` 在 observer / reflector 结束后，必须自动调用 `heartbeat_status_cli.py` 记录 `success`、`failed` 或 `skipped`。
 - **observer 幂等性**: 若 `contexts/memory/OBSERVATIONS.md` 中已存在当天 `Date: YYYY-MM-DD` 条目，observer 应记为 `skipped`，而不是重复写入。
+- **策略与运行态分层**: `heartbeat_status.json` 只记录 observer / reflector 的运行态与 prompted 去重；`windows_popup_enabled` 属于 versioned reminder policy，不写入本地 state。
+- **提醒表面**: 仓库 policy 开启弹窗时，hook 显示 modal；关闭弹窗时，hook 显示 8.88 秒自动消失的轻提醒窗，点击后复制 `/ai-heartbeat`。轻提醒窗不提供“今天不再提醒”的即时交互，也不会写 prompted。
 - **执行边界**: hook 不直接执行任何观测或反思动作；它只提醒用户在当前 chat 中运行 `/ai-heartbeat`。
 
 ## 5. 执行角色隔离 (Role Isolation)
