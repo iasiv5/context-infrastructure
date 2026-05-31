@@ -61,4 +61,4 @@ Date: 2026-06-01
 
 🟡 Medium: `periodic_jobs/ai_heartbeat/config/reminder_policy.json` 仍然只保留 `windows_popup_enabled`，提醒 surface 继续和运行态分层。
 🟡 Medium: `/ai-heartbeat --command-spec` 今天返回 `observer_and_reflector`，`target_date` 为 `2026-06-01`。
-🟢 Low: `git status --short` 为空，当前工作区没有未提交变更。
+🟡 Medium: `.github/hooks/pre-session.ps1` 的 text reminder 仍然用 8880 ms 自动关闭计时器，点击会复制 `/ai-heartbeat`，测试通过 `AI_HEARTBEAT_TEST_*` seam 驱动。
