@@ -57,3 +57,8 @@ Date: 2026-05-31
 🔴 High: AI Heartbeat 的执行合同从“架构收口”继续落到状态语义闭环：`.github/prompts/ai-heartbeat.prompt.md` 现在是唯一执行入口，`heartbeat_preflight.py --command-spec` 在命令侧显式忽略 `last_prompted_on`，所以 SessionStart hook 的同日提醒去重不会屏蔽用户手动运行 `/ai-heartbeat`；同时 `heartbeat_state.collect_due_tasks()` 把同一 `target_date` 的 `skipped` 视为已处理，observer 因幂等跳过后不会继续被判定为 due。
 🟡 Medium: AI Heartbeat 的逻辑日期已切到本地时区，`target_date` 与 `last_prompted_on` 以本地日期记账，UTC 只保留给 attempt/success 时间戳；相关测试已经覆盖本地逻辑日期、same-day skipped、以及 reminder-only hook 的命令侧合同。
 🟡 Medium: SessionStart hook 现在稳定为 reminder-only 的两步语义：`知道了` 不改状态，`今天不再提醒` 才写 `last_prompted_on`。提醒去重与执行状态因此解耦，用户同一天手动补跑 `/ai-heartbeat` 不会被错误地判成 `none`。
+Date: 2026-06-01
+
+🟡 Medium: `periodic_jobs/ai_heartbeat/config/reminder_policy.json` 仍然只保留 `windows_popup_enabled`，提醒 surface 继续和运行态分层。
+🟡 Medium: `/ai-heartbeat --command-spec` 今天返回 `observer_and_reflector`，`target_date` 为 `2026-06-01`。
+🟢 Low: `git status --short` 为空，当前工作区没有未提交变更。
