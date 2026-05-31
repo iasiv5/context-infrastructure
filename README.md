@@ -92,3 +92,7 @@ context-infrastructure/
 **不可复用层**：公理的具体内容、skill 背后的具体经验。理解它们的结构和形成方式，然后从你自己的数据中积累。
 
 ---
+
+## License
+
+MIT

@@ -41,6 +41,17 @@ Daily     → Crontab Monitor: 健康审计，发现异常则发告警邮件
 - **建议时间**：每日 9:00 AM
 
 ### AI News Survey（每日/每周）
+调用 AI Agent 生成 AI 行业日报或周报，可发布到 Kit 订阅者或发送个人邮件。
+
+- **脚本**：`periodic_jobs/ai_heartbeat/src/v0/jobs/ai_news_survey.py`
+- **依赖**：已配置的 AI backend、Gmail 或 Kit API
+- **建议时间**：每日 8:00 AM（日报）或每周一 8:00 AM（周报）
+
+---
+
+## 示例 crontab 配置
+
+将以下内容添加到 `crontab -e`。**使用前请将 `/path/to/your/workspace` 替换为实际路径。**
 ```cron
 # ── 时区说明 ──────────────────────────────────────────────
 # 以下时间均为本地时间。如需指定时区，在 crontab 顶部添加：
