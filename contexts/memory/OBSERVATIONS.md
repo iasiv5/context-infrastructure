@@ -59,6 +59,9 @@ Date: 2026-05-31
 🟡 Medium: SessionStart hook 现在稳定为 reminder-only 的两步语义：`知道了` 不改状态，`今天不再提醒` 才写 `last_prompted_on`。提醒去重与执行状态因此解耦，用户同一天手动补跑 `/ai-heartbeat` 不会被错误地判成 `none`。
 Date: 2026-06-01
 
-🟡 Medium: `periodic_jobs/ai_heartbeat/config/reminder_policy.json` 仍然只保留 `windows_popup_enabled`，提醒 surface 继续和运行态分层。
-🟡 Medium: `/ai-heartbeat --command-spec` 今天返回 `observer_and_reflector`，`target_date` 为 `2026-06-01`。
-🟡 Medium: `.github/hooks/pre-session.ps1` 的 text reminder 仍然用 8880 ms 自动关闭计时器，点击会复制 `/ai-heartbeat`，测试通过 `AI_HEARTBEAT_TEST_*` seam 驱动。
+🟢 Low: AI Heartbeat 6 月 1 日运行确认：`reminder_policy.json` schema 不变；`--command-spec` 返回 `observer_and_reflector`；`pre-session.ps1` text reminder 机制与测试链通过 seam 驱动验证正常。
+
+Date: 2026-06-04
+
+🔴 High: AI Heartbeat 完成跨平台重构的主仓库侧迁移。`.github/prompts/ai-heartbeat.prompt.md` 从厚文件（~100 行）瘦身为薄壳（~22 行），只保留 OS 探测 + SOP 引用；独立 `periodic_jobs/ai_heartbeat/docs/AI_HEARTBEAT_SOP.md` 成为执行合同单一事实来源；新增 `.claude/commands/ai-heartbeat.md` 作为 Claude Code 入口。两个平台入口共享同一份 SOP，消除了平台耦合和内容重复。首次验证了"子仓库先行重构→主仓库跟进迁移"的跨仓知识同步模式。
+🟡 Medium: openbmc-aware-harness 子仓库经历密集演进周期（6 月 2-3 日）。已完成：ob 脚本从 `tools/ob` 迁移至仓库根目录并新增 machine 校验关卡与 single-source lock（`openbmc-source.lock`）；rules 体系加数字前缀统一加载顺序，删除 5 个低价值 skill（净减 895 行）；README 重写为人类使用手册；文档一致性清理补齐路由表和幽灵路径。
