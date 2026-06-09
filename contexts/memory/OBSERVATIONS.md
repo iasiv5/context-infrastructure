@@ -65,3 +65,9 @@ Date: 2026-06-04
 
 🔴 High: AI Heartbeat 完成跨平台重构的主仓库侧迁移。`.github/prompts/ai-heartbeat.prompt.md` 从厚文件（~100 行）瘦身为薄壳（~22 行），只保留 OS 探测 + SOP 引用；独立 `periodic_jobs/ai_heartbeat/docs/AI_HEARTBEAT_SOP.md` 成为执行合同单一事实来源；新增 `.claude/commands/ai-heartbeat.md` 作为 Claude Code 入口。两个平台入口共享同一份 SOP，消除了平台耦合和内容重复。首次验证了"子仓库先行重构→主仓库跟进迁移"的跨仓知识同步模式。
 🟡 Medium: openbmc-aware-harness 子仓库经历密集演进周期（6 月 2-3 日）。已完成：ob 脚本从 `tools/ob` 迁移至仓库根目录并新增 machine 校验关卡与 single-source lock（`openbmc-source.lock`）；rules 体系加数字前缀统一加载顺序，删除 5 个低价值 skill（净减 895 行）；README 重写为人类使用手册；文档一致性清理补齐路由表和幽灵路径。
+
+Date: 2026-06-09
+
+🔴 High: ob-harness 子仓经历从 06-04 到 06-09 的爆发式开发周期（40+ commits），仓库名从 `openbmc-aware-harness` 简化为 `ob-harness`。核心能力演进：`ob init` 增加了本地镜像加速克隆、智能 clone URL 路由（HTTPS→SSH 自动检测）、DL_DIR/git2 bare mirror 缓存、WSL 自动并行度调优（`??=` → `?=` 覆盖 OE-core 默认值）、machine 选择 Y/N 确认；`ob build` 全新实现，含 init-done 标记、三遍醒目 machine 确认、glob 匹配构建状态检测；`ob status` 重构为三段式总览面板（环境、源、构建时间）；`ob` 交互菜单模式全量实现。这是 context infrastructure 骨架迁移到领域专用工具链后第一次大规模验证——骨架的可移植性和可演进性得到实战确认。
+🟡 Medium: 主仓 `_context-infrastructure` 在 06-04 至 06-07 期间通过 10 个 PR 持续扩展 SKILL_ECOSYSTEM：新增 Google Maps 路由 skill、Circle Post 社交发布 skill、PDF-to-Markdown CLI skill、delayed agent jobs 路由、OpenCode subagent 模型路由更新。技能生态从"仓库内打包"向"独立 repo + ecosystem registry"的迁移模式持续验证。
+🟡 Medium: iasi 插件体系（`m/plugins/iasi/`）新增四个 skills：brainstorming、writing-plans、handoff、cleanup；同步向 ob-harness 子仓分发 brainstorming 和 writing-plans。所有新增 skill 均标注 obra/superpowers 致敬和 MIT 许可证（ATTRIBUTIONS.md），建立了规范的开源致谢流程。
