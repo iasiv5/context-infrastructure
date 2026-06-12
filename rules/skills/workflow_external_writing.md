@@ -1,12 +1,12 @@
-# 分析写作工作流
+# 外部写作工作流
 
 ## 元数据
 
 - **类型**: Workflow
-- **适用场景**: 将调研素材转化为有判断力的 external-facing 分析文章
+- **适用场景**: 将调研素材转化为有判断力的 external-facing 分析文章、公开 survey report 或面向外部读者的课程/客户内容
 - **前置依赖**: 深度调研工作流（`workflow_deep_research_survey.md`）的 Phase 1-3 产出
 - **创建日期**: 2026-04-28
-- **最后更新**: 2026-04-28
+- **最后更新**: 2026-06-11
 
 ## 何时使用
 
@@ -14,7 +14,7 @@
 
 **与深度调研 skill 的关系**：深度调研 skill 管信息采集和验证（Phase 1-3），本 skill 管判断合成和写作（Phase A-E）。深度调研 skill 的 Phase 3.5-4 中关于 reader mode 和写作的内容已迁移到本 skill，调研 skill 在 Phase 3 完成后指向这里。
 
-**internal mode 文章**（面向自己或共享上下文的协作者）通常不需要完整执行本 skill。internal mode 的价值是帮对方更快做判断，不需要叙事重构和族谱追溯。直接从 Phase D 开始，写清结论、依据和未决问题即可。
+**internal-facing 文档**（面向自己、共享上下文协作者或未来 AI agent）不使用本 skill，改用 `workflow_internal_writing.md`。internal 的价值是更快做判断、跳转和验证，不需要叙事重构和族谱追溯。
 
 ---
 
@@ -144,8 +144,8 @@ LLM 的默认输出是共识（consensus）。训练机制（next token predicti
 
 1. 综合 Phase A-C 的产出，写出完整的 thesis statement（2-3 句话）。这个 thesis 必须满足：能被一个不了解细节的聪明人理解，包含具体的判断（不是"这很复杂需要关注"），指向一个读者可以在其他场景复用的判断框架。
 
-2. 决定 reader mode 和时间维度（从深度调研 skill 迁移过来的判断）：
-   - `mode`: `internal` 或 `external`
+2. 决定目标读者和时间维度（从深度调研 skill 迁移过来的判断）：
+   - `mode`: `external`
    - 目标读者是谁
    - 时间维度判断：短期相关性 / 长期意义 / relevance 判定
 
@@ -163,13 +163,34 @@ LLM 的默认输出是共识（consensus）。训练机制（next token predicti
 
 **动笔前必读**: `rules/COMMUNICATION.md`。不是写完回来对照检查，是动笔前把规则装进来。事后补丁只能抓字面关键词（破折号、"结构性"），抓不到居高临下推荐语、英文 metaphor 直译、"很+形容词+冒号"句式。动笔前装进来，句子从一开始就是对的。**如果产出包含中英文两个版本**，英文版翻译完成后必须回头逐段自查 COMMUNICATION.md 中的译文体规则（被动语态直译、expensive/cheap 的抽象用法、model/framework 的狭义错位、承接词缺失等）。翻译是译文体最高发的场景，写完中文版觉得"风格已经对了"不代表翻译后仍然对。
 
+**主笔模型分工（交付协议，不是建议）**: external-facing 文章的最终写作默认由强写作模型完成。对于 external-facing Chinese survey report，`final_author_model = DeepSeek V4 Flash`。
+
+**自行写作 vs 委派 sub-agent 的判断规则**：主线程模型为 Opus 系列、或 DeepSeek 系列（包括 Flash、Pro、V4 等所有变体）时，主线程自行写作；否则主线程不得直接起草最终稿，必须先把调研素材、thesis、证据表、风格要求、禁用事项、目标输出路径和覆盖策略落盘到 `tmp/<session_slug>/`，再调用 DeepSeek V4 Flash sub-agent 读取这些文件并写入最终 Markdown。Agent 之间不要依赖 chat 传递正文素材，文件才是交接界面。
+
+判断时以模型 ID 为准（如 `opus`、`deepseek`、`deepseek-v4-pro`、`deepseek-flash`），不区分具体运行环境。
+
+**DeepSeek handoff contract**: handoff 文件至少包含 `final_author_model`、`handoff_path`、`target_output_path`、`do_not_self_write`、raw material 路径、reader mode、claim 强弱边界、引用格式要求和 COMMUNICATION.md 风格要求。主线程负责准备材料、事实核查、风格审阅和最终验收，不把未核查的 sub-agent 初稿直接交付。
+
 **控制 cognitive burden**（参见 axiom M11）。读者在任何一段里同时接收的新概念不超过两个。如果一段需要引入新术语或新框架，先用一个读者已有的场景或体感把它接住，再给名字。不要连续三段都在引入新概念而不给读者消化的空间。判断标准：把文章读给目标读者画像里的人听，如果他在某一段开始走神或回翻，大概率是那一段的新概念密度太高了。
+
+**技术比喻的认知负荷控制**。用比喻解释技术概念时，一个比喻段只引入一个核心概念，用多个短段推进，不要一段塞入四个概念（场景设定、传统模式、优化模式、核心洞察）。具体做法：
+- 第一段：建立场景
+- 第二段：展示问题
+- 第三段：展示改进
+- 每段不超过 3 句。宁可多分段，不让读者自己在大段里拆解概念层级。
+
+**meta-commentary 自查清单**。以下短语在成品中一律删除，因为它们是在告诉读者"我接下来要做什么"而不是直接做：
+- "类比一下更好理解"、"具体来说"、"这里有一个和 X 的关键区别"、"性能数据可以量化这种差异"
+- 解释性括号如"工头（CPU）"、"kernel（GPU 上的一个计算任务）"——融入句子而非括号插入
+- 如果删除后文意不通，说明前一句本身不够清晰，重写前一句而非加过渡句
+
+**破折号零容忍**。external-facing 成品中不得出现破折号（——）。插入补充拆成两句，因果改用句号或冒号，双破折号插入语拆成独立句。改动后重读一遍，如果节奏像在念条目清单，检查承接词是否被一起删掉了。
 
 **共享格式要求**:
 - 中文 Markdown
 - 所有引用用绝对链接（`https://` 开头），不用相对链接
 - 关键引用保留原文摘录
-- 重要来源直接进入正文的 inline Markdown links，不只堆在文末
+- 重要来源直接进入正文的 inline Markdown links，所有引用必须以 inline links 形式出现在正文中。不得在文末单独列「来源」或「参考文献」清单。如果来源不值得在正文中被点到，它就不值得被引用。
 
 **External mode 写作要点**:
 
@@ -181,10 +202,9 @@ LLM 的默认输出是共识（consensus）。训练机制（next token predicti
 
 4. **分析框架是 internal 工具，不进入成品。** Thesis Catalog（L1-L6）、axiom 编号、Phase 名称、"叙事重构"这类术语，全部属于写作过程的脚手架，不能出现在最终文章里。读者应该感受到的是一个有自己思考方式的人在做分析，不是一个框架在被套用。具体来说：不要写"从技术族谱的角度看"，直接写三代演化的事实；不要写"这里的瓶颈发生了迁移"，直接写代码变便宜之后验证成了最慢的环节；不要引用 axiom 编号或名称。框架指导你怎么想，但读者看到的只有想出来的结果。
 
-**Internal mode 写作要点**:
-- 让读者更快做判断
-- 先把最影响决策的结论和依据显出来
-- 把仍未确认的点与下一步动作留清楚
+5. **External-facing 文章默认配图（1-3 张）**。纯文字长文在网页上的阅读体验和分享传播效果都差。图表类型按文章内容选择：数据对比可用柱状图/散点图，流程机制用示意图，结果展示用截图。图的目标是降低认知负担，不是装饰。
+
+**Internal-facing 输出**: 改用 `workflow_internal_writing.md`。不要在本 skill 里用 external 文章流程处理内部 memo。
 
 **Survey report 与博客文章的区别**：本 workflow 的默认产出是 survey report，存放在 `contexts/survey_sessions/`。不是博客文章，不要加 Pelican frontmatter 或 Kit 订阅 script。如果用户要求发布到博客，单独复制到 `contexts/blog/content/` 并加 frontmatter。
 
@@ -206,3 +226,7 @@ LLM 的默认输出是共识（consensus）。训练机制（next token predicti
 | 族谱追溯变成流水账 | 每一代平均着墨，没有论证重点 | 族谱服务于当前事件的定位，不是写技术史。只展开和当前判断相关的代际 |
 | 内部框架泄露到成品 | 文中出现"从 L4 技术族谱视角"、axiom 编号、"叙事重构"等术语 | Thesis Catalog、axiom、Phase 名称全部是写作脚手架，最终文章里零出现 |
 | Cognitive burden 过高 | 连续多段引入新概念，读者走神或回翻 | 每段新概念不超过两个，先用已有场景接住再给名字 |
+| 破折号泛滥 | 全文大量使用 —— 做插入、补充、转折，一句甚至两个 | 成品零容忍。插入补充拆成两句，因果改用句号或冒号，双破折号插入语拆成独立句 |
+| 复杂比喻认知超载 | 一个段落同时塞入场景设定 + 传统模式 + 优化模式 + 核心洞察 | 一个比喻段只推一个概念。用多个短段逐层展开 |
+| 元评论当过渡 | 文中出现"类比一下更好理解""具体来说""关键区别在于" | 直接进入内容。删除后如果文意不通，说明前一句本身不够清晰，重写前一句 |
+| 无配图 | External-facing 文章没有图表，纯文字长文 | 写 Phase D 时同步规划配图。用图表或示意图降低认知负担 |

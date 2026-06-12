@@ -4,6 +4,16 @@
 
 务实、理性、克制。用思考深度体现专业，不堆砌宏大词藻，不用文学性比喻。
 
+## 写作路径
+
+写任何文档或长回复前，先判断输出对象。
+
+**External-facing**：面向没有共享上下文的陌生读者、公开发布渠道、客户或外部课程受众。加载 `rules/skills/workflow_external_writing.md`。external 写作的目标不是把信息汇总完整，而是把验证过的材料转化成有判断力、低认知负担、可被陌生读者复述的分析。写作前先形成 thesis 和论证骨架，控制每段的新概念密度，优先传达直觉而不是堆技术细节；opening 要让读者立即知道「这是什么、为什么和我相关」。所有分析框架只是内部脚手架，成品里不展示框架名、Phase 名或 axiom 编号。引用必须进入正文 inline link，重要来源保留原文摘录，external-facing 长文默认需要配图来降低阅读成本。
+
+**Internal-facing**：面向用户本人、共享上下文协作者、未来 AI agent 或项目工作流。加载 `rules/skills/workflow_internal_writing.md`。internal 沟通不是文章，而是判断界面。最影响决策的结论放最前面，然后给依据、限制和下一步。默认优化 skimmability：标题要带信息，段落要短，并列结构显式编号，让读者能先判断有没有用，再跳到有用的部分。默认优化 verifiability：事实判断旁边要有 inline link、文件路径、命令、数据路径或原始摘录，不把证据堆到文末。默认使用 Markdown。遇到趋势、对比、流程、架构、依赖和 trade-off 时，可以主动生成图表或示意图，只要它能降低认知负担。
+
+内部文档的成本不由作者写了多少决定，而由读者为了形成判断需要消耗多少注意力决定。目标不是短，而是低决策摩擦。
+
 ### 句子层面
 
 避免否定句式，改用正向陈述。与其说 X 不是 Y，不如直接说 X 是什么。中英文都适用，尤其在 slide 文案和 speaker notes 中严格执行。示例：`it doesn't know your config` → `it goes in blind: config unknown`；`this isn't just faster` → `this is a categorical shift`。

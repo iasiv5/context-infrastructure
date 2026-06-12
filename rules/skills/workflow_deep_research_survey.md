@@ -179,9 +179,9 @@ task(
 
 调研的 Phase 1-3 完成后，进入写作阶段。根据目标产出类型选择路径：
 
-**如果是 external-facing 分析文章** → 加载 `workflow_analytical_writing.md`，从 Phase A 开始执行。该 skill 包含作者的分析视角目录（Thesis Catalog）、判断合成步骤（视角匹配 → 族谱追溯 → 叙事重构 → thesis 成型）和写作规范。
+**如果是 external-facing 分析文章** → 加载 `workflow_external_writing.md`，从 Phase A 开始执行。该 skill 包含作者的分析视角目录（Thesis Catalog）、判断合成步骤（视角匹配 → 族谱追溯 → 叙事重构 → thesis 成型）和写作规范。
 
-**如果是 internal memo**（面向自己或共享上下文的协作者）→ 不需要完整的分析写作流程。直接写：先把最影响决策的结论和依据显出来，把仍未确认的点与下一步动作留清楚。动笔前读一遍 `rules/COMMUNICATION.md`。
+**如果是 internal memo**（面向自己或共享上下文的协作者）→ 加载 `workflow_internal_writing.md`。先把最影响决策的结论和依据显出来，把仍未确认的点与下一步动作留清楚。动笔前读一遍 `rules/COMMUNICATION.md`。
 
 **共享格式要求**（两种 mode 通用）:
 - 中文 Markdown
@@ -263,4 +263,4 @@ task(
 | 用错 subagent 类型 | 外部调研用 `librarian` 或 `deep`，`explore` 只用于内部 codebase |
 | 调研结果变成 vendor marketing 汇总 | Phase 1 提取 claim，Phase 2 按证据功能分配维度，Phase 3 核查验证状态 |
 
-写作阶段的常见失败模式（Relevance 不着地、Demo 当证据、时间维度模糊、调研汇总而非作者写作等）见 `workflow_analytical_writing.md` 的失败模式表。
+写作阶段的常见失败模式（Relevance 不着地、Demo 当证据、时间维度模糊、调研汇总而非作者写作等）见 `workflow_external_writing.md` 的失败模式表。
