@@ -62,16 +62,19 @@ python rules/skills/pdf_to_markdown_cli.py docling input.pdf --output output.md 
 
 ## 已知陷阱（续）
 
-**macOS MPS float64 崩溃**。Apple Silicon 上 Docling 的 RT-DETR V2 模型做 layout 检测时会调用 `torch.float64`，MPS 后端不支持，整份 PDF 转换崩溃。workaround：
+**macOS MPS float64 崩溃**。Apple Silicon 上 Docling 的 RT-DETR V2 模型做 layout 检测时会调用 `torch.float64`，MPS 后端不支持，整份 PDF 转换崩溃。最省事的 workaround 是直接让 Docling 走 CPU：
 
 ```bash
-PYTORCH_ENABLE_MPS_FALLBACK=1 python -c "
-from docling.document_converter import DocumentConverter
-...
-"
+docling input.pdf --to md --device cpu --output output_dir
 ```
 
-或直接改 `~/.bashrc`/`.zshrc` 加 `export PYTORCH_ENABLE_MPS_FALLBACK=1`。如果仍然失败（已知特定版本组合下 MPS fallback 也不生效），切换到 VLM OCR 路径。
+文本型 PDF 不需要 OCR 时加 `--no-ocr`，可以减少额外模型路径和误识别：
+
+```bash
+docling input.pdf --to md --device cpu --no-ocr --output output_dir
+```
+
+不要优先依赖 `PYTORCH_ENABLE_MPS_FALLBACK=1`。实测特定版本组合下 fallback 仍可能不生效；直接 `--device cpu` 更确定。如果 CPU 路径仍然失败，或者 PDF 是中文扫描件、图片 PDF、pitch deck，再切换到 VLM OCR 路径。
 
 ## 适用边界与路径选择
 
