@@ -19,16 +19,17 @@
 
 ### 2.1 扫描方法论 (Scan Methodology)
 - **降低依赖 Git**: 本项目根目录的git不包括所有文件，内部包含大量嵌套的独立 Git 仓库。基于 Git 的全局 Diff 往往无法覆盖所有子模块且逻辑碎片化。但是具体的子模块在确定理解git结构的前提下也可以使用git。
-- **推荐工具**: 优先使用系统级的 `find`, `ls` 工具进行扫描。例如：`find . -name "*.md" -type f -mtime -1`。
+- **推荐工具**: 优先使用系统级的 `find`, `ls` 工具进行扫描。
+- **⚠️ 时间过滤必须用 `-newermt`，禁用 `-mtime`**: Windows git-bash 下 `find -mtime -N` 会静默返回空（2026-06-19 实测 `-mtime -1` 命中 0 文件，而 `-newermt` 正常命中），直接导致 observer 漏扫。正确写法：`find . -type f -newermt "YYYY-MM-DD 00:00" -not -newermt "YYYY-MM-DD 00:00"`（左闭右开区间，锚定 target_date）。
 
 ### 2.2 Blog 内容识别
-- **路径**: `contexts/blog/content/`
+- **路径**: `contexts/blog/content/`（按本仓实际存在性扫描；本仓当前无此目录，存在时才校验 Date 字段）
 - **逻辑**: 绝不可仅凭文件变动列表（Git/Find）就判定为新内容。
 - **校验**: 必须读取 Markdown Header 中的 `Date` 字段。仅当 `Date` 为今天或当前观测区间时，才视为有效。忽略格式重排导致的旧文章误报。
 
 ### 2.3 路径白名单与黑名单
 - **忽略**: `contexts/daily_records/` (机械重复性数据)。
-- **包含**: `contexts/life_record/` 及其子目录下的 `.csv` 文件。
+- **包含**: `contexts/life_record/` 及其子目录下的 `.csv` 文件（本仓当前无此目录，存在时才扫描）。
 
 ## 3. 记忆系统分级规范 (Memory Tiering System)
 

@@ -87,5 +87,6 @@ Date: 2026-06-18
 
 Date: 2026-06-19
 
-🔴 High: [observer 扫描方法论与实际环境脱节，待 reflector 修正 KNOWLEDGE_BASE §2] 两处实测发现：(1) Windows git-bash 下 `find -mtime -N` 静默漏报——本次 `-mtime -1` 返回空，而 `-newermt "2026-06-17 00:00"` 正常命中 06-18 的演讲稿等文件；KB §2.1 推荐的扫描示例 `-mtime -1` 在本环境不可靠，observer/reflector 扫描应统一改用 `-newermt`。(2) KB §2.2/2.3 列为扫描白名单的 `contexts/blog/content/` 与 `contexts/life_record/*.csv` 在本仓不存在（`contexts/` 实际只有 daily_records/memory/survey_sessions/thought_review，WORKSPACE.md 也未收录这两条路径）。这两点直接影响每次 observer 的扫描完整性，是 reflector 应优先处理的 KB 修正。
+🔴 High: [observer 扫描方法论与实际环境脱节，已于本次 reflector 修正 KNOWLEDGE_BASE §2] 两处实测发现：(1) Windows git-bash 下 `find -mtime -N` 静默漏报——本次 `-mtime -1` 返回空，而 `-newermt "2026-06-17 00:00"` 正常命中 06-18 的演讲稿等文件；KB §2.1 推荐的扫描示例 `-mtime -1` 在本环境不可靠，observer/reflector 扫描应统一改用 `-newermt`。(2) KB §2.2/2.3 列为扫描白名单的 `contexts/blog/content/` 与 `contexts/life_record/*.csv` 在本仓不存在（`contexts/` 实际只有 daily_records/memory/survey_sessions/thought_review，WORKSPACE.md 也未收录这两条路径）。这两点已于本次 reflector 修正进 KNOWLEDGE_BASE §2.1（mtime→newermt）与 §2.2/2.3（白名单路径加存在性注记）。
 🟢 Low: 主仓处于沉淀期——自 06-18 observer 以来无新独立认知变动，唯一实质内容变动是 Harness Engineering 演讲稿经 commit a99f1f3（删旧版、加最终版）落盘定稿，其 14 页叙事与结构已由 06-18 条目覆盖，本次不重复记录。
+🟡 Medium: [reflector 2026-06-19] ob-harness 子仓已由用户删除，以后不再出现。rules/WORKSPACE.md 的 openbmc-aware-harness 路由条目已移除（本地目录亦确认不存在）；OBSERVATIONS 中 06-04/06-09/06-13/06-15/06-18 的 ob-harness 记录转为历史归档，不再代表活跃项目。其中 06-18 的 confirmation banner（视觉强调与确认逻辑分离）模式有跨项目 CLI 复用价值，暂留观测、未晋升 skill。docs/specs 与 docs/plans 下的 ob-harness 设计文档作为历史归档保留，未改动。

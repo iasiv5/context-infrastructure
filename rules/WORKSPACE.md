@@ -8,7 +8,6 @@
 - 写代码 / 跑脚本 / 一次性项目：`adhoc_jobs/<project>/`
 - 工具脚本（邮件、语义搜索、分享报告等）：`tools/`
 - 定时任务：`periodic_jobs/`
-- OpenBMC 专用 harness 子仓：`openbmc-aware-harness/`
 
 ### 知识与记录
 - 通用调研报告：`contexts/survey_sessions/`
