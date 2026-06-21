@@ -1,4 +1,4 @@
-# ob-harness V1.1：一条命令拉起 QEMU 仿真
+# ob-harness V1.1：QEMU 仿真自动化
 
 ob-harness V1.0 让 OpenBMC 的环境初始化和镜像构建变成了一条命令的事。但镜像编出来之后呢？想看看它能不能正常起来，得自己找一份能用的 QEMU binary，手动拼一长串 `qemu-system-arm` 命令行，SSH、Redfish、IPMI 端口转发逐个配，换台机器再来一遍。V1.1 把这件事也收进了 `ob`。
 
