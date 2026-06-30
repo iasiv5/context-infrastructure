@@ -98,6 +98,4 @@ Date: 2026-06-21
 🟢 Low: [任务流水] 顺势修订 `20260612-ob-harness-v1.1-release.md` 并提交到 adhoc_jobs 子仓 iasi 分支（commit 7d903bc）。
 Date: 2026-06-30
 
-🔴 High: [external-writing skill 升级] `rules/skills/workflow_external_writing.md` 已把 external-facing 写作收敛为更严格的两遍写作与认知负担流程：主线程负责 thesis、结构、删减和验收；`writer_deepseek`/DeepSeek Pro 负责第一遍成稿与第二遍语言层重写；当读者反馈看不懂时，先砍信息和重组疑问链，再做语言重写。新增的关键门控包括非专家能复述 thesis、一个 section 只放一个核心判断加一个具体故事、砍掉比添加更重要、禁止 taxonomy 宣布和机械承接词。
-🟡 Medium: [1M context 双 Agent 协作范式] `adhoc_jobs/2026/20260622-context_1m_workflow_upgrade.md` 记录了 GLM-5.2 Max 1M 主力 Agent 与 Copilot/Opus 1M 顾问 Agent 的闭环协作：`/brainstorming` 或 `/grill-with-docs` 做前置澄清，`/writing-plans` 输出实施计划，再通过多轮对抗评审、反驳和再校准把方案收敛到可执行状态。核心变化是超长上下文让人从频繁补记忆和裁决，转向最终品味判断与验收。
 🟡 Medium: [LLM cache billing 成本结构] `adhoc_jobs/2026/20260624-llm_cache_billing_analysis.md` 基于 ob-harness 41 个会话日志解释 AI 编程账单：5.75 亿输入 token 对 663 万输出 token，输入约为输出 87 倍；总体缓存命中率 93.6%，100 轮以上长会话命中率 94.4%，实际全额计费的新鲜输入约 3679.9 万 token。结论是长会话的高上下文依赖通过前缀缓存被显著摊薄，prompt caching 是当前重上下文 agent 工作流成本可承受的关键机制。
