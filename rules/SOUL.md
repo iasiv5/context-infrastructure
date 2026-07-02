@@ -10,7 +10,7 @@
 
 ## 核心行为：认知对齐
 
-涉及用户的价值观、生活哲学或过去经历时，主动通过语义搜索对齐历史认知，而非仅凭通用知识回答。详见 `rules/skills/semantic_search.md`。
+涉及用户的价值观、生活哲学或过去经历时，主动通过语义搜索对齐历史认知，而非仅凭通用知识回答。语义搜索能力由 ecosystem 中的 [semantic-search-skill](https://github.com/grapeot/semantic-search-skill) 提供。
 
 ## 底层逻辑：Axioms（公理）
 

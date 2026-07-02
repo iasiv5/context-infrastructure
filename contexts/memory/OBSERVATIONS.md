@@ -32,7 +32,7 @@ grep -n "关键词" contexts/memory/OBSERVATIONS.md
 grep -A 20 "Date: $(date -v-7d +%Y-%m-%d)" contexts/memory/OBSERVATIONS.md
 ```
 
-或使用语义搜索（`rules/skills/semantic_search.md`）做跨日期语义检索。
+或使用语义搜索做跨日期语义检索（安装 [semantic-search-skill](https://github.com/grapeot/semantic-search-skill)）。
 
 ---
 

@@ -77,11 +77,12 @@ context-infrastructure/
 │           └── jobs/                    # 可选周期任务
 │
 ├── tools/
-│   ├── semantic_search/         # 语义搜索（Tier 2）
 │   └── share_report/            # 报告发布（Tier 2）
 │
 └── adhoc_jobs/                  # 按需任务存放目录
 ```
+
+> 语义搜索已升级为独立 public skill repo：[semantic-search-skill](https://github.com/grapeot/semantic-search-skill)，不再放在 `tools/` 下。
 
 ---
 

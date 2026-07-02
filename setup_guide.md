@@ -155,8 +155,8 @@ python periodic_jobs/ai_heartbeat/src/v0/heartbeat_preflight.py
 
 当你的 `contexts/` 目录积累了足够多内容后，语义搜索让你能按意思而非关键词检索历史记录。
 
-**需要**：LLM Studio（本地）或 OpenAI API key  
-**配置**：参见 `rules/skills/semantic_search.md`
+**需要**：任意 OpenAI-compatible embedding endpoint（本地或云端）  
+**配置**：安装 ecosystem [semantic-search-skill](https://github.com/grapeot/semantic-search-skill)
 
 ### 分享报告到 Web（⚙️）
 

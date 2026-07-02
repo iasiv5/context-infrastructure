@@ -84,7 +84,7 @@ Sub-agent 产出的是**原始调研材料**，不是终稿的任何一部分。
 | 2000-5000 条 | 8-12 条 | 标准版+ | 可做简化预测回测（3 个话题） |
 | 5000+ 条 | 10-15 条 | 完整版 | 全部三层验证，含预测力回测（5+ 个话题） |
 
-**语义搜索准备**（推荐）：如果数据量 ≥ 1000 条，建议在此阶段构建 embedding cache（见 [语义搜索技能](./semantic_search.md)）。将消息按条拆成独立文本文件或 chunk，运行一次 embedding 建缓存。后续 Phase 1/2 的 sub-agent 可以用语义搜索替代纯关键词 grep——语义搜索能找到"关键词不同但意思相近"的消息，对发现隐含观点和边界案例尤其有价值。
+**语义搜索准备**（推荐）：如果数据量 ≥ 1000 条，建议在此阶段构建 embedding cache（安装 [semantic-search-skill](https://github.com/grapeot/semantic-search-skill)）。将消息按条拆成独立文本文件或 chunk，运行一次 embedding 建缓存。后续 Phase 1/2 的 sub-agent 可以用语义搜索替代纯关键词 grep——语义搜索能找到"关键词不同但意思相近"的消息，对发现隐含观点和边界案例尤其有价值。
 
 **Phase 0 产出**：数据概况报告、验证档位决定、初步的维度假设、embedding cache（如适用）。
 
@@ -368,7 +368,7 @@ Sub-agent 产出的是**原始调研材料**，不是终稿的任何一部分。
 
 ## 参见
 
-- [语义搜索技能](./semantic_search.md) — 超越关键词匹配，用 embedding 相似度发现语义相关的消息
+- 语义搜索技能 — 见 ecosystem [semantic-search-skill](https://github.com/grapeot/semantic-search-skill)，用 embedding 相似度发现语义相关的消息
 - [并行 Subagent 工作流](./workflow_parallel_subagents.md) — Sub-agent 调度的执行规则
 - [深度调研工作流](./workflow_deep_research_survey.md) — 多 agent 并行 + 交叉验证的基础架构
 - [多 Agent 并行分析](./bestpractice_multi_agent_analysis.md) — 50% overlap、交叉验证方法论
