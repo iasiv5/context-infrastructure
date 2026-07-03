@@ -80,6 +80,7 @@
 - [多 Agent 并行 analysis](./bestpractice_multi_agent_analysis.md) ✅ — Topic 分割 50% 重叠、交叉验证
 - [GUI 自动化方法论](./bestpractice_gui_automation.md) ✅ — 把没有 API 的界面转化为可编程接口
 - [AI 辅助调试诊断](./bestpractice_ai_debugging_diagnosis.md) ✅ — "代码改不好"的根因诊断决策树
+- [Mac Universal Clipboard 重置](./mac_universal_clipboard.md) ✅ — Mac 与 iPhone/iPad 剪贴板不同步时，重置 `useractivityd` / `sharingd` / `pboard`
 - [AI 产品设计原则](./bestpractice_ai_product_design.md) ✅ — 线性聊天 vs 知识工作、感知规则解耦
 - [产品/技术决策逆向工程](./bestpractice_product_decision_analysis.md) ✅ — 从设计空间、约束和 trade-off 分析产品或技术决策
 - [Playwright E2E 测试方法论](https://github.com/grapeot/playwright-test-skill) 🔗 — CDP step-by-step debugging CLI + E2E methodology。独立 public repo，CLI: `pw-test`。触发词："Playwright E2E"、"CDP debugging"、"SSO login test"、"browser step debugging"
