@@ -105,3 +105,7 @@ Date: 2026-07-03
 🟡 Medium: [ob-harness 持续重构工作流文章产出] 今日 commit 7f896eb 新增三篇 ob-harness 持续重构工作流文章（`adhoc_jobs/2026/20260703-*`），用不同叙事角度拆解 pick-one-arch-task 工作流：（1）三个 Skill 串联的流水线——improve-codebase-architecture（浅模块发掘，删除测试法）→ grill-with-docs（逐个极端输入追问生成 ADR）→ writing-plans（分钟粒度执行计划）；（2）双 Agent 对抗验证——基于 1M 上下文让顾问 Agent 与主力 Agent 多轮 PK 消除逻辑漂移；（3）防回归结构锁——`grep -c 旧函数名` 断言为 0、bitbake 调用次数锁。核心论点是 prompt 只负责路由+约束（"只挑一条"），真正的智能在 skill，把架构决策从直觉搬进有纪律的流程。
 🟢 Low: [SKILL_ECOSYSTEM 扩展] duck 哥 PR #48（6096677，07-02）把 open_router_data_scraper 纳入 skill ecosystem，延续前期的独立 skill 单体打包→生态索引迁移模式。
 🟢 Low: [observer 扫描噪音排查] 本日全仓文件 LastWriteTime 集中在 10:56:08，系一次批量 checkout/clone 的时间戳归一，非真实内容变动；按 KB §2 指引须用 git log + 内容读取区分机械噪音与有效认知，本次真实变动仅 commit 7f896eb 与 6096677 两个提交。
+Date: 2026-07-05
+
+🟡 Medium: [框架工程资产新增] commit 48aed2c 新增 `adhoc_jobs/2026/20260704-harness-loop-engineering-diagram-zh.html` 与配套 `adhoc_jobs/2026/20260704-harness-loop-engineering-diagram.gif`，把 Prompt/Context/Harness/Loop Engineering 关系图沉淀为可复用可传播的可视化资产，延续 Harness Engineering 叙事从文字到图形表达的体系化推进。
+🟢 Low: [observer 噪音过滤] 目标日期窗口内同时命中 `periodic_jobs/ai_heartbeat/state/heartbeat_status.json` 更新，该文件属于心跳运行态自动记账，不作为新认知写入观测主记录。
