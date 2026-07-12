@@ -88,14 +88,12 @@ Date: 2026-06-18
 Date: 2026-06-19
 
 🔴 High: [observer 扫描方法论与实际环境脱节，已于本次 reflector 修正 KNOWLEDGE_BASE §2] 两处实测发现：(1) Windows git-bash 下 `find -mtime -N` 静默漏报——本次 `-mtime -1` 返回空，而 `-newermt "2026-06-17 00:00"` 正常命中 06-18 的演讲稿等文件；KB §2.1 推荐的扫描示例 `-mtime -1` 在本环境不可靠，observer/reflector 扫描应统一改用 `-newermt`。(2) KB §2.2/2.3 列为扫描白名单的 `contexts/blog/content/` 与 `contexts/life_record/*.csv` 在本仓不存在（`contexts/` 实际只有 daily_records/memory/survey_sessions/thought_review，WORKSPACE.md 也未收录这两条路径）。这两点已于本次 reflector 修正进 KNOWLEDGE_BASE §2.1（mtime→newermt）与 §2.2/2.3（白名单路径加存在性注记）。
-🟢 Low: 主仓处于沉淀期——自 06-18 observer 以来无新独立认知变动，唯一实质内容变动是 Harness Engineering 演讲稿经 commit a99f1f3（删旧版、加最终版）落盘定稿，其 14 页叙事与结构已由 06-18 条目覆盖，本次不重复记录。
 🟡 Medium: [reflector 2026-06-19] ob-harness 子仓已由用户删除，以后不再出现。rules/WORKSPACE.md 的 openbmc-aware-harness 路由条目已移除（本地目录亦确认不存在）；OBSERVATIONS 中 06-04/06-09/06-13/06-15/06-18 的 ob-harness 记录转为历史归档，不再代表活跃项目。其中 06-18 的 confirmation banner（视觉强调与确认逻辑分离）模式有跨项目 CLI 复用价值，暂留观测、未晋升 skill。docs/specs 与 docs/plans 下的 ob-harness 设计文档作为历史归档保留，未改动。
 Date: 2026-06-21
 
 🟡 Medium: [项目里程碑] ob-harness V1.2 发布（子仓独立 git 仓库）。四条互锁主线：重构（§1-§7 物理分层 + 抽 5 个公共函数 + 清死代码，4200 行脚本重新可维护）、退出码协议统一（取消 exit0/exit2 混用、bitbake 码不再透传、领域函数层前提 1→3，修了 menu 把取消误报 Init succeeded 的 bug，统一到 0/2/3/1 四档）、从零搭起四层测试体系（protocol/unit/orchestration/integration + run_all + CI + 双核心层交叉覆盖 + multiset shellcheck baseline 防同类告警静默吸收）、ob-first 共识（ADR 0003 + bestpractice_06 skill + AGENTS.md 守卫 + usage↔dispatch 防漂移测试）。ob 从「能用」升级到「可被 agent 稳定依赖」。
 🟡 Medium: [写作方法论] V1.2 发布文章采用「技术深度 + 故事门槛」双轨策略：`adhoc_jobs/2026/20260621-ob-harness-v1.2-release-未发表.md` 完整展开四条主线工程含量供固件同行深度阅读；`adhoc_jobs/2026/20260621-ob-harness-v1.2-release-故事版.md` 用「管家 ob」拟人化隐喻降低阅读门槛，面向破圈与公众号沟通。发文过程踩到「只看 release notes 漏掉 PR 工程含量、把系统性治理窄化成单一主题」的坑，完整教训已沉淀进 user memory（`ob-harness-v1.2-article.md`）。
 🟡 Medium: [方法论/CLI 协议设计] V1.2 退出码 0/2/3/1 四档语义配合 exit 3 的 remedy line（如 `Run 'ob init romulus' first`），让 AI agent 按退出码区分「该重试」vs「该放弃」，是 CLI 工具为 agent 调用方专门设计稳定协议的实例，可作为后续 ob 或类似 CLI 工具设计的参考范式。
-🟢 Low: [任务流水] 顺势修订 `20260612-ob-harness-v1.1-release.md` 并提交到 adhoc_jobs 子仓 iasi 分支（commit 7d903bc）。
 Date: 2026-06-30
 
 🟡 Medium: [LLM cache billing 成本结构] `adhoc_jobs/2026/20260624-llm_cache_billing_analysis.md` 基于 ob-harness 41 个会话日志解释 AI 编程账单：5.75 亿输入 token 对 663 万输出 token，输入约为输出 87 倍；总体缓存命中率 93.6%，100 轮以上长会话命中率 94.4%，实际全额计费的新鲜输入约 3679.9 万 token。结论是长会话的高上下文依赖通过前缀缓存被显著摊薄，prompt caching 是当前重上下文 agent 工作流成本可承受的关键机制。
@@ -109,3 +107,10 @@ Date: 2026-07-05
 
 🟡 Medium: [框架工程资产新增] commit 48aed2c 新增 `adhoc_jobs/2026/20260704-harness-loop-engineering-diagram-zh.html` 与配套 `adhoc_jobs/2026/20260704-harness-loop-engineering-diagram.gif`，把 Prompt/Context/Harness/Loop Engineering 关系图沉淀为可复用可传播的可视化资产，延续 Harness Engineering 叙事从文字到图形表达的体系化推进。
 🟢 Low: [observer 噪音过滤] 目标日期窗口内同时命中 `periodic_jobs/ai_heartbeat/state/heartbeat_status.json` 更新，该文件属于心跳运行态自动记账，不作为新认知写入观测主记录。
+
+Date: 2026-07-12
+
+🟡 Medium: [跨分叉分支 cherry-pick 的维护权属核查] 把 main 最近提交同步到严重分叉的 iasi 分支（iasi 领先 main 98 提交，main 领先 73）时，模块化大重构提交（如 731a3bb 拆 external writing、14cd828 拆 internal writing）会直接覆盖目标分支独有演进。核查方法：`git log <merge-base>..<branch> -- <file>` 确认目标分支分叉后是否动过该文件 + 检查作者权属。iasi 写作方法论文档（COMMUNICATION/workflow_*.md）经核查全是鸭哥（Yan Wang）提交、用户未维护，故直接 checkout main HEAD 对齐；INDEX.md 含用户自有 skill 条目需手动合并。决策模式已存 memory（iasi-writing-docs-align-main）。
+🟡 Medium: [写作方法论文档对齐 main 模块化重构] commit f94993b 将 main 上鸭哥的 external/internal writing 模块化重构同步到 iasi：3 个 workflow/COMMUNICATION 文档对齐 main 最新版，新增 bestpractice_external_prose.md（外部文章文风手册）、reference_writing_thesis_catalog.md（L1-L8 分析视角）、bestpractice_internal_visuals.md（内部视觉组件规范）。main 重构方向是把臃肿单一 workflow 文件拆成「精简 workflow + 独立 bestpractice/reference 文件」，iasi 原为鸭哥早期未精炼版本。
+🟢 Low: [SKILL_ECOSYSTEM 扩展] commit 1d176a2（cherry-pick 自 main 3a2e89b）把 innovation-assistant-skill 纳入 public skill ecosystem，定位为 SIT + Think Bigger 结构化创新流水线，延续独立 skill 单体打包→生态索引的扩展模式。
+🟢 Low: [observer 噪音过滤] find -newermt 命中大量 adhoc_jobs/articles_archive 归档文件，系批量操作时间戳归一噪音（同 07-03 记录的归一现象），非真实内容变动；本次真实认知变动仅来自 07-12 会话的 cherry-pick + sync 工作。
