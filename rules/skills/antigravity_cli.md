@@ -25,6 +25,8 @@ if ! command -v agy >/dev/null 2>&1; then
 fi
 ```
 
+installer URL 会随官方更新而变化。上述“下载后人工审阅”路线只适合可信个人工作站。受管或高安全环境应从 [官方 GitHub Releases](https://github.com/google-antigravity/antigravity-cli/releases) 下载固定版本资产，并在解压或执行前核对该 release 的 GitHub asset metadata 所公布的 SHA-256 digest。组织无法批准对应 release 与 digest 时，不要安装。
+
 安装脚本默认把二进制放在 `~/.local/bin/agy`。如果当前 shell 仍找不到命令，运行安装器自带的环境配置，再重新打开 shell：
 
 ```bash
@@ -53,7 +55,7 @@ agy models
 2. **结果文件**：prompt 要求 agent 把完整成品写入明确路径，例如 `tmp/<session>/agy_<task>_result.md`。
 3. **运行记录**：CLI 的 stdout、stderr 和 `--log-file` 分别落盘。stdout 只是完成说明，不能替代结果文件。
 
-prompt、结果和运行记录可能包含任务正文、文件路径、账号元数据或模型事件。它们必须放在 git-ignored 的 `tmp/` 中，只用于本地审计；不得 commit、上传或公开分享。仓库应至少忽略 `tmp/`、`*.log` 和 `.env`。
+prompt、结果和运行记录可能包含任务正文、文件路径、账号元数据或模型事件。它们必须放在 git-ignored 的 `tmp/` 中，只用于本地审计；不得 commit、上传或公开分享。仓库应至少忽略 `tmp/`、`*.log`、`.env` 和 `.env.*`，并在需要时仅放行已脱敏的 `.env.example`。
 
 不要把长 prompt 直接塞进命令行。命令行只传一条 driver prompt，要求读取任务文件并严格执行。任务文件、参考材料和输出文件都应位于启动目录或其子目录。
 
