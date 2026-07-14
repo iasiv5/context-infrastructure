@@ -175,29 +175,51 @@ task(
    - Tier 3-4 源出现与 Tier 1-2 矛盾的证据 → 以 Tier 3-4 为准，记录矛盾点
 3. 如发现重大矛盾，可再启动 sub-agent 针对性验证。
 
+### Phase 3.3: 溯源与事实核查
+
+**目标**：在观点 brainstorm 之前逐源回查支撑核心 thesis 的关键证据，排除 sub-agent 误读、幻觉和选择性引用。除纯事实汇总外，默认执行。
+
+1. 提取 5-10 个关键参考源：直接支撑或反驳论点的来源、看似矛盾的来源、含关键数据的来源和可信度存疑的来源。
+2. 用 Tavily extract 重新读取原始内容，核查转述、限定条件、URL 和数字精度。不能用 sub-agent 的总结验证另一份 sub-agent 总结。
+3. 写入 `tmp/<session_slug>/fact_check.md`。每项记录来源、当前转述、核查结论（`一致`、`部分偏差`、`hallucination`）和原始摘录。
+4. 把误读标入 scratchpad。brainstorm 只使用修正后的事实；核心来源被证伪时先补调研。
+
+### Phase 3.5: Brainstorm 与补调研决策
+
+**目标**：事实核查完成后，通过独立视角暴露 thesis、反方和信息缺口。external-facing 文章、观点型调研和需要形成 thesis 的任务默认执行；纯事实汇总可以跳过。
+
+1. 主线程整理 `tmp/<session_slug>/brainstorm_brief.md`：初始 thesis、已验证事实、不确定 claim、反例、目标读者和写作约束。
+2. 并行调用不同能力路线的 agent，并分配明确角色，例如证据怀疑者、目标读者、产品决策者。每个 agent 回答：当前 thesis 的最强版本、最脆弱前提、需要补查的 3-5 个问题、哪些证据会改变结论。
+3. 整合为 `tmp/<session_slug>/brainstorm_synthesis.md`，列出 thesis 候选、必须补查的问题和验证通道。
+4. 启动一轮范围窄于 Phase 2 的补调研，只验证最脆弱前提和反例。新增来源追加到 `source_index.md`。
+
+Brainstorm 不是标题润色，也不是多 agent 泛泛复述。它必须转化为补调研或明确的判断收敛。
+
 ### Phase 4: 写作
 
 调研的 Phase 1-3 完成后，进入写作阶段。根据目标产出类型选择路径：
 
-**如果是 external-facing 分析文章** → 加载 `workflow_external_writing.md`，从 Phase A 开始执行。该 skill 包含作者的分析视角目录（Thesis Catalog）、判断合成步骤（视角匹配 → 族谱追溯 → 叙事重构 → thesis 成型）和写作规范。
+**External-facing 分析文章** → 先执行 [External-Facing Thesis Mining](./workflow_external_thesis_mining.md)。只有 verdict 为 `PROCEED`，才进入 [外部写作工作流](./workflow_external_writing.md)。后者按 [Antigravity CLI 文件式调用](./antigravity_cli.md) 执行 AGY IC-1 结构稿、fresh AGY IC-2 低认知负担重写和 fresh AGY IC-3 独立 prose QA。主线程不得绕过写作 agent，也不得在 IC-3 后手工改 prose。
 
-**如果是 internal memo**（面向自己或共享上下文的协作者）→ 加载 `workflow_internal_writing.md`。先把最影响决策的结论和依据显出来，把仍未确认的点与下一步动作留清楚。动笔前读一遍 `rules/COMMUNICATION.md`。
+**Internal memo**（面向用户本人或共享上下文的协作者）→ 加载 [内部写作工作流](./workflow_internal_writing.md)。先呈现最影响决策的结论和依据，并保留未确认点与下一步动作。动笔前读取 `../COMMUNICATION.md`。
 
 **共享格式要求**（两种 mode 通用）:
 - 中文 Markdown
-- 所有引用必须有 URL（Markdown 链接格式），且必须使用**绝对链接**（以 `https://` 开头）。相对链接在 yage.ai 上可工作，但发布到 Circle 等第三方平台时会指向错误地址
+- 所有外部引用必须使用以 `https://` 开头的绝对 URL，避免更换发布环境后失效
 - 关键引用保留原文摘录，不只是总结
 - 如果最终交付是 external article，重要来源直接进入正文的 inline Markdown links，不只堆在文末
 
-**Survey report 与博客文章的区别**：本 workflow 的产出是 survey report，存放在 `contexts/survey_sessions/`。不是博客文章。不要加博客 frontmatter 或 Kit 订阅 script tag。如果用户要求发布到博客，单独复制到 `contexts/blog/content/` 并加 frontmatter，这是独立步骤。
+**Survey report 与博客文章的区别**：本 workflow 的产出是 survey report，存放在 `contexts/survey_sessions/`。不要默认添加博客 frontmatter、订阅组件或渠道专用 metadata。用户明确要求博客时，再按目标项目的博客格式处理。
 
-**交付终点**：写完 `contexts/survey_sessions/` 下的最终 MD 文件即为调研交付的终点。不要自动继续执行发布流程（yage share、博客、Twitter、Circle 等）。只有当用户显式要求发布时，才按对应的 skill 流程执行后续步骤。
+**交付终点**：写完 `contexts/survey_sessions/` 下的最终 MD 文件即为调研交付终点。不要自动发布到 blog、Twitter、Circle 或其他渠道；发布需要用户对当次动作作出显式指令。
 
 **存储位置**: `contexts/survey_sessions/<topic>_survey_YYYYMMDD.md`
 
 **推荐 artifact 目录** `tmp/<session_slug>/`，至少包含：
 - `scratchpad.md`（含 claim extraction 表格）
 - `search_manifest.md`（含产出文件索引表、subagent 定位方式、数据覆盖评估）
+- `fact_check.md`（Phase 3.3 的逐源事实核查）
+- `brainstorm_brief.md`、`brainstorm_synthesis.md`（观点型或 external-facing 任务）
 - `search_notes.md`（按需）
 - `source_index.md`（按需）
 

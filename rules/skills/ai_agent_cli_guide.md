@@ -3,7 +3,7 @@
 ## 元数据
 - 类型: API Guide
 - 适用场景: 用 CLI Agent 构建自动化流水线、AI 调用 AI
-- 最后更新: 2026-03-10
+- 最后更新: 2026-07-14
 
 ---
 
@@ -20,13 +20,13 @@
 
 ## 工具速查
 
-| 维度 | Claude Code | Codex CLI | OpenCode |
-|------|-------------|-----------|----------|
-| **开源** | ❌ | ❌ | ✅ 100% |
-| **模型绑定** | 仅 Claude | 仅 OpenAI | Provider-agnostic（xAI, Anthropic, OpenAI, Google 等） |
-| **CLI 非交互** | `claude --print` | `codex exec` | `opencode serve` + `opencode run --attach`（两步） |
-| **Web API** | ❌ | ❌ | ✅ 完整 |
-| **推荐场景** | 深度推理 | 自动化 | 多模型对比、自动化 + 可视化 |
+| 维度 | Claude Code | Codex CLI | OpenCode | Antigravity CLI |
+|------|-------------|-----------|----------|-----------------|
+| **开源** | ❌ | ❌ | ✅ 100% | ❌ |
+| **模型绑定** | 仅 Claude | 仅 OpenAI | Provider-agnostic（xAI, Anthropic, OpenAI, Google 等） | Antigravity 订阅内模型 |
+| **CLI 非交互** | `claude --print` | `codex exec` | `opencode serve` + `opencode run --attach`（两步） | `agy --print` |
+| **Web API** | ❌ | ❌ | ✅ 完整 | ❌ |
+| **推荐场景** | 深度推理 | 自动化 | 多模型对比、自动化 + 可视化 | 用订阅额度调用 Gemini agent |
 
 ---
 
@@ -80,6 +80,18 @@ subprocess.run([
 - `--json-schema`: 强制输出符合 JSON Schema
 
 **推荐**: Sonnet 4.6 性能接近 Opus，价格仅 1/5
+
+---
+
+## Antigravity CLI 快速参考
+
+Antigravity 自动化使用独立的 `agy` 命令，不使用 `agy-ide chat`。完整安装、认证和执行契约见 [Antigravity CLI 文件式调用](./antigravity_cli.md)。
+
+核心规则：prompt、结果、stdout、stderr、事件日志全部落盘；默认模型为 `Gemini 3.5 Flash (High)`；`--dangerously-skip-permissions` 必须与 `--sandbox` 同时使用；内部 timeout 为 10 分钟，外层约 610 秒。
+
+AGY 1.1.2 没有 `login` 子命令，也没有 JSON event stream。它从系统 keyring 复用 Antigravity App 或 IDE 的 Google 登录，进度检查使用带时间戳的 `--log-file`。成功必须同时满足退出码为 0、结果文件非空、硬约束通过且 stderr 无未处理错误。
+
+多阶段写作必须为每个阶段启动 fresh conversation，并使用独立的 prompt、result、stdout、stderr 和 events 文件。
 
 ---
 
@@ -174,6 +186,8 @@ opencode run \
 > 3. 设置合理的推理强度（如翻译设为 `low`）
 > 4. 传递 Prompt 前清理空字符 (`.replace('\0', '')`)
 > 5. 对于 OpenCode，优先使用 Web Server API"
+
+上面的 JSON 流建议不适用于 Antigravity CLI。AGY 使用 `--log-file` 观察进度，并以指定结果文件作为唯一成品。
 
 ---
 
