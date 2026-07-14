@@ -114,3 +114,8 @@ Date: 2026-07-12
 🟡 Medium: [写作方法论文档对齐 main 模块化重构] commit f94993b 将 main 上鸭哥的 external/internal writing 模块化重构同步到 iasi：3 个 workflow/COMMUNICATION 文档对齐 main 最新版，新增 bestpractice_external_prose.md（外部文章文风手册）、reference_writing_thesis_catalog.md（L1-L8 分析视角）、bestpractice_internal_visuals.md（内部视觉组件规范）。main 重构方向是把臃肿单一 workflow 文件拆成「精简 workflow + 独立 bestpractice/reference 文件」，iasi 原为鸭哥早期未精炼版本。
 🟢 Low: [SKILL_ECOSYSTEM 扩展] commit 1d176a2（cherry-pick 自 main 3a2e89b）把 innovation-assistant-skill 纳入 public skill ecosystem，定位为 SIT + Think Bigger 结构化创新流水线，延续独立 skill 单体打包→生态索引的扩展模式。
 🟢 Low: [observer 噪音过滤] find -newermt 命中大量 adhoc_jobs/articles_archive 归档文件，系批量操作时间戳归一噪音（同 07-03 记录的归一现象），非真实内容变动；本次真实认知变动仅来自 07-12 会话的 cherry-pick + sync 工作。
+
+Date: 2026-07-14
+
+🟡 Medium: [合规科普] commit 2f936a6 新增欧盟 CRA（网络韧性法案）科普文章（`adhoc_jobs/2026/20260713-eu-cra-kepu.md`）。核心要点：安全责任从"出厂前测试"延伸到"产品全生命周期漏洞处理"；覆盖所有连网设备含独立芯片/固件/App；四项核心义务（出厂不带已知漏洞、提供安全更新至少 5 年、维护 SBOM 并跟踪漏洞影响、技术文件保存 10 年）；两个关键节点——2026-09-11 通报时钟开启（24h 早期预警 + 72h 正式报告）、2027-12-11 全面验牌（未贴 CE 标志不得进入欧盟市场）；罚款上限 1500 万欧元或全球营收 2.5%。与固件/BMC 安全领域直接相关，是 OpenBMC 产品出口欧洲需关注的合规背景。
+🟢 Low: [observer 噪音过滤] 142 个文件命中 -newermt 窗口，但 141 个为 adhoc_jobs/articles_archive/scripts_archive/webpage 等归档目录的批量时间戳归一噪音，仅 commit 2f936a6 为真实内容变动。
