@@ -23,15 +23,18 @@ Start from my workspace AGENTS.md or CLAUDE.md. Follow any WORKSPACE.md or skill
 |---|---|---|
 | Web search | [tavily-skill](https://github.com/grapeot/tavily-skill) | Tavily search/extract CLI，给 agent 稳定 JSON 输出 |
 | Documents | [gdocs-skill](https://github.com/grapeot/gdocs-skill) | Google Docs 创建、搜索、修改、分享，支持 Markdown 和 tab |
+| Maps / travel | [google-maps-routing-skill](https://github.com/grapeot/google-maps-routing-skill) | Google Maps Routes + Geocoding CLI，支持地址解析、实时 drive time 和 leave-by 规划 |
 | Email | [outlook_skill](https://github.com/grapeot/outlook_skill) | Outlook.com 邮件下载、归档、Markdown 渲染、发送和日历邀请 |
 | Email | [resend_email_skill](https://github.com/grapeot/resend_email_skill) | Resend 自定义域名发信、收件读取、Markdown 导出和附件检查 |
 | Email / newsletter | [kit-skill](https://github.com/grapeot/kit-skill) | Kit Broadcast Markdown 发信 CLI，支持 dry-run、draft-only、web-only 和 tag/segment 定向；账号默认值放本地 overlay |
 | Messaging | [imessage_skill](https://github.com/grapeot/imessage_skill) | macOS iMessage send-only CLI；联系人 alias 放本地 overlay |
-| Agent operations | [opencode_skill](https://github.com/grapeot/opencode_skill) | OpenCode job 提交、批量任务、SQLite 数据维护和 archive |
-| Agent operations | [process-launcher](https://github.com/grapeot/process-launcher) | 本地 HTTP process launcher，适合 TCC / GUI 权限桥接 |
+| Agent operations | [opencode_skill](https://github.com/grapeot/opencode_skill) | OpenCode `submit` / `submit --dry-run` / batch submission、recurring cron workflow、SQLite 数据维护和 archive |
+| Agent operations | [ai_session_export](https://github.com/grapeot/ai_session_export) | 将 OpenCode、Claude Code、Codex、Antigravity 和 Second Mind 会话增量导出为统一 Markdown 归档，供浏览和检索 |
+| Agent operations | [process-launcher](https://github.com/grapeot/process-launcher) | 本地 HTTP process launcher，适合 TCC / GUI 权限桥接、durable one-shot delayed jobs、进程日志 and 取消 |
 | Agent operations | [opencode-docker](https://github.com/grapeot/opencode-docker) | Docker 部署模版，用于快速配置 OpenCode Server 容器化运行环境 |
 | Usage analytics | [ai_usage_dashboard](https://github.com/grapeot/ai_usage_dashboard) | 多平台 AI token usage、成本估算、本地 dashboard 和 E1002 JSON |
 | Social / growth | [typefully-twitter-skill](https://github.com/grapeot/typefully-twitter-skill) | Typefully 发帖、账号指标和 X/Twitter 单帖 analytics |
+| Community publishing | [circle-post-skill](https://github.com/grapeot/circle-post-skill) | Circle community Markdown conversion, dry-run preflight, publish/update/delete CLI；社区默认值放本地 overlay |
 | Payments / growth | [stripe-skill](https://github.com/grapeot/stripe-skill) | Stripe 只读 finance / sales analytics，live tests 默认 opt-in |
 | Media | [online-media-skill](https://github.com/grapeot/online-media-skill) | 在线媒体下载、ASR artifact、query pack 和 source identification 工作流 |
 | Slides | [presentation_skill](https://github.com/grapeot/presentation_skill) | 默认 image-generated full-slide deck；明确不用图像生成时 fallback 到 HTML module deck |
@@ -52,6 +55,6 @@ Start from my workspace AGENTS.md or CLAUDE.md. Follow any WORKSPACE.md or skill
 
 如果一个能力需要完整 CLI、测试、fixtures 或长期维护，把它做成独立 repo。`context-infrastructure` 只链接它，不复制它。这样用户可以按需安装，不会让 starter workspace 变成巨大的工具合集。
 
-如果一个能力只是通用工作方法，例如深度调研、并行 subagent、分析写作、skill 写作 、项目脚手架，可以留在本仓库的 `rules/skills/`。这些文件是 reference implementation 的核心，clone 后就能阅读和改造。
+如果一个能力只是通用工作方法，例如深度调研、并行 subagent、分析写作、skill 写作、项目脚手架，可以留在本仓库的 `rules/skills/`。这些文件是 reference implementation 的核心，clone 后就能阅读和改造。
 
 如果一个能力依赖私人数据、私人账号或业务上下文，把通用部分放 public repo，把私人部分留在用户自己的 workspace overlay。不要把真实联系人、服务器、路径、API key、客户名、交易数据或使用记录写进 public repo。

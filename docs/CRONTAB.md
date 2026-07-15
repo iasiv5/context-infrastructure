@@ -24,6 +24,17 @@ Daily     → Crontab Monitor: 健康审计，发现异常则发告警邮件
 
 ## 核心任务说明
 
+
+### Session Sync（每日）
+
+使用独立的 [ai_session_export](https://github.com/grapeot/ai_session_export)
+把 OpenCode、Claude Code、Codex、Antigravity 和 Second Mind 的本地会话增量导出为
+统一 Markdown。真实归档应放在私有数据目录并加入 `.gitignore`，不要写进 public repo。
+
+- **建议时间**：每日 4:00 AM
+- **输出**：`contexts/ai_sessions/<source>/`
+- **可选后处理**：用 semantic-search-skill 刷新私有向量索引
+- **搜索入口**：`rules/skills/ai_session_search_archive.md`
 ### AI Heartbeat Due Check（每日 / 每周）
 
 定时检查 observer / reflector 是否到期，并把结果写入日志或接入你自己的提醒系统。这一步只做审计和提醒，不直接执行 observer / reflector；真正处理仍在当前 chat 中运行 `/ai-heartbeat`。如果你同时启用了 workspace 自带的 SessionStart hook，它会按仓库 policy 决定 Windows modal 或 8.88 秒轻提醒窗；cron 本身仍只负责审计和日志。
@@ -60,6 +71,9 @@ Daily     → Crontab Monitor: 健康审计，发现异常则发告警邮件
 # AI Heartbeat Observer Due Check — 每日 8:00 AM
 # 如果日志提示 observer 已到期，请在当前 chat 中运行 /ai-heartbeat
 0 8 * * * cd /path/to/your/workspace && /path/to/your/workspace/.venv/bin/python periodic_jobs/ai_heartbeat/src/v0/heartbeat_preflight.py >> /tmp/heartbeat_observer_check.log 2>&1
+
+# Session Sync — 每日 4:00 AM；先按 ai_session_export README 配置私有输出路径
+0 4 * * * cd /path/to/ai_session_export && /path/to/ai_session_export/.venv/bin/python export_sessions.py --base-dir /path/to/your/workspace/contexts/ai_sessions --state-file /path/to/your/workspace/contexts/ai_sessions/.export_state.json >> /tmp/ai_session_sync.log 2>&1
 
 # AI Heartbeat Reflector Due Check — 每周日 9:00 AM
 # 如果日志提示 reflector 已到期，请在当前 chat 中运行 /ai-heartbeat
