@@ -53,7 +53,7 @@
   - 核心参数：并行度 ≤5，调研 overlap 30-50%，代码 overlap 0-20%
 - [深度调研工作流](./workflow_deep_research_survey.md) ✅ — 多 Agent 并行 + 交叉验证（Phase 1-3 信息采集）
 - [External-Facing Thesis Mining](./workflow_external_thesis_mining.md) ✅ — 位于调研与成文之间的判断层；结合 Axioms、Thesis Catalog、历史语料、独立候选和 fresh critique，输出 `PROCEED` 或 `DO_NOT_WRITE_YET`
-- [外部写作工作流](./workflow_external_writing.md) ✅ — 将通过 thesis gate 的素材转化为 external-facing 分析文章。完整链路是 deep research → thesis mining → AGY IC-1 结构稿 → AGY IC-2 低认知负担重写 → fresh AGY IC-3 独立 prose QA
+- [外部写作工作流](./workflow_external_writing.md) ✅ — 将通过 thesis gate 的素材转化为 external-facing 分析文章。完整链路是 reasoning architecture → AGY IC-1 结构稿 → AGY IC-2 自然介绍重写 → fresh AGY IC-3 voice QA → Manager Voice Pass
 - [内部写作工作流](./workflow_internal_writing.md) ✅ — 面向用户本人、共享上下文协作者和未来 AI agent 的内部文档写作。核心是低决策摩擦：结论前置、skimmable、inline evidence、方便跳转和验证，必要时用图表降低认知负担。
 - [认知画像提取工作流](./workflow_cognitive_profile_extraction.md) — 从非结构化对话数据提取可预测的认知公理
   - 适用：群聊/Slack/Discord/邮件/播客转录等任意对话数据

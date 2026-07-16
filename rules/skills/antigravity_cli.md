@@ -80,7 +80,7 @@ agy --print \
 
 调用方还应设置约 610 秒的外层 process timeout。`--print-timeout 10m` 是 AGY 内部等待上限；外层多留约 10 秒供进程退出和日志落盘。
 
-`--dangerously-skip-permissions` 只允许与 `--sandbox` 同时使用，并且只在上述最小 trusted scratch workspace 中使用。任务文件必须写明唯一输出路径和“不要修改其他文件”。
+`--dangerously-skip-permissions` 只允许与 `--sandbox` 同时使用，并且只在上述最小 trusted scratch workspace 中使用。任务文件必须写明一个输出路径，或逐项列出一组有限输出路径，并明确“不要修改列表之外的文件”。
 
 ## 模型与可观测性
 
@@ -99,25 +99,26 @@ AGY 1.1.2 没有 `--json` 或 streaming JSON 输出。当前可观测性来自 `
 完成条件必须同时满足：
 
 1. 进程退出码为 0。
-2. 指定结果文件存在且非空。
+2. 所有指定结果文件存在且非空。
 3. 结果文件满足任务要求的结构、数字、URL 等硬约束。
 4. stdout 有完成说明，stderr 没有未处理错误。
 
-进程超时、结果文件缺失或为空时，任务失败。不得把 stdout 摘要当作成品兜底。
+进程超时、任一结果文件缺失或为空时，任务失败。不得把 stdout 摘要当作成品兜底。
 
 ## 写作任务约束
 
-任务文件至少应明确：需要完整读取的 brief、草稿和文风规则；唯一结果路径；禁止修改其他文件；必须保留的 thesis、事实、数字、URL、图片、H2 顺序和术语。
+任务文件至少应明确：需要完整读取的 brief、草稿和文风规则；一个结果路径或逐项列出的有限结果路径；禁止修改列表之外的文件；必须保留的 thesis、事实、数字、URL、图片、H2 顺序和术语。
 
 写作 brief 应附“不可改词表”，列出产品名、模型名、API 名、代码标识符、易误译术语和必须逐字保留的标签。中文正文使用自然段。短句是一种倾向，不得把每句话单独换行。
 
 ## Fresh Conversations
 
-每次不带 `--continue` 或 `--conversation` 的 `agy --print` 都创建新 conversation。多轮写作的 IC-1、IC-2、IC-3 应分别调用一次新的 `agy --print`：
+每次不带 `--continue` 或 `--conversation` 的 `agy --print` 都创建新 conversation。多轮写作的 IC-1、IC-2、IC-3 应分别调用一次新的 `agy --print`。所有 prompt、草稿、校准材料、审查报告和日志都放在 gitignored 的 `tmp/<session_slug>/` 下：
 
 - IC-1 只读 brief，写结构稿。
-- IC-2 读 brief 和结构稿，完整重写。
-- IC-3 读 brief、IC-2 成品和文风规则，独立审稿并写最终稿。
+- IC-2 读 brief、结构稿和同渠道文风校准材料，从空白页面完整重写。
+- IC-3 读 brief、IC-2 成品、校准材料和文风规则，独立审稿并写 `article_qa.md` 与 `prose_qa.md`。
+- 主线程随后完成 Manager Voice Pass，写 `article_final.md` 与 `voice_audit.md`。这一步不属于 AGY conversation。
 
 每轮使用独立的 prompt、result、stdout、stderr 和 events 文件，例如 `agy_ic1_prompt.md`、`agy_ic1_result.md`、`agy_ic1_stdout.txt`、`agy_ic1_stderr.txt`、`agy_ic1_events.log`。
 
