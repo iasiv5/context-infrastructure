@@ -127,3 +127,11 @@ Date: 2026-07-16
 🟡 Medium: [内部写作理解门槛理论完善] commit 8b0f63a 在 `workflow_internal_writing.md` 中引入两层核心判断：①"项目上下文 vs 概念上下文"分离——共享项目背景不等于共享术语，本轮新概念仍须建立完整依赖；②"双层结论"原则——首屏先普通语言层（不含术语也能复述发生了什么）再技术精确层，应对"负载术语但无含义"的标签代替解释问题。结论卡片标题从英文改为中文（Bottom Line→核心结论 / Why This Matters→为什么重要 / Recommended Action→建议行动）。适用场景描述也收紧为"熟悉同一项目或决策背景的协作者"。
 🟢 Low: [Antigravity 安装加固] commit 0cc45be 修复 `antigravity_cli.md` 安装流程已知问题（2 行 .gitignore + 安装脚本加固），属配置微调非认知变动。
 🟢 Low: [observer 噪音过滤] 110+ 文件命中 9:56:00 时间戳窗口系 GitHub Copilot Chat 运行时 checkout/sync 批量操作产生的归一噪音；真实认知变动仅来自 4 个 commits（9aee80c/0cc45be/0ae58e5/8b0f63a），均在 07-14 至 07-15 内提交。
+
+Date: 2026-07-18
+
+🔴 High: [iasi 跟踪 main 策略升级 cherry-pick→merge] 对严重分叉的上游（iasi 与 main 双向各领先数十提交）逐提交 cherry-pick 会让结构性分叉点反复冲突；改用 `git merge main` 一次性处理 + 建立增量基线（merge commit b1b4a50），后续同步只处理增量。dry-run merge（`--no-commit` 后 `--abort`）是评估策略代价的有效手段：本次 33 文件自动合并、13 文件冲突。决策模式已存 memory（iasi-merge-main-strategy），含 4 类已知分叉点（heartbeat 归档 / semantic-search 升级 / Copilot 偏好 / INDEX 独有条目）。
+🟡 Medium: [merge 冲突解决决策模式] 13 个结构性冲突的处理范式：modify/delete 保留 iasi 有意删除（observer/opencode_client/reflector.py 三脚本 `git rm`）；main 引用 iasi 已删文件的（CRONTAB/setup_guide 的 reflector.py/observer.py）保留 iasi preflight 版；iasi 领先 main 的改动（cognitive 的 semantic-search repo 升级）保留 iasi；纯 main 增益（Google Maps 列表、trailing whitespace 清理、`functions.task` API 纠正、ChatGPT OAuth）取 main。
+🟡 Medium: [main 内容同步] 本次带入 main 上游内容：7 个新 skill（35e5d94：deployment_github_actions_koyeb / growth_analytics / ios_test_acceleration / openreview / skill_download_paper / workflow_public_consensus_net_income_audit / workflow_research_paper_survey_writing）+ 公开写作工作流术语更新（2510988，thesis gate→reasoning architecture 等）+ ChatGPT OAuth ecosystem 引用（32c96e）+ 代码清理（7902adf）。
+🟢 Low: [push] 推送 b1b4a50 到 origin/iasi；远程 iasi 为 protected ref，靠 bypass 权限推送成功（提示 "Cannot update this protected ref"）。
+🟢 Low: [observer 噪音过滤] 160 文件命中 -newermt 窗口，绝大部分是 merge 批量 touch 的 adhoc_jobs 归档与历史文章时间戳归一噪音；真实认知变动仅本会话 cherry-pick + merge + memory 工作。
