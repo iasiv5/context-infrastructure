@@ -79,7 +79,29 @@ pm2 save
 4. 为生产环境配置 Service Account token 注入链路。
 5. 为密钥设置定期轮换流程与泄漏应急流程。
 
-## 6. 代码中调用 API Key
+## 6. 字段命名约定
+
+vault 固定 `dev`，item 固定 `dev-api-keys`。推断新 service 的 1Password 路径时，按以下规则拼 field name：
+
+| 类型 | 模式 | 示例 |
+|---|---|---|
+| API key（最常见） | `<service>_api_key` | `ollama_api_key`、`typefully_api_key`、`koyeb_api_key` |
+| Token | `<service>_<descriptor>_token` | `circle_api_v2_token`、`ai_builder_space_token`、`data_for_seo_token` |
+| 应用专用密码 | `<service>_app_password` | `gmail_skill_app_password` |
+| Webhook 签名密钥 | `<service>_<use>_signing_secret` | `resend_webhook_signing_secret` |
+| Account ID | `<service>_account_id` | `cloudflare_account_id` |
+| 用户名/密码对 | `<service>_username` / `<service>_password` | `twine_username` / `twine_password` |
+| 环境变体 | `<service>_api_key_<env>` | `shippo_test_api_key`、`deepseek_api_key_opencode`、`resend_api_key_full` |
+
+完整路径：`op://dev/dev-api-keys/<field_name>`。
+
+**推断流程：**
+1. 确定 service 名（typefully、kimi、deepseek…），snake_case。
+2. 加对应类型后缀（默认 `_api_key`）。
+3. 拼成 `op://dev/dev-api-keys/<field>`。
+4. 如果不确定 field 是否存在，先列出现有 field 确认：`op item get dev-api-keys --vault dev --format json` 后检查 `fields[*].label`。避免因拼写（如 `olama` vs `ollama`）静默失败。
+
+## 7. 代码中调用 API Key
 
 在 Python/Node 脚本中，不要硬编码或读取 .env，而是通过 `op read` 获取：
 
