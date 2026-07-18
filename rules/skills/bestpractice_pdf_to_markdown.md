@@ -46,6 +46,12 @@ python rules/skills/pdf_to_markdown_cli.py doctor --format json
 python rules/skills/pdf_to_markdown_cli.py docling input.pdf --output output.md --format json
 ```
 
+在 macOS，尤其是 Apple Silicon 上，直接调用 Docling 官方 CLI 时优先显式走 CPU，避免 MPS 后端在 layout detection 中遇到 `torch.float64` 后崩溃：
+
+```bash
+docling input.pdf --to md --device cpu --no-ocr --output output_dir
+```
+
 ## 验收
 
 - 输出 Markdown 中表格用标准 `| ... |` 语法保留，列对齐

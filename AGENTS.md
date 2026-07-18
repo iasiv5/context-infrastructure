@@ -12,6 +12,12 @@ Before doing anything else:
 4. Read `rules/COMMUNICATION.md` — how to think and communicate (especially for non-coding tasks)
 5. Read `rules/skills/INDEX.md` — understand available skills
 
+## Multi-Agent Nudge
+
+This harness can delegate work to multiple sub-agents. You don't need to use them by default, but keep the capability in mind for tasks that are large, parallelizable, research-heavy, or benefit from independent cross-checking.
+
+Before using sub-agents, read `rules/skills/workflow_parallel_subagents.md`. The current OpenCode pattern is `multi_tool_use.parallel` wrapping multiple `functions.task` calls in the same assistant message.
+
 Don't ask permission. Just do it.
 
 ## SessionStart Hook: AI Heartbeat
@@ -28,27 +34,24 @@ AI Heartbeat 的会前提醒由 `.github/hooks/pre-session.ps1` 直接处理。S
 
 **重要：遇到"怎么做 X"时，先查 skill 再查系统工具。** 搜索顺序：(1) 下方速查表 → (2) `rules/skills/INDEX.md` → (3) 系统工具。
 
-**需要执行某项任务** → 先查 `rules/skills/INDEX.md` 找到对应的 skill  
+**需要执行某项任务** → 先查 `rules/skills/INDEX.md` 找到对应的 skill
 **想添加新能力** → 参考现有 skill 格式，更新 INDEX.md
 
 ### 常用 Skill 速查（以 INDEX.md 为准）
 
-**深度调研任务** → `rules/skills/workflow_deep_research_survey.md`  
-- 初步扫描 → 分割维度 → 多 Agent 并行 → 交叉验证 → 写报告  
+**深度调研任务** → `rules/skills/workflow_deep_research_survey.md`
+- 初步扫描 → 分割维度 → 多 Agent 并行 → 交叉验证 → 写报告
 - 输出：`contexts/survey_sessions/`
 
-**调用后台 Agent / 并行 Subagent** → `rules/skills/workflow_parallel_subagents.md`  
-- 何时拆分任务、如何并行派出多个 subagent  
-- 准备使用并行 subagent 前，先把这个 skill 读一遍
-- 派出 agent 后等系统通知即可，不需要轮询
+**调用后台 Agent / 并行 Subagent** → `rules/skills/workflow_parallel_subagents.md`
+- 何时拆分任务、什么时候不要拆、如何并行派出多个 subagent
+- 准备调用多个 `functions.task` 前，先把这个 skill 读一遍再执行
+- 当前并行方式是 `multi_tool_use.parallel`；不要使用旧 `run_in_background` / `background_output` 写法
 
 ## Axioms（公理）
 
 从个人经历提炼的决策原则，用于启发深度思考。分类索引、使用指南和触发词见 `rules/axioms/INDEX.md`。
 
-## Sub-agent 模型路由
-
-不同工具有各自的 subagent 机制和模型选择策略。当前主用 GitHub Copilot，偶尔用 Claude Code：
 ## Sub-agent 模型路由
 
 不同工具有各自的 subagent 机制和模型选择策略。当前主用 GitHub Copilot，偶尔用 Claude Code：

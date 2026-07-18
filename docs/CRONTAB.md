@@ -24,7 +24,6 @@ Daily     → Crontab Monitor: 健康审计，发现异常则发告警邮件
 
 ## 核心任务说明
 
-
 ### Session Sync（每日）
 
 使用独立的 [ai_session_export](https://github.com/grapeot/ai_session_export)

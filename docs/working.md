@@ -1,5 +1,9 @@
 # Working Log
 
+## 2026-07-16
+
+- Added `chat-gpt-oauth-skill` to the public ecosystem as an opt-in local ChatGPT Plus/Pro OAuth compatibility reference; documented that its private endpoint is unstable and not recommended for production.
+
 ## 2026-07-15
 
 - Added a public AI Session Search & Archive workflow with source routing, lexical-first retrieval, fresh semantic-search file lists, freshness checks, and privacy-safe result rules.
@@ -13,6 +17,11 @@
 ## 2026-07-10
 
 - Added `innovation-assistant-skill` to the public skill ecosystem as the Innovation capability for structured innovation pipelines (SIT + Think Bigger).
+
+## 2026-06-06
+
+- Added `google-maps-routing-skill` to the public skill ecosystem as the Maps / travel capability for Google Maps Routes + Geocoding CLI workflows.
+- Updated README, setup guide, and starter skill index examples so Google Maps appears alongside other standalone public skill repos.
 
 ## 2026-05-25
 

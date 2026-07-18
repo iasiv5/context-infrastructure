@@ -9,7 +9,7 @@
 - **Agentic 自主探索**: 自动化层只负责到期审计和会前提醒；真正的 observer / reflector 由当前 chat 中显式运行 `/ai-heartbeat` 后自主完成。
 - **版本化提醒策略**: 仓库通过 `periodic_jobs/ai_heartbeat/config/reminder_policy.json` 定义默认 reminder policy；当前 schema 只保留 `windows_popup_enabled`，不把 UI 偏好混进本地运行态。
 - **渐进式披露 (Progressive Disclosure)**: 默认不加载详细记忆，仅由 Agent 根据当前任务逻辑主动检索相关的 L1/L2 观测点。
-- **全局分层架构**: 
+- **全局分层架构**:
   - **L3**: 全局硬性约束（存放在 `rules/`，全局被动加载）。
   - **L1/L2**: 动态观测日志（存放在全局记忆池，Agent 主动检索）。
 - **抗噪设计**: 利用 AI 的语义理解能力识别真正的“新内容”。例如，针对 300+ 篇 Blog 的格式变动，AI 应通过检查元数据（Metadata）中的创建日期来识别真正的新文章。

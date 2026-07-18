@@ -6,7 +6,7 @@
 - **适用场景**: 需要对某个主题进行深度、全面、可验证的第三方调研
 - **输出位置**: `contexts/survey_sessions/`
 - **创建日期**: 2026-02-19
-- **最后更新**: 2026-03-30
+- **最后更新**: 2026-06-07
 
 ## 核心原则
 
@@ -129,19 +129,16 @@ External mode 选定后，还需要回答一个更根本的问题：**这件事�
 
 **启动 Sub-agent**:
 
-同时启动 3-5 个 sub-agent，每个负责一个维度。使用以下类型：
+同时启动 3-5 个 sub-agent，每个负责一个维度。使用 `multi_tool_use.parallel` 包多个 `functions.task` 调用，具体调用方式见 `workflow_parallel_subagents.md`。默认用 `general`；低成本初筛可用 `cheap_glm`；高隐私材料用 `private_ds4`；需要 zero-data-retention 云模型时按任务强度选择 `ollama_kimi` 或 `ollama_deepseek_pro`；复杂判断或最终 QA 用 `reasoning_gpt`。
 
-- `librarian` — 外部调研首选，查文档、开源代码、官方资料
-- `deep` category — 自主深度调研，适合复杂多源任务
-
-```
-task(
-  subagent_type="librarian",
-  load_skills=[],
-  description="调研 XX 维度",
-  run_in_background=true,
-  prompt="[具体调研维度的 prompt]"
-)
+```json
+{
+  "description": "调研 XX 维度",
+  "subagent_type": "general",
+  "prompt": "[具体调研维度的 prompt]",
+  "task_id": "",
+  "command": ""
+}
 ```
 
 每个 sub-agent 的 prompt 中明确：
@@ -282,7 +279,7 @@ Brainstorm 不是标题润色，也不是多 agent 泛泛复述。它必须转�
 | 维度划分太干净没有 overlap | 设计维度时故意让边缘模糊 |
 | Sub-agent 返回信息太浅 | prompt 中强调"深度"、"具体"、"原文" |
 | 中间文件堆积 | 集中到 `tmp/<session_slug>/`，只保留关键索引和判断 |
-| 用错 subagent 类型 | 外部调研用 `librarian` 或 `deep`，`explore` 只用于内部 codebase |
+| 用错 subagent 类型 | `subagent_type` 必须是当前已注册 agent 名；外部调研默认 `general`，代码库探索用 `explore`，隐私敏感用 `private_ds4` 或 Ollama Cloud 路线 |
 | 调研结果变成 vendor marketing 汇总 | Phase 1 提取 claim，Phase 2 按证据功能分配维度，Phase 3 核查验证状态 |
 
 写作阶段的常见失败模式（Relevance 不着地、Demo 当证据、时间维度模糊、调研汇总而非作者写作等）见 `workflow_external_writing.md` 的失败模式表。
