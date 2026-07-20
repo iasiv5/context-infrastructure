@@ -100,38 +100,36 @@ Date: 2026-06-30
 
 Date: 2026-07-03
 
-🟡 Medium: [ob-harness 持续重构工作流文章产出] 今日 commit 7f896eb 新增三篇 ob-harness 持续重构工作流文章（`adhoc_jobs/2026/20260703-*`），用不同叙事角度拆解 pick-one-arch-task 工作流：（1）三个 Skill 串联的流水线——improve-codebase-architecture（浅模块发掘，删除测试法）→ grill-with-docs（逐个极端输入追问生成 ADR）→ writing-plans（分钟粒度执行计划）；（2）双 Agent 对抗验证——基于 1M 上下文让顾问 Agent 与主力 Agent 多轮 PK 消除逻辑漂移；（3）防回归结构锁——`grep -c 旧函数名` 断言为 0、bitbake 调用次数锁。核心论点是 prompt 只负责路由+约束（"只挑一条"），真正的智能在 skill，把架构决策从直觉搬进有纪律的流程。
-🟢 Low: [SKILL_ECOSYSTEM 扩展] duck 哥 PR #48（6096677，07-02）把 open_router_data_scraper 纳入 skill ecosystem，延续前期的独立 skill 单体打包→生态索引迁移模式。
-🟢 Low: [observer 扫描噪音排查] 本日全仓文件 LastWriteTime 集中在 10:56:08，系一次批量 checkout/clone 的时间戳归一，非真实内容变动；按 KB §2 指引须用 git log + 内容读取区分机械噪音与有效认知，本次真实变动仅 commit 7f896eb 与 6096677 两个提交。
+🟡 Medium: [ob-harness 持续重构工作流文章产出] commit 7f896eb 新增三篇 ob-harness 持续重构工作流文章（`adhoc_jobs/2026/20260703-*`），用不同叙事角度拆解 pick-one-arch-task 工作流：（1）三个 Skill 串联的流水线——improve-codebase-architecture（浅模块发掘，删除测试法）→ grill-with-docs（逐个极端输入追问生成 ADR）→ writing-plans（分钟粒度执行计划）；（2）双 Agent 对抗验证——基于 1M 上下文让顾问 Agent 与主力 Agent 多轮 PK 消除逻辑漂移；（3）防回归结构锁——`grep -c 旧函数名` 断言为 0、bitbake 调用次数锁。核心论点是 prompt 只负责路由+约束（"只挑一条"），真正的智能在 skill，把架构决策从直觉搬进有纪律的流程。
+🟡 Medium: [SKILL_ECOSYSTEM 持续扩展] 06-04 至 07-14 期间持续把独立 skill 单体打包纳入 `docs/SKILL_ECOSYSTEM.md` 索引（如 Google Maps 路由、Circle Post、PDF-to-Markdown、delayed agent jobs、open_router_data_scraper、innovation-assistant 等），延续"独立 skill repo → 生态索引"的扩展模式。单条 PR 不再单独记录。
+
 Date: 2026-07-05
 
 🟡 Medium: [框架工程资产新增] commit 48aed2c 新增 `adhoc_jobs/2026/20260704-harness-loop-engineering-diagram-zh.html` 与配套 `adhoc_jobs/2026/20260704-harness-loop-engineering-diagram.gif`，把 Prompt/Context/Harness/Loop Engineering 关系图沉淀为可复用可传播的可视化资产，延续 Harness Engineering 叙事从文字到图形表达的体系化推进。
-🟢 Low: [observer 噪音过滤] 目标日期窗口内同时命中 `periodic_jobs/ai_heartbeat/state/heartbeat_status.json` 更新，该文件属于心跳运行态自动记账，不作为新认知写入观测主记录。
 
 Date: 2026-07-12
 
-🟡 Medium: [跨分叉分支 cherry-pick 的维护权属核查] 把 main 最近提交同步到严重分叉的 iasi 分支（iasi 领先 main 98 提交，main 领先 73）时，模块化大重构提交（如 731a3bb 拆 external writing、14cd828 拆 internal writing）会直接覆盖目标分支独有演进。核查方法：`git log <merge-base>..<branch> -- <file>` 确认目标分支分叉后是否动过该文件 + 检查作者权属。iasi 写作方法论文档（COMMUNICATION/workflow_*.md）经核查全是鸭哥（Yan Wang）提交、用户未维护，故直接 checkout main HEAD 对齐；INDEX.md 含用户自有 skill 条目需手动合并。决策模式已存 memory（iasi-writing-docs-align-main）。
+🟡 Medium: [跨分叉分支 cherry-pick 的维护权属核查] 把 main 最近提交同步到严重分叉的 iasi 分支（iasi 领先 main 98 提交，main 领先 73）时，模块化大重构提交（如 731a3bb 拆 external writing、14cd828 拆 internal writing）会直接覆盖目标分支独有演进。核查方法：`git log <merge-base>..<branch> -- <file>` 确认目标分支分叉后是否动过该文件 + 检查作者权属。iasi 写作方法论文档（COMMUNICATION/workflow_*.md）经核查全是鸭哥（Yan Wang）提交、用户未维护，故直接 checkout main HEAD 对齐；INDEX.md 含用户自有 skill 条目需手动合并。决策模式已晋升为 skill `rules/skills/bestpractice_forked_upstream_sync.md` 并存 memory（iasi-forked-upstream-sync）。
 🟡 Medium: [写作方法论文档对齐 main 模块化重构] commit f94993b 将 main 上鸭哥的 external/internal writing 模块化重构同步到 iasi：3 个 workflow/COMMUNICATION 文档对齐 main 最新版，新增 bestpractice_external_prose.md（外部文章文风手册）、reference_writing_thesis_catalog.md（L1-L8 分析视角）、bestpractice_internal_visuals.md（内部视觉组件规范）。main 重构方向是把臃肿单一 workflow 文件拆成「精简 workflow + 独立 bestpractice/reference 文件」，iasi 原为鸭哥早期未精炼版本。
-🟢 Low: [SKILL_ECOSYSTEM 扩展] commit 1d176a2（cherry-pick 自 main 3a2e89b）把 innovation-assistant-skill 纳入 public skill ecosystem，定位为 SIT + Think Bigger 结构化创新流水线，延续独立 skill 单体打包→生态索引的扩展模式。
-🟢 Low: [observer 噪音过滤] find -newermt 命中大量 adhoc_jobs/articles_archive 归档文件，系批量操作时间戳归一噪音（同 07-03 记录的归一现象），非真实内容变动；本次真实认知变动仅来自 07-12 会话的 cherry-pick + sync 工作。
 
 Date: 2026-07-14
 
 🟡 Medium: [合规科普] commit 2f936a6 新增欧盟 CRA（网络韧性法案）科普文章（`adhoc_jobs/2026/20260713-eu-cra-kepu.md`）。核心要点：安全责任从"出厂前测试"延伸到"产品全生命周期漏洞处理"；覆盖所有连网设备含独立芯片/固件/App；四项核心义务（出厂不带已知漏洞、提供安全更新至少 5 年、维护 SBOM 并跟踪漏洞影响、技术文件保存 10 年）；两个关键节点——2026-09-11 通报时钟开启（24h 早期预警 + 72h 正式报告）、2027-12-11 全面验牌（未贴 CE 标志不得进入欧盟市场）；罚款上限 1500 万欧元或全球营收 2.5%。与固件/BMC 安全领域直接相关，是 OpenBMC 产品出口欧洲需关注的合规背景。
-🟢 Low: [observer 噪音过滤] 142 个文件命中 -newermt 窗口，但 141 个为 adhoc_jobs/articles_archive/scripts_archive/webpage 等归档目录的批量时间戳归一噪音，仅 commit 2f936a6 为真实内容变动。
 
 Date: 2026-07-16
 
 🟡 Medium: [外部写作体系重构 + Antigravity CLI 接入] commit 9aee80c 大规模重构外部写作 skill 矩阵：新增 `rules/skills/antigravity_cli.md`（Antigravity CLI 即 `agy` 文件式调用 guide，区分 `agy-ide` launcher 与 `agy` headless agent；已验证版本 1.1.2），新增 `rules/skills/workflow_external_thesis_mining.md`（调研与 external writing 之间的判断层，把 topic 转化为有证据可反驳的 thesis，7 项成功标准含单一判断/证据承载/读者增量/作者连续性/语料增量/可证伪/可写性），重构 `workflow_external_writing.md`（193→精简并模块化），扩展 `ai_agent_cli_guide.md` 和 `workflow_deep_research_survey.md`。延续 main 的"精简 workflow + 独立 bestpractice/reference"模块化重构方向。
 🟡 Medium: [AI Session Search & Archive 跨供应商会话检索] commit 0ae58e5 新增 `rules/skills/ai_session_search_archive.md`，定位为多供应商 AI 会话历史的统一检索工作流。源归档按 `contexts/ai_sessions/{opencode,claude_code,codex,antigravity,second_mind}` 路由，策略是先词法搜 names/identifiers 再语义搜 approximate wording，依赖第三方归档导出器 `ai_session_export`。填补了"跨 Claude/Codex/Antigravity/OpenCode 查历史会话"的工具空白，WORKSPACE.md 与 CRONTAB.md 同步更新。
 🟡 Medium: [内部写作理解门槛理论完善] commit 8b0f63a 在 `workflow_internal_writing.md` 中引入两层核心判断：①"项目上下文 vs 概念上下文"分离——共享项目背景不等于共享术语，本轮新概念仍须建立完整依赖；②"双层结论"原则——首屏先普通语言层（不含术语也能复述发生了什么）再技术精确层，应对"负载术语但无含义"的标签代替解释问题。结论卡片标题从英文改为中文（Bottom Line→核心结论 / Why This Matters→为什么重要 / Recommended Action→建议行动）。适用场景描述也收紧为"熟悉同一项目或决策背景的协作者"。
-🟢 Low: [Antigravity 安装加固] commit 0cc45be 修复 `antigravity_cli.md` 安装流程已知问题（2 行 .gitignore + 安装脚本加固），属配置微调非认知变动。
-🟢 Low: [observer 噪音过滤] 110+ 文件命中 9:56:00 时间戳窗口系 GitHub Copilot Chat 运行时 checkout/sync 批量操作产生的归一噪音；真实认知变动仅来自 4 个 commits（9aee80c/0cc45be/0ae58e5/8b0f63a），均在 07-14 至 07-15 内提交。
 
 Date: 2026-07-18
 
-🔴 High: [iasi 跟踪 main 策略升级 cherry-pick→merge] 对严重分叉的上游（iasi 与 main 双向各领先数十提交）逐提交 cherry-pick 会让结构性分叉点反复冲突；改用 `git merge main` 一次性处理 + 建立增量基线（merge commit b1b4a50），后续同步只处理增量。dry-run merge（`--no-commit` 后 `--abort`）是评估策略代价的有效手段：本次 33 文件自动合并、13 文件冲突。决策模式已存 memory（iasi-merge-main-strategy），含 4 类已知分叉点（heartbeat 归档 / semantic-search 升级 / Copilot 偏好 / INDEX 独有条目）。
+🔴 High: [iasi 跟踪 main 策略升级 cherry-pick→merge] 对严重分叉的上游（iasi 与 main 双向各领先数十提交）逐提交 cherry-pick 会让结构性分叉点反复冲突；改用 `git merge main` 一次性处理 + 建立增量基线（merge commit b1b4a50），后续同步只处理增量。dry-run merge（`--no-commit` 后 `--abort`）是评估策略代价的有效手段：本次 33 文件自动合并、13 文件冲突。**完整方法论（含 5 类冲突决策表、已知分叉点清单、dry-run 流程）已晋升为 skill `rules/skills/bestpractice_forked_upstream_sync.md`，user memory 同步存 `iasi-forked-upstream-sync.md`。**
 🟡 Medium: [merge 冲突解决决策模式] 13 个结构性冲突的处理范式：modify/delete 保留 iasi 有意删除（observer/opencode_client/reflector.py 三脚本 `git rm`）；main 引用 iasi 已删文件的（CRONTAB/setup_guide 的 reflector.py/observer.py）保留 iasi preflight 版；iasi 领先 main 的改动（cognitive 的 semantic-search repo 升级）保留 iasi；纯 main 增益（Google Maps 列表、trailing whitespace 清理、`functions.task` API 纠正、ChatGPT OAuth）取 main。
 🟡 Medium: [main 内容同步] 本次带入 main 上游内容：7 个新 skill（35e5d94：deployment_github_actions_koyeb / growth_analytics / ios_test_acceleration / openreview / skill_download_paper / workflow_public_consensus_net_income_audit / workflow_research_paper_survey_writing）+ 公开写作工作流术语更新（2510988，thesis gate→reasoning architecture 等）+ ChatGPT OAuth ecosystem 引用（32c96e）+ 代码清理（7902adf）。
-🟢 Low: [push] 推送 b1b4a50 到 origin/iasi；远程 iasi 为 protected ref，靠 bypass 权限推送成功（提示 "Cannot update this protected ref"）。
-🟢 Low: [observer 噪音过滤] 160 文件命中 -newermt 窗口，绝大部分是 merge 批量 touch 的 adhoc_jobs 归档与历史文章时间戳归一噪音；真实认知变动仅本会话 cherry-pick + merge + memory 工作。
+
+Date: 2026-07-20
+
+🟡 Medium: [ob-harness 项目里程碑] commit e5c1a5d（07-19）新增 ob dev 首次开发体验文章（`adhoc_jobs/2026/20260719-ob-dev-first-experience.md`）。`ob dev` 命令组（list/modify/refresh/reset/status/finish 共 6 个子命令）把 Yocto devtool 工作流转译为对 Agent 透明的 API，标志 ob-harness 从"外围统筹（init/build/qemu）"跨入"源码深水区"。以替换 gb200nvl-obmc webui logo 为真案例，验证 Agent 一气呵成跑通"方案对齐（bbappend vs devtool modify 取舍）→ 源码替换 → ob build 后台挂起监控 → ob dev finish 生成 patch 落盘 meta-phosphor → ob run-qemu 浏览器验真"全闭环。PR iasiv5/ob-harness#21。这是"AI 合伙人"叙事从外围打杂到代码区输出的关键一步。
+🟡 Medium: [AI 采纳阶梯方法论] commit cfb88b3（07-19）新增《AI 采纳的阶梯》中文翻译与 iasi-remix 版（`adhoc_jobs/2026/20260716-steps-of-ai-adoption-zh.md` + `20260718-steps-of-ai-adoption-iasi-remix.md`），原作者 Boris Cherny（Claude Code 作者，Anthropic）。5 级阶梯（Step 0 受限/1 辅助/2 并行/3 有监督自治/4 AI 原生），核心判断是"单兵 10 倍→全团队 10 倍"的差距不是 token 和模型档位，而是每一级各自的瓶颈与验证护栏构成。关键分水岭是"机器校验机器的闭环"和"信任迭代的速度"，而非"再多买点 token"。iasi-remix 版把判定红线提炼为"这件事本是不是某个工程师会做的？是就发 AI 自动化，不是就交人工审核"。Anthropic 自评 Step 3、Cherny 个人 Step 4。该阶梯与 ob-harness V1.0→V1.2 的工程化路径形成方法论↔实践互证，后续可作 harness engineering 叙事的对标框架。
+🟢 Low: [reflector GC] 本次 reflector 清理了 07-03 至 07-18 共 8 条瞬时 🟢（单 PR 的 SKILL_ECOSYSTEM 扩展、observer 噪音过滤流水、push 操作流水、Antigravity 配置微调），把散落的 SKILL_ECOSYSTEM 单条扩展合并成一条总括 🟡；06-19 的"observer 扫描方法论修正 KB"🔴 因内容已固化进 KB §2 不再保留独立观测；07-18 iasi-merge 策略 🔴 的完整方法论已晋升为 skill `bestpractice_forked_upstream_sync.md`，并在本条目中改为指向 skill。

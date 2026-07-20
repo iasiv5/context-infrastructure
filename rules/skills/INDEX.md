@@ -103,6 +103,7 @@
 - [AI 产品设计原则](./bestpractice_ai_product_design.md) ✅ — 线性聊天 vs 知识工作、感知规则解耦
 - [产品/技术决策逆向工程](./bestpractice_product_decision_analysis.md) ✅ — 从设计空间、约束和 trade-off 分析产品或技术决策
 - [iOS Test Acceleration](./ios_test_acceleration.md) — iOS unit/UI test iteration tips：sequential `xcodebuild`、`build-for-testing` + `test-without-building`、fixed simulator UUID、focused `-only-testing`、fixture launch arguments 和 `.xcresult` inspection
+- [严重分叉上游跟踪策略](./bestpractice_forked_upstream_sync.md) ✅ — 跟踪双向各领先数十提交的严重分叉上游；从逐提交 cherry-pick 切换到一次性 merge + 增量基线；含 modify/delete、文件权属、INDEX 混合文件等 5 类冲突决策表
 - [Playwright E2E 测试方法论](https://github.com/grapeot/playwright-test-skill) 🔗 — CDP step-by-step debugging CLI + E2E methodology。独立 public repo，CLI: `pw-test`。触发词："Playwright E2E"、"CDP debugging"、"SSO login test"、"browser step debugging"
 
 ---
