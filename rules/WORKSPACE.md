@@ -30,11 +30,6 @@
 
 ## 快速查询
 
-### 文章归档
-- 2026年新文章 → `adhoc_jobs/2026/`
-- 历史归档（2026年5月22号之前） → `adhoc_jobs/articles_archive/`
-- 旧 Python 脚本 → `adhoc_jobs/scripts_archive/`
-- 旧网页 → `adhoc_jobs/webpage/`
-
 <!-- 随着你的项目增长，在这里添加活跃项目的快捷路由 -->
 <!-- 格式：- `project-name` → `adhoc_jobs/project_name/` (说明) -->
+<!-- 示例：- `weather monitor` / `weather_monitor` → `adhoc_jobs/weather_monitor/`（家庭气象数据采集与告警） -->

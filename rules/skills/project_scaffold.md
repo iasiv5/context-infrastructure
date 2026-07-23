@@ -201,6 +201,7 @@ project_root/
 3. 先写 `prd.md` / `rfc.md` / `test.md`
 4. 再把代码迁到 `src/`，把可执行入口放进 `scripts/`
 5. 最后补 `working.md`
+6. 在 `rules/WORKSPACE.md` 登记新项目的快捷路由。新增一行时同时写出读者会使用的别名、项目路径和一句用途，例如：`weather monitor` / `weather_monitor` → `adhoc_jobs/weather_monitor/`（家庭气象数据采集与告警）。
 
 不要一边大改代码一边临时想目录结构。先把骨架立起来，后面的改动才会更稳。
 

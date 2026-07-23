@@ -3,7 +3,7 @@
 ## 元数据
 - 类型: API Guide
 - 适用场景: 用 CLI Agent 构建自动化流水线、AI 调用 AI
-- 最后更新: 2026-07-14
+- 最后更新: 2026-07-21
 
 ---
 
@@ -87,9 +87,9 @@ subprocess.run([
 
 Antigravity 自动化使用独立的 `agy` 命令，不使用 `agy-ide chat`。完整安装、认证和执行契约见 [Antigravity CLI 文件式调用](./antigravity_cli.md)。
 
-核心规则：prompt、结果、stdout、stderr、事件日志全部落盘；默认模型为 `Gemini 3.5 Flash (High)`；`--dangerously-skip-permissions` 必须与 `--sandbox` 同时使用；内部 timeout 为 10 分钟，外层约 610 秒。
+核心规则：prompt、结果、stdout、stderr、事件日志全部落盘；默认模型为 `gemini-3.6-flash-high`；`--dangerously-skip-permissions` 必须与 `--sandbox` 同时使用；内部 timeout 为 10 分钟，外层约 610 秒。
 
-AGY 1.1.2 没有 `login` 子命令，也没有 JSON event stream。它从系统 keyring 复用 Antigravity App 或 IDE 的 Google 登录，进度检查使用带时间戳的 `--log-file`。成功必须同时满足退出码为 0、结果文件非空、硬约束通过且 stderr 无未处理错误。
+AGY 1.1.5 的 headless 入口是顶层 `agy --print`，不存在 `agy run`；它没有 `login` 子命令或 JSON event stream。CLI 从系统 keyring 复用 Antigravity App 或 IDE 的 Google 登录，进度检查使用带时间戳的 `--log-file`。它会在 headless mode 继承持久化 `settings.json` policy，运行前必须一并审阅。成功必须同时满足退出码为 0、结果文件非空、硬约束通过且 stderr 无未处理错误。
 
 多阶段写作必须为每个阶段启动 fresh conversation，并使用独立的 prompt、result、stdout、stderr 和 events 文件。
 
@@ -97,15 +97,57 @@ AGY 1.1.2 没有 `login` 子命令，也没有 JSON event stream。它从系统 
 
 ## Codex CLI 快速参考
 
-**基本命令**: `codex exec [options] "prompt"`
+> 基于 Codex CLI 0.144.x 实测校对（2026-07-21）。0.1.x 系列改动很大，旧版的 `--full-auto` 已废弃，sandbox/approval 拆成独立参数，并新增了结构化输出与 last-message 落盘能力。
 
-**关键参数**:
-- `-m, --model`: `gpt-5.2` (推荐)
-- `-c model_reasoning_effort`: `low` (翻译) / `medium` (常规) / `high` (深度重构)
-- `--full-auto`: 自动接受所有操作
-- `--json`: JSON 输出格式
+**基本命令**: `codex exec [options] "prompt"`（`exec` 可简写为 `e`）。prompt 也可用 `-` 从 stdin 读取；stdin 与位置参数同时给出时，stdin 会作为 `<stdin>` block 追加。
 
-**推荐**: 简单任务用 `low`，复杂任务用 `high`
+**核心参数**:
+- `-m, --model`: 指定模型。当前生成为 GPT-5.x Codex 系列；不再是旧文档里的 `gpt-5.2`。
+- `-c model_reasoning_effort=<level>`: `low`（翻译/格式转换）/ `medium`（常规）/ `high`（深度重构）。这是通过 `-c` 覆盖 config，不是独立 flag。
+- `-s, --sandbox <mode>`: `read-only` / `workspace-write` / `danger-full-access`。**取代了旧的 `--full-auto`**。要让 agent 写文件用 `workspace-write`；只读推理用 `read-only`。
+- `-a, --ask-for-approval <policy>`: `untrusted` / `on-request` / `never`。自动化场景配 `never`，让执行失败直接回流给模型而不阻塞。
+- `--skip-git-repo-check`: 在非 git 目录运行（在临时目录必备）。
+- `--ephemeral`: 不把 session 落盘（一次性调用推荐，避免 rollout 文件堆积）。
+- `-C, --cd <dir>`: 指定 agent 工作根目录；`--add-dir <dir>` 追加可写目录。
+- `--color never`: 关闭 ANSI，方便解析 stdout。
+
+**自动化关键：结构化输出与结果落盘**
+
+这是相对旧版最大的实用改进，取代"在 prompt 里恳求模型只输出 JSON"的脆弱做法：
+
+- `-o, --output-last-message <file>`: 把 agent 最终一条消息**干净地**写入文件（无事件噪声）。文件响应模式的首选出口。
+- `--output-schema <file>`: 传入 JSON Schema 文件，强制最终响应符合该 schema。配合 `-o` 可直接拿到校验过的 JSON。实测有效：
+
+```bash
+# schema.json: {"type":"object","properties":{"answer":{"type":"integer"}},"required":["answer"],"additionalProperties":false}
+codex exec --skip-git-repo-check --sandbox read-only --color never \
+  -c model_reasoning_effort=low \
+  --output-schema schema.json \
+  -o out.json \
+  "What is 17 times 3?"
+# out.json => {"answer":51}
+```
+
+**JSONL 事件流（`--json`）**
+
+`--json` 输出 JSONL 事件流，schema 已重构。当前事件类型：
+
+```
+{"type":"thread.started","thread_id":"..."}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"最终答案在这里"}}
+{"type":"turn.completed","usage":{"input_tokens":...,"output_tokens":...}}
+```
+
+最终答案在 `item.type == "agent_message"` 的 `text` 字段；工具调用则是 `command_execution` / `file_change` 等 item 类型。监控进度按 item 逐条解析即可。注意 stderr 偶发 `failed to renew cache TTL` 警告，不影响结果，解析时忽略。
+
+**其他新增子命令（自动化相关）**:
+- `codex exec resume <session_id>` 或 `--last`: 续跑历史 session。
+- `codex review [--uncommitted | --base <branch>]`: 非交互代码审查（也有 `codex exec review`）。
+- `codex sandbox <command...>`: 直接在 Codex 的 seatbelt sandbox 里跑任意命令。
+- `codex doctor`: 诊断安装、auth、runtime 健康（排查 CLI 问题第一步）。
+
+**推荐**: 简单任务用 `low` + `read-only`，需写文件用 `workspace-write`，复杂重构用 `high`。生产自动化统一走 `--output-schema` + `-o` 拿结构化结果，比解析 stdout 稳。
 
 ---
 
@@ -172,7 +214,7 @@ opencode run \
 | xai | `grok-4-1-fast-non-reasoning` | Grok 4.1 非推理，$0.20/1M input |
 | anthropic | `claude-opus-4-6` | Claude 深度推理 |
 | anthropic | `claude-sonnet-4-6` | Claude 常规，性价比高 |
-| openai | `gpt-5.4` | GPT-5.4（需 Codex 插件） |
+| openai | `gpt-5.x` | GPT-5.x Codex 当前生成（需 Codex 插件） |
 
 ---
 
@@ -209,9 +251,9 @@ opencode run \
 
 | 任务类型 | Claude Code | Codex | OpenCode |
 |---------|-------------|-------|----------|
-| **翻译/格式转换** | Sonnet 4.6 | gpt-5.2 + low | *(你的轻量模型)* |
-| **常规开发** | Sonnet 4.6 | gpt-5.2 + medium | *(你的标准模型)* |
-| **深度推理/重构** | Opus 4.6 | gpt-5.2 + high | *(你的推理模型)* |
+| **翻译/格式转换** | Sonnet 4.6 | GPT-5.x Codex + low | *(你的轻量模型)* |
+| **常规开发** | Sonnet 4.6 | GPT-5.x Codex + medium | *(你的标准模型)* |
+| **深度推理/重构** | Opus 4.6 | GPT-5.x Codex + high | *(你的推理模型)* |
 
 ---
 
