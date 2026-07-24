@@ -151,7 +151,7 @@ Read these files completely:
 1. `/absolute/path/to/source_contract.md`
 2. `/absolute/path/to/writing_brief.md`
 3. `/absolute/path/to/voice_contract.md`
-4. `/absolute/path/to/article_source.md`
+4. `/absolute/path/to/content_map.md`
 
 Write the complete result to:
 `/absolute/path/to/result.md`
@@ -161,9 +161,10 @@ Do not modify any other file.
 ## Task
 
 - Write one complete external-facing Chinese article from a blank page.
-- Use only facts, scenes, causal claims, and boundaries present in `source_contract.md` and `article_source.md`.
+- Use only facts, scenes, causal claims, and boundaries present in `source_contract.md` and `content_map.md`.
 - Preserve the thesis, claim strength, numbers, URLs, image references, and immutable terms.
 - Follow `voice_contract.md`; do not output an audit, explanation, invariant count, or PASS statement.
+- Decide H2 wording and paragraph entrances independently. Do not copy content-map labels or research taxonomy into the article outline.
 - Use normal Chinese paragraphs. Do not put every sentence on its own line.
 ```
 
@@ -171,14 +172,15 @@ Do not modify any other file.
 
 ## Fresh Context、并行候选与一次返工
 
-每次不带 `--continue` 或 `--conversation` 的 `agy --print` 都创建新 conversation。External writing 使用两类 AGY 调用：
+每次不带 `--continue` 或 `--conversation` 的 `agy --print` 都创建新 conversation。External writing 使用三类 AGY 调用：
 
-- **Round 2 parallel candidates**：默认用两个全新 conversation 从同一个 task packet 分别生成 `candidate_a.md` 和 `candidate_b.md`。它们互不读取，也不串行改写。两个调用可以并行执行。
+- **Round 2 parallel candidates**：默认用两个全新 conversation 从同一个 task packet 分别生成 `candidate_a.md` 和 `candidate_b.md`。运行时有多个模型家族时，优先跨家族生成；它们互不读取，也不串行改写。
+- **Round 3 blind reader**：对每个候选使用全新 conversation，只读候选正文，输出 `blind_reader_audit_a.md` 或 `blind_reader_audit_b.md`。它不做事实核查或 PASS 判断。
 - **Round 4 optional revision**：只有 Main Agent 冷读验收给出 `RETRY_PROSE` 时，才启动一个全新 conversation。它读取选中候选、原始 task packet 和不超过 3-5 项的 `revision_delta.md`，输出完整修订稿。
 
 AGY Writer 不写 QA，也不是 PASS authority。Main Agent 必须直接读取候选正文，用确定性工具核对数字、URL、图片和结构，再对照 source contract 判断事实与 voice。Round 4 最多一次；仍有非 surgical blocker 时回到 Main Agent 的上游工件或向用户报告，不自动启动更多 AGY conversation。
 
-Round 3 的验收结论写入 `acceptance_audit.md`，只能是 `ACCEPT`、`RETRY_PROSE` 或 `RETURN_TO_ROUND_1`。Writer 的 stdout 只证明进程完成，不参与选择或 PASS 判断。
+Main Agent 先独立写 `main_cold_read_a.md` 或 `main_cold_read_b.md`，再读取 blind-reader audit 完成 `acceptance_audit.md`。最终 verdict 只能是 `ACCEPT`、`RETRY_PROSE` 或 `RETURN_TO_ROUND_1`。Writer 的 stdout 只证明进程完成，不参与选择或 PASS 判断。
 
 Round 4 的任务文件必须额外读取选中候选和 `revision_delta.md`。`revision_delta.md` 只列 3-5 个最高影响 blocker、原文位置与正确方向，不得重新附加整份 workflow 或 prose taxonomy。Round 4 输出完整修订稿，不输出 QA。
 

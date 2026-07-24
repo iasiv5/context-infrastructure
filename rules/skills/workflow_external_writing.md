@@ -5,7 +5,7 @@
 - **类型**：Workflow
 - **适用场景**：把已核实的调研转化为 external-facing 中文分析文章、公开 survey report、课程或客户内容。
 - **前置依赖**：`workflow_deep_research_survey.md` Phase 1-3，或等价的事实底稿。
-- **最后更新**：2026-07-22
+- **最后更新**：2026-07-23
 
 ## 1. 核心原则
 
@@ -15,7 +15,7 @@
 2. **完整成文**：把已经锁定的内容写成自然、连贯的 prose。
 3. **结果验收**：检查事实是否漂移、约束是否满足、整篇声音是否成立。
 
-Main Agent 是编辑、事实负责人和最终验收者。Antigravity Writer 只生成完整候选稿，不为自己的文章写 QA，也无权宣布 PASS。确定性脚本检查数字、URL、图片和格式；Main Agent 判断事实含义、读者路径和整篇声线。
+Main Agent 是编辑、事实负责人和最终验收者。Writer 只生成完整候选稿，不为自己的文章写 QA，也无权宣布 PASS。确定性脚本检查数字、URL、图片和格式；Main Agent 判断事实含义、读者路径和整篇声线。
 
 禁止让 Writer 读取本 workflow、整份 `bestpractice_external_prose.md` 或全部历史反馈。Main Agent 必须把本题真正需要的要求压缩到一个短 task packet。长篇规则是 Manager 的参考资料，不是模型生成时的上下文。
 
@@ -38,6 +38,10 @@ Main Agent 是编辑、事实负责人和最终验收者。Antigravity Writer �
 - H2 之间由同一个对象、动作、限制或后果连接；遮住标题仍能读出为什么下一段此刻出现。
 - 数字、URL、归因、限定语、图片和专有名词与 source of truth 一致，没有生成模型补出的场景或因果。
 - 文章读起来像熟悉问题的人在自然介绍发现，既不端着，也不靠俚语、夸张比喻或网络文案表演亲切。
+- 技术概念通过动作和后果被读懂，不采用“中文概念（English gloss）”或“English term（中文释义）”的词典式括注。
+- 框架只在确实帮助读者作判断时显式出现。连续使用“两条轴、三层、四件事、六项检查”或“先定义、再分类、逐项解释、最后总结”的节奏，按教材声处理。
+- **解释增量不可替代**：每个核心 claim 都要经过具体动作或场景、旧安排为何如此、新动作改变什么、因此出现何种后果的完整链条；只有机构名加一句结论的文章不合格。
+- **反提纲测试**：遮住标题和 H2 后，正文仍必须是一条连续论证。若把每段压成一句后几乎没有信息损失，判 `RETURN_TO_ROUND_1`。
 
 任何一项失败，都不能由 Writer 的自评或 QA 报告抵消。
 
@@ -112,8 +116,8 @@ Main Agent 完成研究、编辑选择和内容底稿。这个阶段生成四个
 
 这是后续所有 Writer 的事实依据，必须包含：
 
-- 每项可进入正文的 claim 及对应来源。
-- 精确数字、日期、版本、URL、图片引用和不可改术语。
+- 每项可进入正文的 claim 及对应来源，使用稳定 claim ID 供其他工件引用。
+- 精确数字、日期、版本、URL、图片引用和真正不可改的产品名、协议名、法定名称。不要把一般英文分析词汇整批列为不可改术语。
 - 归因、统计口径、比较基准与不得外推的边界。
 - 明确禁止补写的未知信息。
 - 对 running example 的说明：哪些动作来自来源，哪些只能写成假想示例。
@@ -127,7 +131,7 @@ Main Agent 完成研究、编辑选择和内容底稿。这个阶段生成四个
 - reader start state、reader takeaway、精确 thesis 与 article warrant；
 - 文章主角、当下触发点和首屏承诺；
 - 与作者既有观点的连续性：当前证据是在填补、修正还是反驳旧判断，并记录相关旧文 URL；
-- claim dependency、H2 顺序及章节 handoff；
+- claim dependency、证据到达顺序及章节 handoff；除非用户已锁定，不预写最终 H2 文案，也不把研究 taxonomy 自动升级为文章目录；
 - concrete carrier、必须讲深与主动舍弃的内容；
 - 三至五个不同角度的候选标题，以及最终标题为何准确表达对象与文章增量；
 - 哪条新证据会削弱或推翻 thesis。
@@ -140,15 +144,27 @@ Writer 实际读取的文风要求必须控制在一页左右，只写本题需�
 - 一至两段用户明确认可、且解释难度相近的正向摘录，并说明只学习什么。
 - 本稿最可能出现的两至三段负例，直接指出段落为什么端着或表演。
 - 本题允许的第一人称、问句、技术密度与局部列表边界。
+- 一条必带约束：不用“很 + 形容词 + 冒号”作为评价标签引出事实，直接从事实、动作或后果开始。
+- 一条必带约束：不用“中文（English）”或“English（中文释义）”给普通概念做括号补译；需要保留的英文术语嵌入自然句法解释。
 - 不超过八条高影响 voice constraints。
 
 不要粘贴整篇已发布文章，不要转录通用禁词表，也不要要求 Writer 阅读 `COMMUNICATION.md`、本 workflow 或完整 prose guide。
 
-### `article_source.md`
+### `content_map.md`
 
-Main Agent 写一份完整、可核查的内容稿。它需要有正确的 thesis、事实、证据顺序、H2、链接和图片位置，但不追求最终 prose。它不是关键词提纲，也不是让 Writer 自行补全的 claim 列表。具体信息越完整，后续 Writer 越不需要发明动作和因果。
+Main Agent 写一份**事实完整、prose 中性**的内容地图。每个内容块只包含：当前具体对象或动作、引用的 claim ID、这组证据要让读者改变什么认识、与上一块的因果关系、下一问、图片位置。它可以包含必要引文和不可改数字，但不写成连续文章，不预写段落入口、总结句或最终 H2，不使用“两条轴/三层/四件事”等框架替 Writer 完成成文。
 
-Round 1 结束前，Main Agent 必须把 `article_source.md` 与 `source_contract.md` 对照一次。事实缺口在这里补，不把 research 任务转嫁给 prose Writer。
+`content_map.md` 不是关键词提纲：Writer 不需要补研究、猜因果或发明场景。它也不是半成品文章：任意连续三块不应能原样拼成正文。Round 1 结束前，Main Agent 必须用 claim ID 与 `source_contract.md` 对照；事实缺口在这里补，不把 research 转嫁给 Writer。
+
+**Anti-anchoring gate：** 若 `content_map.md` 已出现最终标题/H2、连续完整段落、定义式入口或可直接复制的结尾，判定为源稿锚定，必须重做。
+
+### Article-warrant gate
+
+交给 Writer 前，Main Agent 还必须写 `article_warrant_audit.md`，明确：读者原本怎样理解该问题、文章要改变什么、哪个具体场景贯穿、哪一组内容第一次真正回答“为什么”、删掉哪一组后文章会退化为摘要。写不出这些答案，必须重建 `content_map.md`。
+
+### Reader-path gate
+
+把 `content_map.md` 交给 Writer 前，Main Agent 必须另写一份简短的 `reader_path_audit.md`，逐个内容块记录：读者已知的对象、这一段新增的主关系、留下的下一问及下一段怎样接住它，以及新术语能否在本段换回普通语言复述。若读者要同时记住两个以上未落到同一对象的新分类，先重写 `content_map.md` 和 brief，不能交给 Writer 靠 prose 补救。
 
 ## 6. Round 2：Antigravity 并行生成完整候选
 
@@ -159,7 +175,7 @@ Round 1 结束前，Main Agent 必须把 `article_source.md` 与 `source_contrac
 1. `source_contract.md`
 2. `writing_brief.md`
 3. `voice_contract.md`
-4. `article_source.md`
+4. `content_map.md`
 5. 本轮自己的短 prompt
 
 Writer 的任务是交付完整文章，不输出 audit、解释、计数或 PASS 自述。两个候选使用相同事实和 thesis；并行的价值是获得独立 prose 路径，不是让它们故意表演两种夸张风格。
@@ -168,17 +184,28 @@ Round 2 prompt 只需强调：
 
 - 从空白页成文，但不得补充 `source_contract.md` 之外的事实、场景和因果。
 - 保留 thesis、claim strength、数字、URL、图片与必要术语。
-- 可以重写段落入口、句法和 H2 wording；若结构本身阻碍自然表达，在正文外不解释，仍按 brief 完成最佳候选。
+- 自行决定段落入口、句法和 H2 wording；不要把 `content_map.md` 的块标题或研究框架原样搬进正文。
 - 沿 concrete carrier 自然推进，不按规则分类授课。
+- 技术词通过其正在做的事情被解释，不写括号补译或先定义后使用的词条段。
 - 只写文章本身。
 
 所有调用遵循 `antigravity_cli.md` 的文件式契约。prompt、结果、stdout、stderr 和 events 分别落盘。
 
-## 7. Round 3：Main Agent 冷读验收
+## 7. Round 3：两段式冷读验收
 
-Main Agent 是唯一 PASS authority。验收时先读候选正文，不读 Writer 的 stdout，也不存在 Writer 自评报告。
+Main Agent 是唯一 PASS authority，但不再独自承担第一次冷读。候选稿必须先经过一个全新、隔离的 blind-reader context 的盲审，再由 Main Agent 完成自己的事实与结构判断。
 
-### 7.1 先做确定性检查
+### 7.1 Blind-reader audit
+
+每个准备进入验收的候选先启动一个全新 blind-reader context。它只读取候选正文，禁止读取 `source_contract.md`、`writing_brief.md`、`voice_contract.md`、本 workflow、此前 audit、聊天记录或网页。它不改候选，不做事实核查；完整审稿分别写入 `blind_reader_audit_a.md` 或 `blind_reader_audit_b.md`。
+
+盲审按首屏、每个 H2 入口和结尾记录：读者已知的对象、动作与问题；此刻新出现的专名或规则；它为何必须在此刻出现；下一段是否接住已形成的问题。它还必须做解释增量和非教材声拒绝测试，并给出 `ACCEPT`、`RETRY_PROSE` 或 `RETURN_TO_ROUND_1` 之一。盲审是诊断输入，不是最终 verdict。
+
+### 7.2 Main Agent final acceptance
+
+Main Agent 不能先看 blind-reader verdict。它先只读候选正文，完成 `main_cold_read_a.md` 或 `main_cold_read_b.md`，再读 blind-reader audit、source contract、writing brief 和正向摘录，完成 `acceptance_audit.md`。若结论不同，必须记录分歧与复核理由。
+
+### 7.2.1 先做确定性检查
 
 用脚本或直接比对检查：
 
@@ -187,10 +214,11 @@ Main Agent 是唯一 PASS authority。验收时先读候选正文，不读 Write
 - 必须保留和不得出现的术语；
 - H2 数量及必要顺序；
 - Markdown、字数和文件路径。
+- 括号补译候选：中文后紧跟英文括号、英文后紧跟中文释义。扫描只负责定位，Main Agent 判断是否属于必要全称或不自然双写。
 
 不要让生成模型用自然语言报告代替这些检查。
 
-### 7.2 再做语义验收
+### 7.2.2 再做语义验收
 
 Main Agent 把候选与 `source_contract.md`、`writing_brief.md` 和正向摘录对照，依次判断：
 
@@ -201,6 +229,10 @@ Main Agent 把候选与 `source_contract.md`、`writing_brief.md` 和正向摘�
 5. 是否为了亲切加入装饰性比喻、俚语、假想事故或未经支持的细节？
 6. 章节 handoff 和整体节奏是否成立？
 7. 标题是否准确说明文章对象和分析增量，且与最终正文承诺一致？
+8. **同一对象复述测试**：不看标题，读完每个 H2 的第一段，读者能否用已经认识的具体对象复述发生了什么；若只能复述新术语、分类名或作者的总结标签，判定为 `RETURN_TO_ROUND_1`。
+9. **教材声测试**：连续三段是否分别承担定义、分类、逐项解释或抽象总结，而没有同一个具体对象继续发生动作？若是，不能因“结构清楚”放行。
+10. **括注与翻译体测试**：删掉括号中的英译或中译后信息是否不减？若不减，判 `RETRY_PROSE`；系统性出现则 `RETURN_TO_ROUND_1`。
+11. **框架密度测试**：两轴、三层、四问、六项等 scaffold 是否都必须显式教给读者？能在具体比较或动作中完成的，不应同时变成 H2、列表和结尾总结。
 
 选择更好的候选不等于从两个版本拼接段落。Main Agent 输出 `acceptance_audit.md`，记录选择、证据与三种 verdict 之一：
 
@@ -246,6 +278,8 @@ Round 4 Writer 读取：
 
 视觉风格是常驻约束：淡色背景、典雅、简洁、商务；不用暗色、科幻、紫色或高饱和大红大绿，科幻视觉会降低对外稿的可信度。信息图承载最难口述的区分（范围/边界、生命周期、并列 vs 顺序），必须忠于概念的真实拓扑——并列关系不为整齐画成线性流水线。图读起来"乱"或"误导"就重画。
 
+含文字的信息图必须额外维护一份 `image_text_contract.md`，列出所有应出现的标题、标签、数字和不得出现的变体。最终压缩图要在 100% 尺寸逐字肉眼核对；任一错字、漏字、数字变化或产品名变形都必须重生成，不能进入最终 Markdown。
+
 ## 11. 最终检查与交付
 
 交付不止是 prose——canonical 文件、渲染形态、标题、配图都算"文章是否正确"的一部分，与 framing 错误同等分量。Main Agent 在最后一次修改后逐项过：
@@ -253,7 +287,7 @@ Round 4 Writer 读取：
 1. **标题**已生成，是一等交付物不是事后补；标题在 thesis/张力层，不在动作层（操作型标题会把范式级分析矮化成工具介绍）。
 2. 对最终文件执行数字、URL、图片、H2、禁用脚手架术语和 Markdown 扫描。
 3. **首屏逐句扫** prompt 残留与元指令泄漏（给写作模型的"首句换成…"这类指令最容易被当正文塞进第一句）。
-4. **中英混排扫描**：引文中文重述保 URL，术语中文或中英并置，无机器翻译残留；累积英文密度以中文读者体感为准，不逐句踩红线。
+4. **中英混排与括注扫描**：引文中文重述保 URL，正文选择必要的中文或英文称呼，不用“中文（English）”或“English（中文释义）”重复同义信息；无机器翻译残留。
 5. **canonical 路径**明确，durable 目录里没有躺着已知有问题的旧稿而无标示。
 6. **渲染形态忠于内容**：文章以文章的可读形态呈现，不用示意图冒充；若要推送到设备/渲染端，方向、字体、字号都要对。
 7. 确认最终归档文件与通过验收的 candidate 加 Round 5 edits 一致。

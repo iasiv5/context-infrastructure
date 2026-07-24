@@ -43,7 +43,7 @@
 调用外部系统或工具的操作手册。
 
 - [AI CLI Agent 实用指南](./ai_agent_cli_guide.md) — CLI Agent 设计原则、工具对比（Claude Code / Codex / OpenCode / Antigravity）、文件响应模式、AI 调用 AI
-- [Antigravity CLI 文件式调用](./antigravity_cli.md) — 用 `agy --print` 调用 Gemini agent；覆盖首次安装、keyring/App 登录、sandbox、timeout、文件式结果与运行日志验收；含 external-writing task packet、并行候选、三种 verdict、一次 fresh 返工和 `completion_edits.md` 契约
+- [Antigravity CLI 文件式调用](./antigravity_cli.md) — 用 `agy --print` 调用 Gemini agent；覆盖首次安装、keyring/App 登录、sandbox、timeout、文件式结果与运行日志验收；含 external-writing task packet、跨模型候选、blind-reader、三种 verdict、一次 fresh 返工和 `completion_edits.md` 契约
 - [Claude Code 使用指南](./claude_code.md) — Claude Code 的默认 runtime 设置（adaptive thinking 规避）、非交互命令行调用、嵌套调用硬规则及 Timeout 管理
 - [OpenReview API](./openreview.md) — 查询 AI 学术会议论文 metadata 和作者 profile（institution history、position、tilde ID）。触发词："OpenReview"、"查作者 profile"、"ICLR papers"、"NeurIPS papers"、"tilde ID"
 - [GitHub Actions → Koyeb 部署指南](./deployment_github_actions_koyeb.md) — 通过 GitHub Actions 实现测试通过后自动部署到 Koyeb；适用于任何 Docker 化应用
@@ -65,8 +65,8 @@
 - [深度调研工作流](./workflow_deep_research_survey.md) ✅ — 多 Agent 并行 + 交叉验证（Phase 1-3 信息采集）
 - [公开 Consensus Net Income 审计工作流](./workflow_public_consensus_net_income_audit.md) — 用 MarketScreener 等公开网页审计一组股票的 FY/CY consensus net income，区分 direct/derived、current/baseline/revision，并要求逐链接 QA。触发词："consensus net income"、"MarketScreener 审计"、"FY2026E 净利润共识"
 - [科研论文调研与写作工作流](./workflow_research_paper_survey_writing.md) — 把科研论文转化为面向技术从业者的分析文章。核心：按读者重要性排序（不按论文章节）、三层分离（paper claim / 外部验证 / 我们的判断）、强制生态位分析（bottleneck / 替代路径 / stack 层级 / 相邻影响）。触发词："分析这篇论文"、"写论文解读"、"paper analysis"
-- [外部写作工作流](./workflow_external_writing.md) ✅ — 将已核实的素材转化为 external-facing 分析文章；Main Agent 在 Round 1 建立 source of truth，Round 2 并行生成独立 AGY 候选，Round 3 冷读验收，必要时只做一次 fresh 返工，Round 5 记录 surgical completion
-- [内部写作工作流](./workflow_internal_writing.md) ✅ — 面向用户本人、共享上下文协作者和未来 AI agent 的内部文档写作。核心是低决策摩擦：结论前置、skimmable、inline evidence、方便跳转和验证，必要时用图表降低认知负担。
+- [外部写作工作流](./workflow_external_writing.md) ✅ — 将已核实的素材转化为 external-facing 分析文章；Main Agent 建立 source of truth 与 prose-neutral content map，独立候选后先独立冷读、再与 blind-reader 交叉验收，必要时只做一次 fresh 返工
+- [内部写作工作流](./workflow_internal_writing.md) ✅ — 面向用户本人、共享上下文协作者和未来 AI agent 的内部文档写作。先建立可验收 question contract，再用问题、方案、决策三层降低决策摩擦。
 - [认知画像提取工作流](./workflow_cognitive_profile_extraction.md) — 从非结构化对话数据提取可预测的认知公理
   - 适用：群聊/Slack/Discord/邮件/播客转录等任意对话数据
   - 流程：Round 驱动的迭代引擎（Discover / Verify / Finalize / Restructure），动态滚动
