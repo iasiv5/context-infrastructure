@@ -196,7 +196,7 @@ Brainstorm 不是标题润色，也不是多 agent 泛泛复述。它必须转�
 
 调研的 Phase 1-3 完成后，进入写作阶段。根据目标产出类型选择路径：
 
-**External-facing 分析文章** → 进入 [外部写作工作流](./workflow_external_writing.md)，先完成其中的 thesis-and-outline 方案选择与 article warrant 检查。Main Agent 随后建立 source contract、writing brief、voice contract 和 prose-neutral content map；再按 [Antigravity CLI 文件式调用](./antigravity_cli.md) 并行生成独立 prose 候选。Main Agent 先独立冷读、再与 blind-reader audit 交叉验收，必要时只允许一次 fresh AGY 返工，最后完成有记录的 surgical 修复。
+**External-facing 分析文章** → 进入 [外部写作工作流](./workflow_external_writing.md)，先完成其中的 thesis-and-outline 方案选择与 article warrant 检查。Main Agent 随后建立 source contract、writing brief、audience contract、voice contract 和 prose-neutral content map；再按 [Antigravity CLI 文件式调用](./antigravity_cli.md) 双生成异质 prose 候选、单审查选优。验收走看不到 contract 的分离冷读（style blind read + cognitive walkthrough + 校准 voice comparison），必要时只允许一次 fresh AGY 返工，最后由一道机器阻断"完成"的终端陌生读者冷读一票放行，再做有记录的 surgical 修复。
 
 **Internal memo**（面向用户本人或共享上下文的协作者）→ 加载 [内部写作工作流](./workflow_internal_writing.md)。先呈现最影响决策的结论和依据，并保留未确认点与下一步动作。动笔前读取 `../COMMUNICATION.md`。
 
