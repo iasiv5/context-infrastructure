@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Darwin 2.1 Paired Report — code-review OCR 融合</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --orange: #E8590C;
+    --orange-light: #FF8A4C;
+    --orange-bg: #FFF0E6;
+    --green: #2B8A3E;
+    --green-bg: #E8F5E9;
+    --red: #E03131;
+    --red-bg: #FFF0F0;
+    --ink: #1A1A1A;
+    --paper: #FAFAF5;
+    --paper-warm: #F5F0E8;
+    --gray: #888;
+    --gray-light: #BBB;
+    --border: #E0D8CC;
+    --cell-bg: #F0EBE3;
+  }
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    background: #EDE8E0;
+    font-family: 'Noto Sans SC', 'Inter', sans-serif;
+    padding: 40px 16px;
+  }
+
+  .report {
+    width: 920px;
+    background: var(--paper);
+    border-radius: 0;
+    box-shadow: 0 4px 40px rgba(0,0,0,0.08);
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* ===== 顶部品牌条 ===== */
+  .brand-bar {
+    background: var(--ink);
+    padding: 22px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .brand-name {
+    font-size: 22px; font-weight: 800; color: #fff;
+    letter-spacing: 0.02em;
+    font-family: 'Inter', 'Noto Sans SC', sans-serif;
+  }
+  .brand-name .dot { color: var(--orange); }
+  .brand-meta { display: flex; gap: 24px; align-items: center; }
+  .brand-version {
+    font-size: 13px; font-weight: 600; color: #999;
+    background: rgba(255,255,255,0.08);
+    padding: 5px 12px; border-radius: 6px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .brand-date { font-size: 15px; font-weight: 500; color: #888; }
+
+  /* ===== Verdict 大区 ===== */
+  .verdict-section {
+    padding: 44px 48px 36px;
+    background: linear-gradient(180deg, var(--paper) 0%, var(--paper-warm) 100%);
+    display: flex;
+    gap: 36px;
+    align-items: center;
+    position: relative;
+  }
+  .verdict-stamp {
+    width: 200px; height: 200px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--green);
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    color: #fff;
+    box-shadow: 0 8px 32px rgba(43,138,62,0.25);
+    position: relative;
+  }
+  .verdict-stamp::before {
+    content: '✓';
+    font-size: 72px; font-weight: 900;
+    line-height: 1;
+    font-family: 'Inter', sans-serif;
+    margin-bottom: 4px;
+  }
+  .verdict-stamp-label {
+    font-size: 18px; font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .verdict-text { flex: 1; }
+  .verdict-eyebrow {
+    font-size: 14px; font-weight: 700; color: var(--gray);
+    letter-spacing: 0.1em; text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .verdict-headline {
+    font-size: 36px; font-weight: 900; color: var(--ink);
+    line-height: 1.2; margin-bottom: 6px;
+  }
+  .verdict-headline .skill-name { color: var(--orange); }
+  .verdict-sub {
+    font-size: 17px; font-weight: 500; color: #555;
+    line-height: 1.55;
+  }
+  .verdict-sub .method-tag {
+    display: inline-block;
+    background: var(--ink); color: #fff;
+    font-size: 12px; font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    padding: 3px 10px; border-radius: 5px;
+    margin: 0 2px;
+  }
+  .verdict-sub .method-tag.warn { background: var(--red); }
+  .verdict-vote-row {
+    display: flex; gap: 12px; margin-top: 16px; align-items: center;
+  }
+  .vote-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 15px; font-weight: 700;
+    padding: 8px 18px; border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+  }
+  .vote-pill.better { background: var(--green); color: #fff; }
+  .vote-pill.better .count { font-size: 22px; }
+  .vote-pill.worse { background: var(--red-bg); color: var(--red); border: 2px solid rgba(224,49,49,0.15); }
+  .vote-pill.worse .count { font-size: 22px; }
+  .vote-margin {
+    font-size: 14px; font-weight: 600; color: var(--gray);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ===== Section 通用 ===== */
+  .section {
+    padding: 32px 48px;
+    border-top: 1px solid #E8E0D4;
+  }
+  .section-title {
+    font-size: 14px; font-weight: 700; color: var(--gray);
+    letter-spacing: 0.1em; text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+
+  /* ===== 9 维度网格 ===== */
+  .dims-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .dim-cell {
+    background: var(--cell-bg);
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    position: relative;
+    border-left: 4px solid transparent;
+  }
+  .dim-cell.win  { border-left-color: var(--green); background: var(--green-bg); }
+  .dim-cell.loss { border-left-color: var(--red);   background: var(--red-bg); }
+  .dim-cell.draw { border-left-color: var(--gray-light); }
+  .dim-num {
+    font-size: 11px; font-weight: 700; color: var(--gray-light);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .dim-head {
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .dim-name {
+    font-size: 14px; font-weight: 700; color: var(--ink);
+  }
+  .dim-tag {
+    font-size: 10px; font-weight: 800;
+    font-family: 'Inter', sans-serif;
+    padding: 3px 8px; border-radius: 5px;
+    text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .dim-tag.better { background: var(--green); color: #fff; }
+  .dim-tag.worse  { background: var(--red);   color: #fff; }
+  .dim-tag.tie    { background: #DDD; color: #888; }
+  .dim-reason {
+    font-size: 12.5px; font-weight: 500; color: #666;
+    line-height: 1.45;
+  }
+
+  /* ===== Judge 分解 ===== */
+  .judges { display: flex; flex-direction: column; gap: 12px; }
+  .judge-row {
+    display: flex; gap: 16px; align-items: stretch;
+    background: #F8F5F0; border-radius: 12px;
+    padding: 18px 20px;
+    border: 1px solid #E8E0D4;
+  }
+  .judge-id {
+    width: 52px; flex-shrink: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 4px;
+  }
+  .judge-id .badge {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--ink); color: #fff;
+    font-size: 18px; font-weight: 900;
+    font-family: 'Inter', sans-serif;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .judge-id .role {
+    font-size: 10px; font-weight: 700; color: var(--gray);
+    text-align: center; line-height: 1.2;
+  }
+  .judge-body { flex: 1; }
+  .judge-meta {
+    display: flex; gap: 10px; align-items: center; margin-bottom: 6px;
+    flex-wrap: wrap;
+  }
+  .judge-verdict {
+    font-size: 13px; font-weight: 800;
+    background: var(--green); color: #fff;
+    padding: 3px 10px; border-radius: 5px;
+    font-family: 'Inter', sans-serif;
+  }
+  .judge-margin {
+    font-size: 12px; font-weight: 600; color: var(--gray);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .judge-prompt {
+    font-size: 11px; color: var(--gray);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .judge-reason {
+    font-size: 13.5px; font-weight: 500; color: #555;
+    line-height: 1.5;
+  }
+  .judge-reason strong { color: var(--ink); font-weight: 700; }
+
+  /* ===== 胜点/败点 卡 ===== */
+  .findings-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  }
+  .finding-card {
+    border-radius: 12px; padding: 22px 24px 20px;
+    position: relative;
+  }
+  .finding-card.win {
+    background: linear-gradient(135deg, var(--green) 0%, #51B35E 100%);
+    color: #fff;
+  }
+  .finding-card.loss {
+    background: #F0EAE0; border: 2px solid var(--border); color: var(--ink);
+  }
+  .finding-label {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; margin-bottom: 10px;
+  }
+  .finding-card.win .finding-label { color: rgba(255,255,255,0.75); }
+  .finding-card.loss .finding-label { color: var(--gray); }
+  .finding-dim {
+    font-size: 16px; font-weight: 900; margin-bottom: 8px;
+  }
+  .finding-card.win .finding-dim { color: #fff; }
+  .finding-card.loss .finding-dim { color: var(--red); }
+  .finding-text {
+    font-size: 14px; font-weight: 500; line-height: 1.55;
+  }
+  .finding-card.win .finding-text { color: rgba(255,255,255,0.95); }
+  .finding-card.loss .finding-text { color: #666; }
+
+  /* ===== Gate 行 ===== */
+  .gates { display: flex; flex-direction: column; gap: 8px; }
+  .gate-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px; border-radius: 10px;
+    font-size: 14px; font-weight: 500;
+  }
+  .gate-row.pass { background: var(--green-bg); }
+  .gate-row.warn { background: var(--red-bg); }
+  .gate-icon {
+    width: 24px; height: 24px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 900; flex-shrink: 0;
+    color: #fff;
+  }
+  .gate-row.pass .gate-icon { background: var(--green); }
+  .gate-row.warn .gate-icon { background: var(--red); }
+  .gate-name { font-weight: 700; min-width: 180px; }
+  .gate-detail { color: #666; }
+  .gate-row.warn .gate-detail { color: var(--red); font-weight: 600; }
+
+  /* ===== 改动摘要 ===== */
+  .summary-list { display: flex; flex-direction: column; gap: 8px; }
+  .summary-item {
+    font-size: 14px; font-weight: 500; color: #555;
+    line-height: 1.55; padding-left: 22px;
+    position: relative;
+  }
+  .summary-item::before {
+    content: ''; position: absolute; left: 0; top: 8px;
+    width: 8px; height: 8px;
+    background: var(--orange); border-radius: 50%;
+  }
+  .summary-item code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; background: var(--cell-bg);
+    padding: 2px 6px; border-radius: 4px; color: var(--ink);
+  }
+
+  /* ===== 底部 ===== */
+  .footer {
+    background: var(--ink);
+    padding: 28px 48px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-left { display: flex; flex-direction: column; gap: 6px; }
+  .footer-brand {
+    font-size: 20px; font-weight: 800; color: #fff;
+    font-family: 'Inter', 'Noto Sans SC', sans-serif;
+  }
+  .footer-brand .dot { color: var(--orange); }
+  .footer-slogan { font-size: 14px; color: #777; font-weight: 500; }
+  .footer-right {
+    text-align: right; display: flex; flex-direction: column; gap: 4px;
+  }
+  .footer-url {
+    font-size: 14px; color: #aaa; font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .footer-by { font-size: 13px; color: #666; }
+  .footer-tsv {
+    margin-top: 8px;
+    font-size: 12px; color: #555;
+    font-family: 'JetBrains Mono', monospace;
+    background: rgba(255,255,255,0.06);
+    padding: 4px 10px; border-radius: 5px;
+    display: inline-block;
+  }
+</style>
+</head>
+<body>
+
+<div class="report">
+
+  <!-- 顶部品牌条 -->
+  <div class="brand-bar">
+    <div class="brand-name">Darwin<span class="dot">.</span>skill</div>
+    <div class="brand-meta">
+      <span class="brand-version">v2.1 · paired</span>
+      <span class="brand-date">2026.07.29</span>
+    </div>
+  </div>
+
+  <!-- Verdict 大区 -->
+  <div class="verdict-section">
+    <div class="verdict-stamp">
+      <span class="verdict-stamp-label">KEEP</span>
+    </div>
+    <div class="verdict-text">
+      <div class="verdict-eyebrow">Paired Comparison · 3 Independent Judges</div>
+      <div class="verdict-headline">
+        真优化，已保留<br>
+        <span class="skill-name">code-review</span> × OCR 融合
+      </div>
+      <div class="verdict-sub">
+        3 个独立 judge 同-call 读改前(HEAD <code>7fad129</code>)+改后双版，
+        按 9 维 rubric 做 paired 比较（<span class="method-tag">不用绝对分&Delta;</span>避免 judge 换尺噪音 &plusmn;8），
+        eval_mode = <span class="method-tag warn">dry_run</span>
+      </div>
+      <div class="verdict-vote-row">
+        <span class="vote-pill better"><span class="count">3</span> better</span>
+        <span class="vote-pill worse"><span class="count">0</span> worse</span>
+        <span class="vote-margin">margin: clear × 3</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9 维度网格 -->
+  <div class="section">
+    <div class="section-title">九维度 Paired 比较（after vs before）</div>
+    <div class="dims-grid">
+      <div class="dim-cell draw">
+        <div class="dim-head">
+          <span><span class="dim-num">dim 1</span> &nbsp;<span class="dim-name">Frontmatter</span></span>
+          <span class="dim-tag tie">tie</span>
+        </div>
+        <div class="dim-reason">name/description 未改，入口契约不动</div>
+      </div>
+      <div class="dim-cell win">
+        <div class="dim-head">
+          <span><span class="dim-num">dim 2</span> &nbsp;<span class="dim-name">工作流清晰度</span></span>
+          <span class="dim-tag better">2↑ 1=</span>
+        </div>
+        <div class="dim-reason">Step 4.5 插入正确，Step 5 输入标注同步更新</div>
+      </div>
+      <div class="dim-cell win">
+        <div class="dim-head">
+          <span><span class="dim-num">dim 3</span> &nbsp;<span class="dim-name">失败模式编码</span></span>
+          <span class="dim-tag better">3-0</span>
+        </div>
+        <div class="dim-reason">最强项：证伪自检(不静默)+定位兜底(不丢弃)，before 完全缺失</div>
+      </div>
+      <div class="dim-cell win">
+        <div class="dim-head">
+          <span><span class="dim-num">dim 4</span> &nbsp;<span class="dim-name">检查点设计</span></span>
+          <span class="dim-tag better">2↑</span>
+        </div>
+        <div class="dim-reason">Step 4.5 成显式证伪门，验证状态占位行成 MUST-FILL</div>
+      </div>
+      <div class="dim-cell win">
+        <div class="dim-head">
+          <span><span class="dim-num">dim 5</span> &nbsp;<span class="dim-name">可执行具体性</span></span>
+          <span class="dim-tag better">2↑ 1=</span>
+        </div>
+        <div class="dim-reason">判定规则具体"只认 diff 内反证"，反例带可机械判定条件</div>
+      </div>
+      <div class="dim-cell win">
+        <div class="dim-head">
+          <span><span class="dim-num">dim 6</span> &nbsp;<span class="dim-name">资源整合度</span></span>
+          <span class="dim-tag better">2↑ 1=</span>
+        </div>
+        <div class="dim-reason">头部首次建术语纲领，SKILL↔resources 双向衔接到位</div>
+      </div>
+      <div class="dim-cell loss">
+        <div class="dim-head">
+          <span><span class="dim-num">dim 7</span> &nbsp;<span class="dim-name">整体架构</span></span>
+          <span class="dim-tag worse">1↓ 2↑</span>
+        </div>
+        <div class="dim-reason">唯一 worse：术语衔接段自我注释 + 理念复述 4 次，未达废话题值</div>
+      </div>
+      <div class="dim-cell win">
+        <div class="dim-head">
+          <span><span class="dim-num">dim 8</span> &nbsp;<span class="dim-name">实测表现</span></span>
+          <span class="dim-tag better">2↑ 1=</span>
+        </div>
+        <div class="dim-reason">干跑证实"该报不挡、不该报挡误报"，双轨未破坏</div>
+      </div>
+      <div class="dim-cell win">
+        <div class="dim-head">
+          <span><span class="dim-num">dim 9</span> &nbsp;<span class="dim-name">反例与黑名单</span></span>
+          <span class="dim-tag better">3-0</span>
+        </div>
+        <div class="dim-reason">次强项：反模式 +2 条、FIRMWARE/REVIEW 各补"不应报"高 signal 反例</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Judge 分解 -->
+  <div class="section">
+    <div class="section-title">三个独立 Judge 逐条分解</div>
+    <div class="judges">
+
+      <div class="judge-row">
+        <div class="judge-id">
+          <div class="badge">A</div>
+          <div class="role">BMC/固件<br>视角</div>
+        </div>
+        <div class="judge-body">
+          <div class="judge-meta">
+            <span class="judge-verdict">better</span>
+            <span class="judge-margin">margin: clear</span>
+            <span class="judge-prompt">prompt: bmc-sensor-spec-and-standards + uefi-smm-boundary</span>
+          </div>
+          <div class="judge-reason">
+            干跑 bmc-sensor：证伪自检对 3 条真实 🔴🟡 检测后<strong>无 diff 反证 → 全部保留</strong>，正确不误杀。
+            旁证 uefi-smm：FIRMWARE"不应报·载荷在已确认缓冲区内"条件在此 case <strong>未满足 → 正确不触发</strong>，反例高 signal 性得到验证，没变一刀切。
+            <strong>Spec/Standards 双轨未被破坏。</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="judge-row">
+        <div class="judge-id">
+          <div class="badge">B</div>
+          <div class="role">Web/通用<br>视角</div>
+        </div>
+        <div class="judge-body">
+          <div class="judge-meta">
+            <span class="judge-verdict">better</span>
+            <span class="judge-margin">margin: clear</span>
+            <span class="judge-prompt">prompt: web-register-sql-and-secrets</span>
+          </div>
+          <div class="judge-reason">
+            干跑 web-register：该 diff 真 bug（f-string SQL 注入、明文密码、全表扫描）
+            <strong>全部不命中新增"不应报"反例</strong>——反例门槛是"参数化查询已用""mock 占位密钥"，代码不满足故不被误排除。
+            <strong>新机制在不该报时挡误报，在该报时不挡真 bug，方向正确。</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="judge-row">
+        <div class="judge-id">
+          <div class="badge">C</div>
+          <div class="role">魔鬼代言人<br>(devil's advocate)</div>
+        </div>
+        <div class="judge-body">
+          <div class="judge-meta">
+            <span class="judge-verdict">better</span>
+            <span class="judge-margin">margin: clear</span>
+            <span class="judge-prompt">prompt: validation-path-selection</span>
+          </div>
+          <div class="judge-reason">
+            <strong>默认怀疑"改后=更好"，反复施压后仍判 better。</strong>
+            最强反对 2 点：①"术语衔接"段是无收益的自我注释（~150 字向 skill 自己解释术语成体系）；
+            ② Step 4.5 触发面过窄，典型用例纯 no-op。
+            但证据足以推翻怀疑：<strong>"定位失败兜底"是 before 完全缺失、对 BMC domain 真正重要的失败分支——无法用"冗余"反驳。</strong>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 胜点 / 败点 -->
+  <div class="section">
+    <div class="section-title">最强胜点 vs 最强败点</div>
+    <div class="findings-grid">
+      <div class="finding-card win">
+        <div class="finding-label">三 Judge 共识 · 最强胜点</div>
+        <div class="finding-dim">dim 3 失败模式编码（Q2+Q6）</div>
+        <div class="finding-text">
+          before 版遇到"位置漂移"或"diff 直接反证"这类情形无任何规定，LLM 默认会<strong>静默丢弃</strong>漂移发现或保留假阳性。
+          after 的"定位失败兜底——不丢弃、标位置待重锚定"和"证伪自检——证伪不证实、移除即记录理由不静默"
+          把这两条原本会悄悄丢失信息的路径变成<strong>显式、可审计的人类交接点</strong>，在 BMC/固件（沉默=放过炸硬件 bug）领域信号增益极高。
+        </div>
+      </div>
+      <div class="finding-card loss">
+        <div class="finding-label">Judge C 魔鬼代言人 · 最强败点</div>
+        <div class="finding-dim">dim 7 整体架构 / 冗余</div>
+        <div class="finding-text">
+          ①<strong>"术语衔接"段是无收益自我注释</strong>：skill 花 ~150 字向自己声明术语"纳入体系、不游离"——排名前沿的"为了显得系统化而造词"嫌疑。<br><br>
+          ②<strong>"分级精度"理念复述 4 次</strong>（头部+Step4🟢行+2×resources 衔接句），每处附"理由：…"，部分可裁而不损行为正确性。
+          <strong>目前未越过废话题值</strong>，但若再叠一层值得回滚裁体。
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gate 项 -->
+  <div class="section">
+    <div class="section-title">Gate 项（独立于评分）</div>
+    <div class="gates">
+      <div class="gate-row pass">
+        <div class="gate-icon">✓</div>
+        <span class="gate-name">Runtime 中立性</span>
+        <span class="gate-detail">扫描无命中——无「Claude Code only」等 runtime-specific 措辞</span>
+      </div>
+      <div class="gate-row warn">
+        <div class="gate-icon">!</div>
+        <span class="gate-name">文件体积 ≤ 150%</span>
+        <span class="gate-detail">FIRMWARE-CHECKS.md 2294→3670 字节 (159%) 超红线，其余 110-122% 在限内</span>
+      </div>
+      <div class="gate-row warn">
+        <div class="gate-icon">!</div>
+        <span class="gate-name">dim8 验证模式</span>
+        <span class="gate-detail">dry_run（子 agent 干跑），无 full_test 真实行为验证，待后续 Phase 2 升级兑现</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 改动摘要 -->
+  <div class="section">
+    <div class="section-title">本次改动一览（4 文件 +56-/3 行）</div>
+    <div class="summary-list">
+      <div class="summary-item"><code>SKILL.md</code> 头部增"分级精度"原则段 + 术语衔接；Step 1 ⑤风险摘要；Step 4 🟢沉默行 + 定位失败兜底 + <strong>Step 4.5 证伪自检子步骤</strong>；Step 6 验证状态占位行；反模式 +2 条</div>
+      <div class="summary-item"><code>FIRMWARE-CHECKS.md</code> 头部分级精度衔接句 + 4 专项段各补"不应报（高 signal 反例）"</div>
+      <div class="summary-item"><code>REVIEW-CHECKLIST.md</code> 头部衔接句 + 并发/安全各补"不应报"反例</div>
+      <div class="summary-item"><code>FEEDBACK-GUIDELINES.md</code> 新增位置待重锚定 + 自否决降级 2 条措辞示例</div>
+    </div>
+  </div>
+
+  <!-- 底部 -->
+  <div class="footer">
+    <div class="footer-left">
+      <div class="footer-brand">Darwin<span class="dot">.</span>skill</div>
+      <div class="footer-slogan">像训练模型一样进化你的 Skills</div>
+      <div class="footer-tsv">results.tsv → paired · 3-0 better · keep</div>
+    </div>
+    <div class="footer-right">
+      <div class="footer-url">github.com/alchaincyf/darwin-skill</div>
+      <div class="footer-by">base: HEAD 7fad129 → worktree · 2026-07-29</div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
