@@ -60,6 +60,7 @@ Start from my workspace AGENTS.md or CLAUDE.md. Follow any WORKSPACE.md or skill
 | Design | [design_skill](https://github.com/grapeot/design_skill) | UI evaluation and improvement judgment framework |
 | Home automation | [smart_home_skill](https://github.com/grapeot/smart_home_skill) | Smart home CLI；device aliases and household details in local overlay |
 | E-ink display | [eink_diary](https://github.com/grapeot/eink_diary) | Visual diary generation for e-ink displays |
+| Embedded hardware | [m5stack-sticks3-skill](https://github.com/grapeot/m5stack-sticks3-skill) | M5StickS3 板级 bring-up 与实机验收指南；覆盖 Arduino/ESP-IDF、按钮、电源、LCD、IR、ES8311 音频、NVS 和 BLE HID 陷阱，不回显设备 secret |
 | Identity | [logto-management-skill](https://github.com/grapeot/logto-management-skill) | 安全发现、审计和管理 Logto 租户配置的 CLI + Python 库；支持租户 Swagger 检索、配置写入强制备份与回读校验、快照 diff、MFA 运维和破坏性操作 dry-run |
 
 ## 选择原则

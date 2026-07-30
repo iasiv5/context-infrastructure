@@ -1,5 +1,9 @@
 # Working Log
 
+## 2026-07-29
+
+- Added `m5stack-sticks3-skill` to the public ecosystem for source-backed M5StickS3 board bring-up and hardware acceptance checks; it contains no workspace-private overlay or device secrets.
+
 ## 2026-07-20
 
 - Added `apple-photos-skill` for normalized Apple Photos metadata workflows and explicitly authorized, dry-run-first PhotoKit mutations; the public entry preserves its live-unverified alpha boundary.
