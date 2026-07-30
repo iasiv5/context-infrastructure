@@ -146,3 +146,8 @@ Date: 2026-07-29
 🟡 Medium: [ob-harness Know-how 双通道经验沉淀] `adhoc_jobs/2026/20260728-ob-harness 实战：把 Agent 踩的坑变成 Know-how.md` 实录纯手动把 Agent 协作坑沉淀成 Know-how 的三轮迭代：Round1 阻断 DRY-RUN 逻辑断裂（CWD 无主仓时 machine check 失去物理依据）→ Round2 阻断交互盲区（ob init 遗漏 --url 卡在交互窗口）→ Round3 经验生效一次跑通。框架内 SKILL 改名 KNOW-HOW 避免与 Agent Skill 语义混淆。手动沉淀与 /ai-heartbeat 半自动机制互为补充，构成 ob-harness 双通道经验积累体系。
 🟡 Medium: [认知画像提取工作流成熟] `rules/skills/workflow_cognitive_profile_extraction.md` 基于多源大规模实践（6.9M 字 → 8 条公理/6 轮）更新：Guardrail 区分 Opus（设计/QA/写作不 delegate）与非 Opus（暂停确认）；Round 驱动迭代引擎（Discover/Verify/Finalize/Restructure 四动作）替代固定线性 Phase；确立"写作不 delegate"硬约束保证概念一致性与文风统一。INDEX.md 已同步。
 🟢 Low: [归档迁移] 07-27 17:42 一次大批量同时间戳文件变动（articles_archive/、docs/specs/plans/ 历史文件、webpage/ 模板等）为归档操作，非新内容，本次 observer 已按元数据原则过滤为噪音。
+
+Date: 2026-07-30
+
+🟡 Medium: [harness engineering 叙事延续] commit 7c7e003 新增文章 `adhoc_jobs/2026/20260730-从 GitHub 到 IPDD：约束凭什么越做越薄.md`，把 GitHub 官方博客《The harness is all you need (mostly)》八步原生循环（原型→plan 模式→Autopilot→rubber duck review）与 IPDD 三阶段（Intent/Plan/DD）互证，提炼出共同内核是"锁定变量、降方差"：同一 session 不换模型保 prompt cache、一份计划锁死意图防发散。区分大众场景（原生 harness 足够）与严肃工程深水区（需 IPDD 对抗式审查兜底 mostly 余量）。与 07-21/07-29 的 IPDD 收口叙事连续，从"实施计划为王"进一步收紧为"约束越做越薄、方向越做越锋利"。
+🟡 Medium: [iasi 跟踪 main 第五次同步] commit ffba3d5 合并 main `c3e9d9c`（PR #81+#80+#78+#77，共 7 个上游提交）到 iasi，纯增益零冲突 auto-merge 直接通过（+112 行）。带入内容：新增 M5StickS3 skill、增强 project_scaffold skill（加 context/CI-CD/common pitfalls）。这是自 07-18 建立增量基线以来第 5 次连续零冲突纯增益同步，持续验证"iasi 只新增不重构上游文件 → auto-merge 直接通过"模式成立。下次同步起点锚定 `ffba3d5`。
