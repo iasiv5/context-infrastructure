@@ -66,7 +66,8 @@
 - [深度调研工作流](./workflow_deep_research_survey.md) ✅ — 多 Agent 并行 + 交叉验证（Phase 1-3 信息采集）
 - [公开 Consensus Net Income 审计工作流](./workflow_public_consensus_net_income_audit.md) — 用 MarketScreener 等公开网页审计一组股票的 FY/CY consensus net income，区分 direct/derived、current/baseline/revision，并要求逐链接 QA。触发词："consensus net income"、"MarketScreener 审计"、"FY2026E 净利润共识"
 - [科研论文调研与写作工作流](./workflow_research_paper_survey_writing.md) — 把科研论文转化为面向技术从业者的分析文章。核心：按读者重要性排序（不按论文章节）、三层分离（paper claim / 外部验证 / 我们的判断）、强制生态位分析（bottleneck / 替代路径 / stack 层级 / 相邻影响）。触发词："分析这篇论文"、"写论文解读"、"paper analysis"
-- [外部写作工作流](./workflow_external_writing.md) ✅ — 将调研素材转化为 external-facing 分析文章的操作主干；Main Agent 负责 thesis、source of truth 与上游工件，写作 agent 双生成异质候选、单审查选优，验收走看不到答案的分离冷读，最终由一道机器阻断"完成"的终端陌生读者冷读一票放行
+- [外部写作工作流](./workflow_external_writing.md) ✅ — 将调研素材转化为 external-facing 分析文章的操作主干；Main Agent 负责 thesis、source of truth 与上游工件，写作 agent 双生成候选、单审查选优，验收走看不到答案的分离冷读，Round 4 强制 CLI 机械自查 + residual 返工，最终由一道机器阻断"完成"的终端陌生读者冷读一票放行。机械自查：`external_prose_lint.md`
+- [External Prose Lint CLI](./external_prose_lint.md) ✅ — 确定性扫描 external 中文稿的破折号/引号/括号补译/禁词表/单句段/裸 URL 等；每条 finding 附 skill 问题。`python -m rules.skills.external_prose_lint_cli <md>`
 - [内部写作工作流](./workflow_internal_writing.md) ✅ — 面向用户本人、共享上下文协作者和未来 AI agent 的内部文档写作。先建立可验收 question contract，再用问题、方案、决策三层降低决策摩擦。
 - [认知画像提取工作流](./workflow_cognitive_profile_extraction.md) — 从非结构化对话数据提取可预测的认知公理
   - 适用：群聊/Slack/Discord/邮件/播客转录等任意对话数据
@@ -85,7 +86,7 @@
 
 通用的最佳实践和经验教训。
 
-- [外部中文 prose 诊断词汇表](./bestpractice_external_prose.md) ✅ — 供 Main Agent 诊断教材声、认知负担与表演式口语，并压缩成本题约一页 voice contract 的**参考词汇**；不是验收 gate 清单，不整份交给 Writer
+- [外部中文 prose 诊断词汇表](./bestpractice_external_prose.md) ✅ — 供 Main Agent 诊断教材声、认知负担与表演式口语，并压缩成本题约一页 voice contract 的**参考词汇**；不是验收 gate 清单，不整份交给 Writer。机械扫描见 [External Prose Lint CLI](./external_prose_lint.md)
 - [外部文章启发性分析视角（Thesis Catalog）](./reference_writing_thesis_catalog.md) ✅ — L1-L8 启发性分析视角及相关 axiom 映射
 - [内部文档排版与自适应视觉组件规范](./bestpractice_internal_visuals.md) ✅ — 内部 Memo/RFC/周报的自适应 HTML 卡片、主题变量、暗色模式兼容与视觉组件规范
 - [AI 编程核心方法论](./bestpractice_ai_programming_mindset.md) ✅ — 70%问题、成功标准、可验证性
