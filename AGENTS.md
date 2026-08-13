@@ -48,6 +48,10 @@ AI Heartbeat 的会前提醒由 `.github/hooks/pre-session.ps1` 直接处理。S
 - 准备调用多个 `functions.task` 前，先把这个 skill 读一遍再执行
 - 当前并行方式是 `multi_tool_use.parallel`；不要使用旧 `run_in_background` / `background_output` 写法
 
+**merge main to iasi branch** → `rules/skills/bestpractice_forked_upstream_sync.md`
+- 先读这个 bp 再执行同步；即使判断 already-up-to-date 也不能短路
+- merge 完成后**必须**跑一遍 overlay refresh（见 `rules/skills/bestpractice_external_skill_overlay.md`）：`cd external_skills/<repo> && git pull && pip install -e .`
+
 ## Axioms（公理）
 
 从个人经历提炼的决策原则，用于启发深度思考。分类索引、使用指南和触发词见 `rules/axioms/INDEX.md`。

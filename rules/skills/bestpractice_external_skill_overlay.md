@@ -51,7 +51,7 @@ pip install -e .                  # 如果 src/ 里的代码变了，重装
 
 | 时机 | 谁触发 | 原因 |
 |---|---|---|
-| **merge main to iasi 之后** | 你主动让 agent merge main | main 可能改了 stub 的 URL/格式，顺手刷新 overlay 确保一致 |
+| **merge main to iasi 流程的一部分** | agent 执行 merge main | **无条件必做**——即使 git merge 报 already-up-to-date，仍须跑 overlay refresh。main 可能改了 stub 的 URL/格式，顺手刷新确保一致 |
 | **上游 repo 有新 PR/commit** | 你看到通知或想用新功能 | writing-skill 一周 7 个 commit，比较活跃 |
 | **CLI 报错或行为异常** | 你发现 lint/写作工具不工作 | 可能是上游修了 bug，pull 一下再说 |
 
