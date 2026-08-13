@@ -27,10 +27,13 @@
 
 ## 验收标准
 
-- [ ] 一次性 merge commit 已生成（不是 N 个 cherry-pick commit）
-- [ ] 所有冲突已按"决策表"逐一处理并记录理由（至少在 commit message 列出 modify/delete 与取 main/取 fork 的关键文件）
-- [ ] 下一次跟踪 main 时，merge 范围仅限于上次 merge commit 之后 main 的新增提交（验证：`git log <merge-base>..main --oneline` 全部为新提交，无回溯）
+以下清单无论 git merge 是否产生了新 commit，都必须逐项确认。如果 merge 报 already-up-to-date，跳过冲突相关项，但 **overlay refresh 和 memory 同步仍然必做**。
+
+- [ ] 如果有新提交：一次性 merge commit 已生成（不是 N 个 cherry-pick commit）
+- [ ] 如果有冲突：所有冲突已按“决策表”逐一处理并记录理由（至少在 commit message 列出 modify/delete 与取 main/取 fork 的关键文件）
+- [ ] 如果有新提交：下一次跟踪 main 时，merge 范围仅限于上次 merge commit 之后 main 的新增提交（验证：`git log <merge-base>..main --oneline` 全部为新提交，无回溯）
 - [ ] fork 的自定义能力未被破坏（关键功能、关键 skill 条目、关键脚本仍存在且可用）
+- [ ] **overlay refresh（无条件必做）**：对 `external_skills/` 下每个已 clone 的外部 skill repo 跑一遍 `git pull && pip install -e .`，确认本地 clone 与主仓 stub 指向一致。即使本次 merge already-up-to-date 也必须跑。详见 [外部 Skill Overlay 的本地安装与更新](./bestpractice_external_skill_overlay.md)
 - [ ] 关键决策已写入 user/repo memory，含"已知分叉点清单"，避免下次重复踩同一组冲突
 
 ## 可用资源与工具
@@ -60,9 +63,7 @@
 5. **双方同一文件都做了实质性修改**（真冲突）
    - 手动合并。读 `git log <merge-base>..main -- <file>` 和 `git log <merge-base>..fork -- <file>` 理解双方意图后逐段合并。
    - 这类文件必须人工审阅，不接受任何一方的整段覆盖。
-
-## 方法论建议（非硬约束）
-
+- **不要在 already-up-to-date 时短路**：即使 `git merge main` 回到 already-up-to-date ，本流程也没有结束——overlay refresh（见验收标准）和 memory 同步仍须执行。最大的陷阱不是冲突本身，而是判断“没事可做”后提前退出，把 overlay 的潜在偏差置之脑后。
 - **先 dry-run 评估代价**：`git merge main --no-commit` → 看一眼 `git status` → `git merge --abort`。如果冲突文件数 > 30 且大多属于第 5 类真冲突，考虑是否值得本次合并，或先做一次更小的范围合并。
 - **保留 INDEX.md 之类含本地独有条目的混合文件**：fork 可能在某个 INDEX 里加了主仓没有的条目，main 又重构了同一 INDEX。这种情况不接受任何一方整段覆盖，必须手动合并保留双方条目。
 - **用 commit message 留痕**：把本次合并处理的"已知分叉点"（哪几个文件取了谁、理由是什么）写进 merge commit message，作为下次同步的参考。
@@ -83,4 +84,4 @@
 - 一个 merge commit，message 含"已知分叉点处理理由"
 - 一条 user 或 repo memory，含"已知分叉点清单"和本次策略
 - 冲突解决后立即跑一次 fork 的关键功能验证（最小 smoke：关键脚本 `--help`、关键 skill 文件可被 INDEX.md 解析）
-- 如果 fork 有外部 skill 的本地 overlay（见 [外部 Skill Overlay 的本地安装与更新](./bestpractice_external_skill_overlay.md)），merge 完成后顺手跑一遍 overlay refresh：`cd external_skills/<repo> && git pull && pip install -e .`，确保本地 clone 与主仓 stub 指向一致
+- overlay refresh 已按验收标准执行（无条件必做，无需在此重复）
