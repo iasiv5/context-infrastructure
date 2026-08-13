@@ -83,3 +83,4 @@
 - 一个 merge commit，message 含"已知分叉点处理理由"
 - 一条 user 或 repo memory，含"已知分叉点清单"和本次策略
 - 冲突解决后立即跑一次 fork 的关键功能验证（最小 smoke：关键脚本 `--help`、关键 skill 文件可被 INDEX.md 解析）
+- 如果 fork 有外部 skill 的本地 overlay（见 [外部 Skill Overlay 的本地安装与更新](./bestpractice_external_skill_overlay.md)），merge 完成后顺手跑一遍 overlay refresh：`cd external_skills/<repo> && git pull && pip install -e .`，确保本地 clone 与主仓 stub 指向一致
