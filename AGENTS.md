@@ -39,6 +39,9 @@ AI Heartbeat 的会前提醒由 `.github/hooks/pre-session.ps1` 直接处理。S
 
 ### 常用 Skill 速查（以 INDEX.md 为准）
 
+**写文章 / 公众号 / 外部文档** → 读 `rules/skills/writing_skill_local_overlay.md`
+- 极度重要：严禁 AI 直接输出最终文章。只要用户要求“写短文”、“写公众号”、“写锐评”，必须先读取该文件以接入 external writing workflow。
+
 **深度调研任务** → `rules/skills/workflow_deep_research_survey.md`
 - 初步扫描 → 分割维度 → 多 Agent 并行 → 交叉验证 → 写报告
 - 输出：`contexts/survey_sessions/`
