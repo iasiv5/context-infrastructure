@@ -10,3 +10,4 @@ __pycache__/
 periodic_jobs/ai_heartbeat/state/heartbeat_status.json
 m/
 external_skills/
+ob-harness/
