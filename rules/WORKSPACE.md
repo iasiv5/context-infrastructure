@@ -20,6 +20,11 @@
 - 核心公理（Axioms）：`rules/axioms/`
 - 记忆系统：`contexts/memory/` + `periodic_jobs/ai_heartbeat/`
 
+### 独立子仓（.gitignore 排除跟踪，物理相邻但 git 独立）
+- `ob-harness/` → OpenBMC harness 专用仓（自带 heartbeat：`ob-harness/contexts/memory/OBSERVATIONS.md`；主仓 observer 只记指针条目，子仓细节去子仓记忆查）
+- `external_skills/` → 外部 skill 本地 clone + overlay（writing-skill、ai-agent-cli-skill 等；overlay 机制见 `rules/skills/bestpractice_external_skill_overlay.md`）
+- `m/` → iasi 插件 marketplace 子仓（brainstorming/grilling/writing-plans 等 skill 的上游）
+
 ## 命名规则
 - 目录和文件名：小写 + 下划线 (snake_case)
 - 临时一次性项目：`tmp_<name>/`
