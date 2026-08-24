@@ -1,0 +1,6 @@
+# external_skills overlay 一键安装/校验 -- 主仓依赖的 clones 在这里声明
+packages:
+  - name: writing-skill
+    repo: https://github.com/grapeot/writing-skill.git
+    branch: master
+    pip: external_skills/writing-skill   # editable 安装路径（不含则跳过 pip）

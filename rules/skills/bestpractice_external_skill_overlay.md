@@ -24,7 +24,17 @@
 
 ## 核心步骤：首次安装一个 overlay
 
-对每个需要本地常驻的外部 skill repo：
+**新机器一键路径**（推荐）：overlay 清单收敛在 `.github/deps.yml`，直接跑
+
+```powershell
+python tools/install_overlays.py                          # 缺什么装什么
+python tools/install_overlays.py --proxy http://L7IC.inventec.com.cn:3129   # 公司网
+python tools/install_overlays.py --check                  # 只校验（CI/体检用）
+```
+
+脚本幂等：已 clone 的只报状态不动它；之后新增 overlay 也应**先在 deps.yml 加声明**再装（保持清单与磁盘一致）。
+
+手动等价步骤（脚本做的事展开）：
 
 1. **clone 到 `external_skills/<repo-name>/`**（统一目录，不散落各处）
 2. **如果有 CLI（pyproject.toml）**：`pip install -e .` 以 editable 模式安装，这样 `git pull` 后代码立即生效

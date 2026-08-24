@@ -8,6 +8,7 @@
 - 写代码 / 跑脚本 / 一次性项目：`adhoc_jobs/<project>/`
 - 工具脚本（邮件、语义搜索、分享报告等）：`tools/`
 - 定时任务：`periodic_jobs/`
+- 外部 skill overlay 清单与一键安装：`.github/deps.yml` + `python tools/install_overlays.py`（新机器 setup 先跑它；`--check` 只校验）
 
 ### 知识与记录
 - 通用调研报告：`contexts/survey_sessions/`
