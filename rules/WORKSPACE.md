@@ -18,6 +18,7 @@
 
 ### 系统与规则
 - 可复用技术方案 / Skill：`rules/skills/`
+- 斜杠命令三入口（Claude Code / Copilot / DeepSeek Harness）：`.claude/commands/<n>.md` + `.github/prompts/<n>.prompt.md` + `.dsh/skills/<n>.md`（DSH 入口是带 `name`/`description` frontmatter 的裸 .md，命令即 skill，`/name` 即调用；三入口互不引用，共同事实只放中立合同如 `periodic_jobs/` SOP）
 - 核心公理（Axioms）：`rules/axioms/`
 - 记忆系统：`contexts/memory/` + `periodic_jobs/ai_heartbeat/`
 
