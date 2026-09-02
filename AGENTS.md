@@ -11,6 +11,7 @@ Before doing anything else:
 3. Read `rules/WORKSPACE.md` — file routing table, check before searching for files
 4. Read `rules/COMMUNICATION.md` — how to think and communicate (especially for non-coding tasks)
 5. Read `rules/skills/INDEX.md` — understand available skills
+6. **检查 external skill overlays（强制）**：运行 `python tools/install_overlays.py --check`。退出码非 0 即表示有 overlay 缺失，必须先运行 `python tools/install_overlays.py` 补齐 clone 再开始任何依赖它的工作（公司内网 git clone 超时加 `--proxy http://L7IC.inventec.com.cn:3129`）。**写作任务在检查通过前视为阻塞**：`rules/skills/` 下的写作 skill 只是转发桩，真正内容在本地 clone `external_skills/writing-skill/`；新机器 clone 主仓后该目录默认不存在，不补齐就没有写作 skill 可触发。
 
 ## Multi-Agent Nudge
 
@@ -41,6 +42,7 @@ AI Heartbeat 的会前提醒由 `.github/hooks/pre-session.ps1` 直接处理。S
 
 **写文章 / 公众号 / 外部文档** → 读 `rules/skills/writing_skill_local_overlay.md`
 - 极度重要：严禁 AI 直接输出最终文章。只要用户要求“写短文”、“写公众号”、“写锐评”，必须先读取该文件以接入 external writing workflow。
+- 若 `external_skills/writing-skill/` 不存在（新机器常见），先跑 `python tools/install_overlays.py` 补齐，再按 overlay 路由读取完整 skill。
 
 **深度调研任务** → `rules/skills/workflow_deep_research_survey.md`
 - 初步扫描 → 分割维度 → 多 Agent 并行 → 交叉验证 → 写报告
