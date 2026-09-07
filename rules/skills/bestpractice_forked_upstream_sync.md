@@ -33,6 +33,7 @@
 - [ ] 如果有冲突：所有冲突已按“决策表”逐一处理并记录理由（至少在 commit message 列出 modify/delete 与取 main/取 fork 的关键文件）
 - [ ] 如果有新提交：下一次跟踪 main 时，merge 范围仅限于上次 merge commit 之后 main 的新增提交（验证：`git log <merge-base>..main --oneline` 全部为新提交，无回溯）
 - [ ] fork 的自定义能力未被破坏（关键功能、关键 skill 条目、关键脚本仍存在且可用）
+- [ ] auto-merge 结果抽查（零冲突≠语义安全）：对 fork 曾独立改过的文件，`git diff <merge-base>..main -- <file>` 确认双方改动 hunk 级不重叠——auto-merge 通过只说明文本不打架，不排除 fork 演进被 main 语义覆盖（08-06 第七次同步沉淀的验证条例）
 - [ ] **overlay refresh（无条件必做）**：对 `external_skills/` 下每个已 clone 的外部 skill repo 跑一遍 `git pull && pip install -e .`，确认本地 clone 与主仓 stub 指向一致。即使本次 merge already-up-to-date 也必须跑。详见 [外部 Skill Overlay 的本地安装与更新](./bestpractice_external_skill_overlay.md)
 - [ ] 关键决策已写入 user/repo memory，含"已知分叉点清单"，避免下次重复踩同一组冲突
 
