@@ -166,3 +166,7 @@ Date: 2026-08-24
 🟡 Medium: [m 子仓 5.7.2/5.7.3 发布] 5.7.3（08-18）：skill 跨引用去斜杠命令化（"run the `/grilling` skill" → "call the Skill tool with grilling"），skill-to-skill 调用不再伪装成用户面 slash command；domain-modeling 触发条件从抽象 "ubiquitous language" 改为具体制品锚（编辑 CONTEXT.md / 记录 ADR / 术语讨论）。5.7.2（08-07）：sub-agent 生成指引去工具化，skill 文本跨 agent runtime 可移植。
 🟢 Low: [归档迁移] 08-17 09:47-09:50 批量文件时间戳刷新为第十次 merge 的 checkout 结果（git status clean），observer 按 git name-status + 同秒批量时间戳模式过滤为噪音。此为 07-27 / 08-06 后第三次同模式出现，过滤口径已稳定。
 <!-- 2026-08-24 reflector GC：删除过时 🟢 三条（07-20 当时 GC 操作的流水、07-27 与 08-06 归档噪音过滤流水——同模式已三次出现，口径稳定进 observer 惯例，不再逐次记录）与 🟡 一条（07-21"文章锐评 slash command 落地"，功能已稳定投入使用，配置文件自明）。08-24 归档 🟢 为当日新记，保留一轮观察期。-->
+
+Date: 2026-09-07
+
+🟡 Medium: [iasi 跟踪 main 第十一次同步] commit 95c7aee 合并 main `421df58`（PR #90+#91：diet skills INDEX 路由层 + INDEX 描述 re-voice 修 review drift + GPT 3D skill 入生态文档，共 5 个上游提交）。本次打破连续 8 次零冲突记录：`rules/skills/INDEX.md` 出现第 5 类真冲突——main 在 ba463f2 对 3 个共享条目（iOS Test Acceleration / Playwright E2E / Playwright Ajax Capture）刻意 re-voice 措辞，iasi 侧同区域挂着 3 个 fork 独有条目。按决策表手动合并：共享条目取 main re-voice 措辞（上游纯正增益），fork 独有条目（forked_upstream_sync / external_skill_overlay / writing_skill_local_overlay）全部保留。AGENTS.md / SKILL_ECOSYSTEM.md auto-merge 正确。overlay refresh 已跑：writing-skill @ 9f2f697 already up to date。下次起点锚定 `95c7aee`（merge-base `421df58`）。已知分叉点复用：INDEX.md fork 专属条目区仍是首选冲突位，re-voice 类上游改写取 main。
