@@ -45,13 +45,9 @@ AI Heartbeat 的会前提醒由 `.github/hooks/pre-session.ps1` 直接处理。S
 - 若 `external_skills/writing-skill/` 不存在（新机器常见），先跑 `python tools/install_overlays.py` 补齐，再按 overlay 路由读取完整 skill。
 
 **深度调研任务** → `rules/skills/workflow_deep_research_survey.md`
-- 初步扫描 → 分割维度 → 多 Agent 并行 → 交叉验证 → 写报告
-- 输出：`contexts/survey_sessions/`
-
 **调用后台 Agent / 并行 Subagent** → `rules/skills/workflow_parallel_subagents.md`
-- 何时拆分任务、什么时候不要拆、如何并行派出多个 subagent
-- 准备调用多个 `functions.task` 前，先把这个 skill 读一遍再执行
-- 当前并行方式是 `multi_tool_use.parallel`；不要使用旧 `run_in_background` / `background_output` 写法
+
+命中后读对应 skill 文件再执行；INDEX.md 是唯一路由源，这里不展开步骤。
 
 **merge main to iasi branch** → `rules/skills/bestpractice_forked_upstream_sync.md`
 - 先读这个 bp 再执行同步；即使判断 already-up-to-date 也不能短路
