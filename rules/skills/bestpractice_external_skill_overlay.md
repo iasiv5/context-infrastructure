@@ -110,6 +110,7 @@ foreach ($repo in (Get-ChildItem external_skills -Directory)) {
 | 往 main 独占的 stub 里写 fork 内容 | 下次 merge main 时该行跟 main 改动冲突 | stub 保持 main 纯净，fork 专属逻辑只写 overlay 路由文件 |
 | 忘记 pip install -e . 后代码没更新 | `git pull` 了但 CLI 行为没变 | pull 后如果有 src/ 变化，必须 `pip install -e .`；editable 模式下一般自动生效但保险起见重装 |
 | 上游重构了 skills/ 目录文件名 | overlay 路由文件的路径表失效，AI 读不到内容 | pull 后快速扫一眼 `git log --oneline -3`；如果有 rename/restructure，更新路由文件路径表 |
+| 无 pip 的机器跑 overlay refresh | `pip install -e .` 直接 command not found（如 DSH Linux 服务器：无 pip/ensurepip/uv/venv，只有裸 python3） | CLI 层装不上不影响内容层（clone + 路由文件完整可用，`git pull` 照跑）；需要 CLI 的场景（写作 Round 4 自查）改在有 pip 的主力机跑，或先给机器装 python3-pip |
 
 ## 输出
 
