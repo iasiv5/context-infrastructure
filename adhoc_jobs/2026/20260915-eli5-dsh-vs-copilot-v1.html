@@ -1,0 +1,580 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ELI5 · DeepSeek Harness vs GitHub Copilot</title>
+<style>
+  :root{
+    --paper:#FAF7F1; --ink:#1B2437; --muted:#68718A;
+    --vio:#6E56CF; --blu:#3E63DD;
+    --line:#E4DECF;
+  }
+  *{box-sizing:border-box}
+  html{scroll-snap-type:y proximity;scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans SC","Microsoft YaHei","Segoe UI",sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .screen{
+    min-height:100vh;scroll-snap-align:start;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:22px;padding:56px 4vw;
+  }
+  .kicker{font-size:12.5px;letter-spacing:.28em;color:var(--muted);text-transform:uppercase}
+  h1{margin:0;font-size:clamp(30px,4.6vw,52px);letter-spacing:.01em;text-align:center;line-height:1.25}
+  .sub{margin:0;font-size:clamp(13px,1.4vw,16px);color:var(--muted);text-align:center}
+  h2{margin:0;font-size:clamp(23px,3.2vw,38px);text-align:center;line-height:1.3}
+  .fig{
+    width:min(1060px,94vw);background:#fff;border:1.5px solid var(--line);border-radius:22px;
+    padding:clamp(10px,1.8vw,22px);box-shadow:0 16px 48px rgba(27,36,55,.08);
+  }
+  .fig svg{width:100%;height:auto;display:block}
+  svg text{font-family:inherit}
+  .cap{
+    max-width:800px;margin:0;text-align:center;
+    font-size:clamp(15px,1.5vw,17.5px);line-height:2.05;color:#3D4559;
+  }
+  .cap b{color:var(--ink)}
+  .vio{color:#5B48C2;font-weight:700}
+  .blu{color:#2F4FC7;font-weight:700}
+  .colophon{font-size:12px;color:#A8A091;letter-spacing:.08em}
+</style>
+</head>
+<body>
+
+<!-- shared defs: arrowheads + soft shadow -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <marker id="ar"  viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#1B2437"/></marker>
+    <marker id="arv" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#6E56CF"/></marker>
+    <marker id="arb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#3E63DD"/></marker>
+    <marker id="arAm" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#B45309"/></marker>
+    <marker id="arg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#8A93A8"/></marker>
+    <filter id="ds" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="3" stdDeviation="6" flood-color="#1B2437" flood-opacity="0.16"/>
+    </filter>
+  </defs>
+</svg>
+
+<!-- ========================= 01 全景 ========================= -->
+<section class="screen">
+  <div class="kicker">ELI5 图解 · 8 屏 · 给熟悉 Copilot 的你</div>
+  <h1>DeepSeek Harness <span style="color:#B45309">vs</span> GitHub Copilot</h1>
+  <div class="fig" aria-label="全景示意图">
+    <svg viewBox="0 0 960 600" role="img">
+      <!-- left: Copilot -->
+      <rect x="24" y="32" width="424" height="400" rx="18" fill="#F5F2FF" stroke="#C9BCF5" stroke-width="1.5"/>
+      <rect x="48" y="64" width="376" height="240" rx="12" fill="#FFFFFF" stroke="#D8D2EE" stroke-width="1.5"/>
+      <circle cx="68" cy="84" r="5" fill="#FF5F57"/><circle cx="86" cy="84" r="5" fill="#FEBC2E"/><circle cx="104" cy="84" r="5" fill="#28C840"/>
+      <line x1="48" y1="100" x2="424" y2="100" stroke="#EEEAF8" stroke-width="1.5"/>
+      <rect x="66" y="116" width="130" height="10" rx="5" fill="#ECEAF6"/>
+      <rect x="66" y="134" width="210" height="10" rx="5" fill="#ECEAF6"/>
+      <rect x="66" y="152" width="90"  height="10" rx="5" fill="#ECEAF6"/>
+      <rect x="66" y="170" width="180" height="10" rx="5" fill="#ECEAF6"/>
+      <rect x="66" y="188" width="120" height="10" rx="5" fill="#ECEAF6"/>
+      <!-- small robot inside editor -->
+      <line x1="267" y1="190" x2="267" y2="178" stroke="#6E56CF" stroke-width="2"/>
+      <circle cx="267" cy="175" r="3.5" fill="#6E56CF"/>
+      <rect x="250" y="192" width="34" height="26" rx="6" fill="#6E56CF"/>
+      <circle cx="261" cy="204" r="3.5" fill="#FFFFFF"/><circle cx="273" cy="204" r="3.5" fill="#FFFFFF"/>
+      <rect x="254" y="222" width="26" height="20" rx="6" fill="#8B76E3"/>
+      <rect x="292" y="224" width="96" height="16" rx="4" fill="#F1EDFF" stroke="#9C8BEB" stroke-width="1.2" stroke-dasharray="4 3"/>
+      <text x="340" y="236" font-size="10" fill="#7A68D6" text-anchor="middle">幽灵补全…</text>
+      <rect x="292" y="248" width="64" height="18" rx="9" fill="#6E56CF"/>
+      <text x="324" y="261" font-size="10.5" fill="#FFFFFF" text-anchor="middle">Tab 接受</text>
+      <!-- the human, driving -->
+      <circle cx="150" cy="330" r="14" fill="#F5C889" stroke="#B98A4A" stroke-width="1.5"/>
+      <rect x="132" y="348" width="36" height="26" rx="11" fill="#F5C889" stroke="#B98A4A" stroke-width="1.5"/>
+      <text x="180" y="356" font-size="12.5" fill="#68718A">你敲代码 · 它接话</text>
+      <text x="236" y="404" font-size="17" font-weight="700" fill="#5B48C2" text-anchor="middle">GitHub Copilot</text>
+      <text x="236" y="424" font-size="12.5" fill="#68718A" text-anchor="middle">AI 住进你的编辑器</text>
+
+      <!-- right: DSH -->
+      <rect x="512" y="32" width="424" height="400" rx="18" fill="#F2F5FF" stroke="#B9CBF7" stroke-width="1.5"/>
+      <rect x="536" y="64" width="220" height="240" rx="12" fill="#FFFFFF" stroke="#CBD8F5" stroke-width="1.5"/>
+      <text x="646" y="86" font-size="11" fill="#68718A" text-anchor="middle">shell · 文件 · 后台任务</text>
+      <g>
+        <rect x="550" y="96"  width="192" height="34" rx="6" fill="#EDF2FE"/><rect x="562" y="108" width="80" height="10" rx="5" fill="#DCE5F8"/><circle cx="706" cy="113" r="4" fill="#B9CBF7"/><circle cx="720" cy="113" r="4" fill="#3E63DD"/>
+        <rect x="550" y="142" width="192" height="34" rx="6" fill="#EDF2FE"/><rect x="562" y="154" width="64" height="10" rx="5" fill="#DCE5F8"/><circle cx="706" cy="159" r="4" fill="#B9CBF7"/><circle cx="720" cy="159" r="4" fill="#3E63DD"/>
+        <rect x="550" y="188" width="192" height="34" rx="6" fill="#EDF2FE"/><rect x="562" y="200" width="92" height="10" rx="5" fill="#DCE5F8"/><circle cx="706" cy="205" r="4" fill="#B9CBF7"/><circle cx="720" cy="205" r="4" fill="#3E63DD"/>
+        <rect x="550" y="234" width="192" height="34" rx="6" fill="#EDF2FE"/><rect x="562" y="246" width="72" height="10" rx="5" fill="#DCE5F8"/><circle cx="706" cy="251" r="4" fill="#B9CBF7"/><circle cx="720" cy="251" r="4" fill="#3E63DD"/>
+      </g>
+      <!-- browser window -->
+      <line x1="786" y1="168" x2="760" y2="168" stroke="#8A93A8" stroke-width="2" marker-start="url(#arg)" marker-end="url(#arg)"/>
+      <rect x="786" y="120" width="126" height="96" rx="10" fill="#FFFFFF" stroke="#CBD8F5" stroke-width="1.5"/>
+      <circle cx="798" cy="133" r="3" fill="#C9CFDD"/><circle cx="808" cy="133" r="3" fill="#C9CFDD"/><circle cx="818" cy="133" r="3" fill="#C9CFDD"/>
+      <circle cx="849" cy="158" r="10" fill="#F5C889" stroke="#B98A4A" stroke-width="1.3"/>
+      <rect x="838" y="171" width="22" height="15" rx="7" fill="#F5C889" stroke="#B98A4A" stroke-width="1.3"/>
+      <text x="849" y="236" font-size="11" fill="#68718A" text-anchor="middle">你从浏览器指挥</text>
+      <!-- big robot -->
+      <line x1="646" y1="306" x2="646" y2="296" stroke="#3E63DD" stroke-width="2"/>
+      <circle cx="646" cy="293" r="4" fill="#3E63DD"/>
+      <rect x="622" y="308" width="48" height="34" rx="8" fill="#3E63DD"/>
+      <circle cx="638" cy="324" r="4.5" fill="#FFFFFF"/><circle cx="654" cy="324" r="4.5" fill="#FFFFFF"/>
+      <rect x="630" y="346" width="32" height="22" rx="8" fill="#6E8DF5"/>
+      <text x="676" y="352" font-size="12.5" fill="#68718A">它干活 · 你审批</text>
+      <text x="724" y="404" font-size="17" font-weight="700" fill="#2F4FC7" text-anchor="middle">DeepSeek Harness</text>
+      <text x="724" y="424" font-size="12.5" fill="#68718A" text-anchor="middle">你远程指挥它的机器</text>
+
+      <!-- center mirror -->
+      <line x1="480" y1="60" x2="480" y2="400" stroke="#C9C2B4" stroke-width="1.5" stroke-dasharray="6 6"/>
+      <rect x="414" y="212" width="132" height="44" rx="22" fill="#FFF7E8" stroke="#E8C983" stroke-width="1.5" filter="url(#ds)"/>
+      <text x="480" y="231" font-size="12" font-weight="700" fill="#B45309" text-anchor="middle">谁在谁的地盘</text>
+      <text x="480" y="247" font-size="11" fill="#B45309" text-anchor="middle">干活？</text>
+
+      <!-- bottom: model vs harness -->
+      <rect x="300" y="462" width="360" height="34" rx="10" fill="#EEF1F8" stroke="#8A93A8" stroke-width="1.5"/>
+      <rect x="314" y="470" width="26" height="18" rx="3" fill="none" stroke="#8A93A8" stroke-width="1.5"/>
+      <line x1="318" y1="475" x2="336" y2="475" stroke="#8A93A8" stroke-width="1.2"/>
+      <line x1="318" y1="480" x2="336" y2="480" stroke="#8A93A8" stroke-width="1.2"/>
+      <text x="492" y="484" font-size="12.5" fill="#4A5568" text-anchor="middle">模型＝发动机（可换：这台 DSH 里装的甚至是别家引擎）</text>
+      <line x1="480" y1="498" x2="480" y2="514" stroke="#8A93A8" stroke-width="2" marker-end="url(#arg)"/>
+      <rect x="250" y="516" width="460" height="56" rx="12" fill="#FFF7E8" stroke="#E8C983" stroke-width="1.5"/>
+      <circle cx="280" cy="544" r="10" fill="none" stroke="#B45309" stroke-width="2"/>
+      <line x1="280" y1="544" x2="280" y2="534" stroke="#B45309" stroke-width="2"/>
+      <line x1="280" y1="544" x2="289" y2="549" stroke="#B45309" stroke-width="2"/>
+      <line x1="280" y1="544" x2="271" y2="549" stroke="#B45309" stroke-width="2"/>
+      <text x="492" y="538" font-size="13" font-weight="700" fill="#B45309" text-anchor="middle">harness＝底盘 · 方向盘 · 门禁 · 仪表盘</text>
+      <text x="492" y="558" font-size="11.5" fill="#A16207" text-anchor="middle">两家都有 harness——区别是车开进了谁的车库</text>
+    </svg>
+  </div>
+  <p class="cap">两者都是给<span class="vio">模型（发动机）</span>套上 <b>harness（底盘、方向盘、门锁）</b>，但车停进了不同的车库：<span class="vio">Copilot 把 AI 住进你的编辑器</span>，<span class="blu">DSH 让你坐在浏览器里、远程指挥一台属于它的机器</span>。记住这个镜像关系，后面每一屏都是它的一个切面。</p>
+</section>
+
+<!-- ========================= 02 宿主 ========================= -->
+<section class="screen">
+  <h2>切面一 · 宿主：插件插槽 vs 一台整机</h2>
+  <div class="fig" aria-label="宿主形态对比图">
+    <svg viewBox="0 0 960 480" role="img">
+      <text x="236" y="28" font-size="15" font-weight="700" fill="#5B48C2" text-anchor="middle">Copilot：装进编辑器的插件</text>
+      <text x="724" y="28" font-size="15" font-weight="700" fill="#2F4FC7" text-anchor="middle">DSH：自托管的一台整机</text>
+
+      <!-- left -->
+      <rect x="24" y="40" width="424" height="336" rx="18" fill="#F5F2FF" stroke="#C9BCF5" stroke-width="1.5"/>
+      <rect x="48" y="64" width="376" height="200" rx="12" fill="#FFFFFF" stroke="#D8D2EE" stroke-width="1.5"/>
+      <circle cx="68" cy="82" r="4.5" fill="#FF5F57"/><circle cx="84" cy="82" r="4.5" fill="#FEBC2E"/><circle cx="100" cy="82" r="4.5" fill="#28C840"/>
+      <line x1="48" y1="96" x2="424" y2="96" stroke="#EEEAF8" stroke-width="1.5"/>
+      <rect x="50" y="97" width="72" height="166" fill="#F3F1FB"/>
+      <rect x="140" y="112" width="180" height="9" rx="4.5" fill="#ECEAF6"/>
+      <rect x="140" y="130" width="120" height="9" rx="4.5" fill="#ECEAF6"/>
+      <rect x="140" y="148" width="200" height="9" rx="4.5" fill="#ECEAF6"/>
+      <rect x="140" y="166" width="90"  height="9" rx="4.5" fill="#ECEAF6"/>
+      <!-- extension socket on right edge -->
+      <rect x="416" y="200" width="14" height="36" rx="4" fill="#ECE9F8" stroke="#C9BCF5" stroke-width="1.2" stroke-dasharray="3 2"/>
+      <!-- plug + chip -->
+      <path d="M352,252 C352,230 414,238 423,220" fill="none" stroke="#6E56CF" stroke-width="2.5"/>
+      <rect x="310" y="252" width="84" height="30" rx="8" fill="#6E56CF"/>
+      <text x="352" y="271" font-size="11.5" fill="#FFFFFF" text-anchor="middle">Copilot</text>
+      <text x="352" y="300" font-size="11" fill="#7A68D6" text-anchor="middle">插进扩展插槽</text>
+      <rect x="56" y="312" width="356" height="52" rx="12" fill="#FFFFFF" stroke="#E3DEF6" stroke-width="1.5"/>
+      <text x="234" y="334" font-size="12.5" font-weight="700" fill="#1B2437" text-anchor="middle">像车载导航仪：能力长在编辑器上</text>
+      <text x="234" y="352" font-size="11.5" fill="#68718A" text-anchor="middle">拔掉插头，车照开、路照跑</text>
+
+      <!-- right -->
+      <rect x="512" y="40" width="424" height="336" rx="18" fill="#F2F5FF" stroke="#B9CBF7" stroke-width="1.5"/>
+      <rect x="560" y="68" width="328" height="58" rx="12" fill="#FFFFFF" stroke="#B9CBF7" stroke-width="1.5"/>
+      <rect x="574" y="82" width="30" height="20" rx="3" fill="#EDF2FE" stroke="#4A5568" stroke-width="1.5"/>
+      <rect x="585" y="102" width="8" height="4" fill="#4A5568"/>
+      <text x="618" y="94"  font-size="12.5" font-weight="700" fill="#1B2437">你的浏览器 · 唯一入口</text>
+      <text x="618" y="113" font-size="11" fill="#68718A">会话 · 侧栏 · 审批卡片</text>
+      <line x1="724" y1="126" x2="724" y2="142" stroke="#3E63DD" stroke-width="2" marker-end="url(#arb)"/>
+      <rect x="560" y="142" width="328" height="58" rx="12" fill="#FFFFFF" stroke="#B9CBF7" stroke-width="1.5"/>
+      <circle cx="589" cy="171" r="11" fill="#EDF2FE" stroke="#4A5568" stroke-width="1.5"/>
+      <line x1="589" y1="158" x2="589" y2="162" stroke="#4A5568" stroke-width="1.5"/>
+      <line x1="589" y1="180" x2="589" y2="184" stroke="#4A5568" stroke-width="1.5"/>
+      <line x1="576" y1="171" x2="580" y2="171" stroke="#4A5568" stroke-width="1.5"/>
+      <line x1="598" y1="171" x2="602" y2="171" stroke="#4A5568" stroke-width="1.5"/>
+      <text x="618" y="166" font-size="12.5" font-weight="700" fill="#1B2437">自托管 Web 服务（daemon＝长住保姆）</text>
+      <text x="618" y="186" font-size="11" fill="#68718A">systemd 守护 · 关掉页面活照跑</text>
+      <line x1="724" y1="200" x2="724" y2="216" stroke="#3E63DD" stroke-width="2" marker-end="url(#arb)"/>
+      <rect x="560" y="216" width="328" height="58" rx="12" fill="#FFFFFF" stroke="#B9CBF7" stroke-width="1.5"/>
+      <rect x="574" y="230" width="30" height="22" rx="3" fill="#1B2437"/>
+      <text x="580" y="246" font-size="10" fill="#FFFFFF">&gt;_</text>
+      <text x="618" y="240" font-size="12.5" font-weight="700" fill="#1B2437">一台 Linux 工作区</text>
+      <text x="618" y="260" font-size="11" fill="#68718A">shell · 文件 · 后台任务 · 子智能体</text>
+      <rect x="558" y="296" width="352" height="52" rx="12" fill="#FFFFFF" stroke="#E3DEF6" stroke-width="1.5"/>
+      <text x="734" y="318" font-size="12.5" font-weight="700" fill="#1B2437" text-anchor="middle">像代驾司机：他开他自己的车</text>
+      <text x="734" y="336" font-size="11.5" fill="#68718A" text-anchor="middle">你负责上车、指路，必要时踩一脚（审批）</text>
+    </svg>
+  </div>
+  <p class="cap"><span class="vio">Copilot 住在你 IDE 的插件插槽里</span>，像装在车上的导航仪——拔下来，车照开。<span class="blu">DSH 本身是一个自托管服务</span>（systemd 守护进程 ＋ 浏览器入口），像雇了位代驾——他开他自己的车，你只负责指路。</p>
+</section>
+
+<!-- ========================= 03 工作单元 ========================= -->
+<section class="screen">
+  <h2>切面二 · 工作单元：一次建议 vs 一张行程单</h2>
+  <div class="fig" aria-label="工作单元对比图">
+    <svg viewBox="0 0 960 520" role="img">
+      <text x="236" y="34" font-size="15" font-weight="700" fill="#5B48C2" text-anchor="middle">Copilot：秒级小回路</text>
+      <text x="724" y="34" font-size="15" font-weight="700" fill="#2F4FC7" text-anchor="middle">DSH：任务级长回路</text>
+
+      <!-- top lane -->
+      <rect x="24" y="50" width="912" height="192" rx="18" fill="#FBFAFF" stroke="#E3DEF6" stroke-width="1.5"/>
+      <rect x="64" y="120" width="60" height="44" rx="8" fill="#FFFFFF" stroke="#C9BCF5" stroke-width="1.5"/>
+      <rect x="72" y="128" width="14" height="9" rx="2" fill="#D8D2EE"/><rect x="90" y="128" width="14" height="9" rx="2" fill="#D8D2EE"/><rect x="108" y="128" width="14" height="9" rx="2" fill="#D8D2EE"/>
+      <rect x="72" y="141" width="14" height="9" rx="2" fill="#D8D2EE"/><rect x="90" y="141" width="14" height="9" rx="2" fill="#D8D2EE"/><rect x="108" y="141" width="14" height="9" rx="2" fill="#D8D2EE"/>
+      <text x="94" y="192" font-size="11.5" fill="#68718A" text-anchor="middle">你在写代码</text>
+      <line x1="132" y1="142" x2="166" y2="142" stroke="#6E56CF" stroke-width="2" marker-end="url(#arv)"/>
+      <rect x="172" y="120" width="140" height="44" rx="8" fill="#F1EDFF" stroke="#9C8BEB" stroke-width="1.3" stroke-dasharray="4 3"/>
+      <rect x="184" y="132" width="80" height="8" rx="4" fill="#DFD8F7"/>
+      <rect x="184" y="146" width="104" height="8" rx="4" fill="#DFD8F7"/>
+      <text x="242" y="192" font-size="11.5" fill="#68718A" text-anchor="middle">灰色幽灵字＝还没答应的建议</text>
+      <line x1="316" y1="142" x2="350" y2="142" stroke="#6E56CF" stroke-width="2" marker-end="url(#arv)"/>
+      <rect x="356" y="116" width="72" height="52" rx="10" fill="#6E56CF"/>
+      <text x="392" y="148" font-size="16" font-weight="700" fill="#FFFFFF" text-anchor="middle">Tab</text>
+      <text x="392" y="192" font-size="11.5" fill="#68718A" text-anchor="middle">你按下，才落地</text>
+      <line x1="432" y1="142" x2="466" y2="142" stroke="#6E56CF" stroke-width="2" marker-end="url(#arv)"/>
+      <rect x="472" y="120" width="120" height="44" rx="8" fill="#EAF7EE" stroke="#7BC492" stroke-width="1.5"/>
+      <rect x="484" y="132" width="64" height="8" rx="4" fill="#A7DDB8"/>
+      <rect x="484" y="146" width="88" height="8" rx="4" fill="#C4EBCE"/>
+      <text x="532" y="192" font-size="11.5" fill="#68718A" text-anchor="middle">几秒内合入</text>
+      <path d="M560,112 C500,64 180,64 110,112" fill="none" stroke="#9C8BEB" stroke-width="1.8" stroke-dasharray="5 4" marker-end="url(#arv)"/>
+      <text x="335" y="80" font-size="11.5" fill="#7A68D6" text-anchor="middle">一个接一个，节奏你定</text>
+      <rect x="656" y="116" width="256" height="76" rx="12" fill="#FFFFFF" stroke="#E3DEF6" stroke-width="1.5"/>
+      <text x="784" y="146" font-size="13" font-weight="700" fill="#1B2437" text-anchor="middle">单位：一次建议</text>
+      <text x="784" y="168" font-size="11.5" fill="#68718A" text-anchor="middle">补全 / 一个 diff——像递一次扳手</text>
+
+      <!-- bottom lane -->
+      <rect x="24" y="266" width="912" height="220" rx="18" fill="#F8FAFF" stroke="#DCE5F8" stroke-width="1.5"/>
+      <rect x="52" y="296" width="128" height="76" rx="10" fill="#FFFFFF" stroke="#9DB4F0" stroke-width="1.5"/>
+      <path d="M52,306 a10,10 0 0 1 10,-10 h108 a10,10 0 0 1 10,10 v12 h-128 z" fill="#E7EEFF"/>
+      <text x="116" y="312" font-size="11.5" font-weight="700" fill="#2F4FC7" text-anchor="middle">任务单 goal</text>
+      <rect x="64" y="334" width="96" height="7" rx="3.5" fill="#DCE5F8"/>
+      <rect x="64" y="346" width="80" height="7" rx="3.5" fill="#DCE5F8"/>
+      <rect x="64" y="358" width="88" height="7" rx="3.5" fill="#DCE5F8"/>
+      <text x="116" y="394" font-size="11.5" fill="#68718A" text-anchor="middle">你下达目标</text>
+      <line x1="188" y1="334" x2="214" y2="334" stroke="#3E63DD" stroke-width="2" marker-end="url(#arb)"/>
+      <rect x="220" y="296" width="150" height="76" rx="10" fill="#E7EEFF" stroke="#9DB4F0" stroke-width="1.5"/>
+      <rect x="236" y="336" width="118" height="10" rx="5" fill="#C7D6F8"/>
+      <rect x="236" y="336" width="70" height="10" rx="5" fill="#3E63DD"/>
+      <text x="295" y="394" font-size="11.5" fill="#68718A" text-anchor="middle">后台执行 · 子任务并行</text>
+      <line x1="378" y1="334" x2="404" y2="334" stroke="#3E63DD" stroke-width="2" marker-end="url(#arb)"/>
+      <rect x="410" y="296" width="132" height="76" rx="10" fill="#FFFFFF" stroke="#E8C983" stroke-width="1.5"/>
+      <rect x="462" y="318" width="10" height="28" fill="#D97706"/>
+      <rect x="480" y="318" width="10" height="28" fill="#D97706"/>
+      <text x="476" y="394" font-size="11.5" fill="#68718A" text-anchor="middle">关键动作等你审批</text>
+      <line x1="550" y1="334" x2="576" y2="334" stroke="#3E63DD" stroke-width="2" marker-end="url(#arb)"/>
+      <rect x="582" y="296" width="132" height="76" rx="10" fill="#EAF7EE" stroke="#7BC492" stroke-width="1.5"/>
+      <path d="M628,332 l12,12 l24,-26" fill="none" stroke="#2F9E44" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="648" y="394" font-size="11.5" fill="#68718A" text-anchor="middle">交付 ＋ 汇报</text>
+      <path d="M116,410 L116,426 L714,426 L714,410" fill="none" stroke="#8A93A8" stroke-width="1.5"/>
+      <text x="415" y="446" font-size="11.5" fill="#68718A" text-anchor="middle">几分钟～几小时 · 你合上电脑它照跑 · 断了能从断点续（跨轮次）</text>
+      <rect x="776" y="296" width="140" height="76" rx="12" fill="#FFFFFF" stroke="#E3DEF6" stroke-width="1.5"/>
+      <text x="846" y="326" font-size="12.5" font-weight="700" fill="#1B2437" text-anchor="middle">单位：一个任务</text>
+      <text x="846" y="348" font-size="10.5" fill="#68718A" text-anchor="middle">像给代驾一张行程单</text>
+    </svg>
+  </div>
+  <p class="cap"><span class="vio">Copilot 的基本单位是「一次建议」</span>——补全、一个 diff（一页修订稿），等你按 Tab 定夺。<span class="blu">DSH 的基本单位是「一个任务」</span>：后台跑的脚本、一支并行小队，甚至一张跨天续跑的行程单（goal）。</p>
+</section>
+
+<!-- ========================= 04 权限 ========================= -->
+<section class="screen">
+  <h2>切面三 · 权限：逐扇门签字 vs 分级门禁卡</h2>
+  <div class="fig" aria-label="权限模型对比图">
+    <svg viewBox="0 0 960 480" role="img">
+      <text x="236" y="34" font-size="15" font-weight="700" fill="#5B48C2" text-anchor="middle">Copilot：每扇门都签字</text>
+      <text x="724" y="34" font-size="15" font-weight="700" fill="#2F4FC7" text-anchor="middle">DSH：分级门禁卡</text>
+
+      <!-- left doors -->
+      <rect x="24" y="48" width="424" height="384" rx="18" fill="#FBFAFF" stroke="#E3DEF6" stroke-width="1.5"/>
+      <g>
+        <rect x="50" y="72" width="112" height="48" rx="9" fill="#FFFFFF" stroke="#C9BCF5" stroke-width="1.5"/>
+        <text x="106" y="92"  font-size="11" font-weight="700" fill="#1B2437" text-anchor="middle">允许运行命令？</text>
+        <text x="106" y="110" font-size="10.5" fill="#68718A" text-anchor="middle">[ 允许 ]  [ 跳过 ]</text>
+        <line x1="106" y1="120" x2="106" y2="138" stroke="#C9BCF5" stroke-width="1.3" stroke-dasharray="3 3"/>
+        <rect x="64" y="140" width="84" height="150" rx="6" fill="#FFFFFF" stroke="#B9B2D9" stroke-width="1.5"/>
+        <rect x="74" y="152" width="64" height="126" rx="4" fill="#F6F5FA"/>
+        <circle cx="134" cy="215" r="4" fill="#B9B2D9"/>
+      </g>
+      <g>
+        <rect x="180" y="72" width="112" height="48" rx="9" fill="#FFFFFF" stroke="#C9BCF5" stroke-width="1.5"/>
+        <text x="236" y="92"  font-size="11" font-weight="700" fill="#1B2437" text-anchor="middle">允许改文件？</text>
+        <text x="236" y="110" font-size="10.5" fill="#68718A" text-anchor="middle">[ 允许 ]  [ 跳过 ]</text>
+        <line x1="236" y1="120" x2="236" y2="138" stroke="#C9BCF5" stroke-width="1.3" stroke-dasharray="3 3"/>
+        <rect x="194" y="140" width="84" height="150" rx="6" fill="#FFFFFF" stroke="#B9B2D9" stroke-width="1.5"/>
+        <rect x="204" y="152" width="64" height="126" rx="4" fill="#F6F5FA"/>
+        <circle cx="264" cy="215" r="4" fill="#B9B2D9"/>
+      </g>
+      <g>
+        <rect x="310" y="72" width="112" height="48" rx="9" fill="#FFFFFF" stroke="#C9BCF5" stroke-width="1.5"/>
+        <text x="366" y="92"  font-size="11" font-weight="700" fill="#1B2437" text-anchor="middle">允许联网？</text>
+        <text x="366" y="110" font-size="10.5" fill="#68718A" text-anchor="middle">[ 允许 ]  [ 跳过 ]</text>
+        <line x1="366" y1="120" x2="366" y2="138" stroke="#C9BCF5" stroke-width="1.3" stroke-dasharray="3 3"/>
+        <rect x="324" y="140" width="84" height="150" rx="6" fill="#FFFFFF" stroke="#B9B2D9" stroke-width="1.5"/>
+        <rect x="334" y="152" width="64" height="126" rx="4" fill="#F6F5FA"/>
+        <circle cx="394" cy="215" r="4" fill="#B9B2D9"/>
+      </g>
+      <text x="236" y="322" font-size="12.5" fill="#68718A" text-anchor="middle">agent 模式：每个动作弹一次确认</text>
+      <rect x="56" y="336" width="360" height="64" rx="12" fill="#FFFFFF" stroke="#E3DEF6" stroke-width="1.5"/>
+      <text x="236" y="362" font-size="12.5" font-weight="700" fill="#1B2437" text-anchor="middle">像进每扇门都要你签字</text>
+      <text x="236" y="382" font-size="11.5" fill="#68718A" text-anchor="middle">安全——但你签字签到手软</text>
+
+      <!-- right layers -->
+      <rect x="512" y="48" width="424" height="384" rx="18" fill="#F8FAFF" stroke="#DCE5F8" stroke-width="1.5"/>
+      <rect x="548" y="84" width="352" height="236" rx="16" fill="#EDF2FE" stroke="#B9CBF7" stroke-width="1.5"/>
+      <text x="724" y="110" font-size="13" font-weight="700" fill="#2F4FC7" text-anchor="middle">第 1 层 · 沙箱（围墙）</text>
+      <text x="724" y="128" font-size="11.5" fill="#68718A" text-anchor="middle">文件只能写进指定工作区</text>
+      <rect x="582" y="146" width="284" height="152" rx="14" fill="#DCE7FB" stroke="#9DB4F0" stroke-width="1.5"/>
+      <text x="724" y="172" font-size="13" font-weight="700" fill="#2F4FC7" text-anchor="middle">第 2 层 · 审批策略</text>
+      <text x="724" y="190" font-size="11.5" fill="#68718A" text-anchor="middle">危险动作必须你点头（ask）</text>
+      <rect x="632" y="210" width="184" height="66" rx="12" fill="#FFF7E8" stroke="#E8C983" stroke-width="1.5"/>
+      <text x="724" y="236" font-size="12.5" font-weight="700" fill="#B45309" text-anchor="middle">第 3 层 · 一次性提权</text>
+      <text x="724" y="256" font-size="11" fill="#B45309" text-anchor="middle">带理由申请，人批了才生效</text>
+      <g stroke="#B45309" stroke-width="2.5" fill="none">
+        <circle cx="846" cy="242" r="8"/>
+        <line x1="854" y1="242" x2="872" y2="242"/>
+        <line x1="866" y1="242" x2="866" y2="250"/>
+        <line x1="872" y1="242" x2="872" y2="252"/>
+      </g>
+      <text x="724" y="342" font-size="12.5" fill="#68718A" text-anchor="middle">进门发一张卡，卡有级别</text>
+      <rect x="548" y="356" width="352" height="60" rx="12" fill="#FFFFFF" stroke="#E3DEF6" stroke-width="1.5"/>
+      <text x="724" y="380" font-size="12.5" font-weight="700" fill="#1B2437" text-anchor="middle">越核心的权限，门槛越高</text>
+      <text x="724" y="400" font-size="11.5" fill="#68718A" text-anchor="middle">拒绝就是拒绝——并说明是哪一层拦的</text>
+    </svg>
+  </div>
+  <p class="cap"><span class="vio">Copilot 默认逐个动作向你确认</span>，像每开一扇门都找你签字。<span class="blu">DSH 用分层门禁</span>：外层沙箱圈死活动范围，中层策略决定哪些动作必须审批，真要越界就一次性申请提权——并强制附带一句理由。</p>
+</section>
+
+<!-- ========================= 05 记忆 ========================= -->
+<section class="screen">
+  <h2>切面四 · 记忆：屏幕便签 vs 三层员工手册</h2>
+  <div class="fig" aria-label="上下文与记忆对比图">
+    <svg viewBox="0 0 960 500" role="img">
+      <text x="236" y="34" font-size="15" font-weight="700" fill="#5B48C2" text-anchor="middle">Copilot：便签 ＋ 本轮聊天</text>
+      <text x="724" y="34" font-size="15" font-weight="700" fill="#2F4FC7" text-anchor="middle">DSH：三层记忆</text>
+
+      <!-- left -->
+      <rect x="24" y="48" width="424" height="404" rx="18" fill="#FBFAFF" stroke="#E3DEF6" stroke-width="1.5"/>
+      <rect x="52" y="72" width="190" height="184" rx="12" fill="#FFFFFF" stroke="#D8D2EE" stroke-width="1.5"/>
+      <circle cx="66" cy="88" r="3.5" fill="#C9CFDD"/><circle cx="80" cy="88" r="3.5" fill="#C9CFDD"/><circle cx="94" cy="88" r="3.5" fill="#C9CFDD"/>
+      <rect x="66" y="104" width="116" height="26" rx="8" fill="#EFEBFF"/>
+      <rect x="88" y="140" width="134" height="30" rx="8" fill="#F6F5FA" stroke="#E3DEF6" stroke-width="1.2"/>
+      <rect x="66" y="182" width="104" height="26" rx="8" fill="#EFEBFF"/>
+      <rect x="88" y="218" width="120" height="24" rx="8" fill="#F6F5FA" stroke="#E3DEF6" stroke-width="1.2"/>
+      <text x="147" y="278" font-size="11.5" fill="#68718A" text-anchor="middle">聊天上下文（本轮有效，关了就没）</text>
+      <g transform="rotate(4 342 140)">
+        <rect x="280" y="86" width="124" height="104" rx="4" fill="#FFF3C4" stroke="#E8C983" stroke-width="1.5"/>
+        <rect x="292" y="112" width="92" height="6" rx="3" fill="#EAD48F"/>
+        <rect x="292" y="130" width="80" height="6" rx="3" fill="#EAD48F"/>
+        <rect x="292" y="148" width="96" height="6" rx="3" fill="#EAD48F"/>
+        <circle cx="342" cy="96" r="5" fill="#D97706"/>
+        <text x="342" y="176" font-size="11.5" font-weight="700" fill="#8A6D1F" text-anchor="middle">指令文件</text>
+        <text x="342" y="184" font-size="8.5" fill="#8A6D1F" text-anchor="middle">copilot-instructions.md</text>
+      </g>
+      <text x="342" y="278" font-size="11.5" fill="#68718A" text-anchor="middle">指令文件（一直贴在屏幕边）</text>
+      <path d="M147,286 C170,320 240,344 274,358" fill="none" stroke="#6E56CF" stroke-width="2" marker-end="url(#arv)"/>
+      <path d="M342,286 C336,308 316,326 306,340" fill="none" stroke="#6E56CF" stroke-width="2" marker-end="url(#arv)"/>
+      <circle cx="300" cy="368" r="32" fill="#EFEBFF" stroke="#6E56CF" stroke-width="2"/>
+      <path d="M282,372 q6,-12 14,-4 q6,8 14,-4 q6,-8 12,2" fill="none" stroke="#6E56CF" stroke-width="2"/>
+      <text x="300" y="424" font-size="11.5" fill="#68718A" text-anchor="middle">喂给模型（本轮窗口）</text>
+
+      <!-- right -->
+      <rect x="512" y="48" width="424" height="404" rx="18" fill="#F8FAFF" stroke="#DCE5F8" stroke-width="1.5"/>
+      <rect x="548" y="72" width="352" height="60" rx="12" fill="#E7EEFF" stroke="#9DB4F0" stroke-width="1.5"/>
+      <text x="564" y="96"  font-size="13" font-weight="700" fill="#2F4FC7">① 常驻规则 · AGENTS.md</text>
+      <text x="564" y="116" font-size="11.5" fill="#68718A">每轮自动注入——员工手册总则</text>
+      <rect x="548" y="148" width="352" height="60" rx="12" fill="#FFFFFF" stroke="#9DB4F0" stroke-width="1.5"/>
+      <text x="564" y="172" font-size="13" font-weight="700" fill="#2F4FC7">② 技能库 · SKILL.md</text>
+      <text x="564" y="192" font-size="11.5" fill="#68718A">目录随身带，命中才翻全文——按需请专家</text>
+      <rect x="548" y="224" width="352" height="60" rx="12" fill="#FFFFFF" stroke="#9DB4F0" stroke-width="1.5"/>
+      <text x="564" y="248" font-size="13" font-weight="700" fill="#2F4FC7">③ 插件 · 装进 runtime</text>
+      <text x="564" y="268" font-size="11.5" fill="#68718A">装进来自带说明书——新家电的 manual</text>
+      <path d="M548,110 C522,150 520,300 694,376" fill="none" stroke="#3E63DD" stroke-width="2.4" marker-end="url(#arb)"/>
+      <path d="M900,178 C926,220 928,320 754,376" fill="none" stroke="#3E63DD" stroke-width="1.8" stroke-dasharray="5 4" marker-end="url(#arb)"/>
+      <line x1="724" y1="284" x2="724" y2="352" stroke="#3E63DD" stroke-width="1.8" stroke-dasharray="5 4" marker-end="url(#arb)"/>
+      <circle cx="724" cy="392" r="34" fill="#E7EEFF" stroke="#3E63DD" stroke-width="2"/>
+      <text x="724" y="397" font-size="12.5" font-weight="700" fill="#2F4FC7" text-anchor="middle">模型</text>
+      <text x="724" y="448" font-size="12" fill="#68718A" text-anchor="middle">该在的常在——不该来的不占上下文</text>
+    </svg>
+  </div>
+  <p class="cap"><span class="vio">Copilot 靠指令文件和聊天上下文记事</span>，像贴在屏幕边的便签。<span class="blu">DSH 把上下文做成三层</span>：常驻规则每轮必读、技能目录按需翻全文、插件装进来自带说明书——该在的都在，不该来的不占地方。</p>
+</section>
+
+<!-- ========================= 06 编排 ========================= -->
+<section class="screen">
+  <h2>切面五 · 编排：一个助理 vs 一位能拉群的经理</h2>
+  <div class="fig" aria-label="多智能体编排对比图">
+    <svg viewBox="0 0 960 500" role="img">
+      <text x="236" y="34" font-size="15" font-weight="700" fill="#5B48C2" text-anchor="middle">Copilot：一条对话线</text>
+      <text x="724" y="34" font-size="15" font-weight="700" fill="#2F4FC7" text-anchor="middle">DSH：一支可编排的小队</text>
+
+      <!-- left -->
+      <rect x="24" y="48" width="424" height="404" rx="18" fill="#FBFAFF" stroke="#E3DEF6" stroke-width="1.5"/>
+      <circle cx="100" cy="140" r="16" fill="#F5C889" stroke="#B98A4A" stroke-width="1.5"/>
+      <rect x="82" y="160" width="36" height="30" rx="12" fill="#F5C889" stroke="#B98A4A" stroke-width="1.5"/>
+      <line x1="300" y1="120" x2="300" y2="110" stroke="#6E56CF" stroke-width="2"/>
+      <circle cx="300" cy="107" r="3.5" fill="#6E56CF"/>
+      <rect x="276" y="122" width="48" height="34" rx="8" fill="#6E56CF"/>
+      <circle cx="291" cy="138" r="4" fill="#FFFFFF"/><circle cx="309" cy="138" r="4" fill="#FFFFFF"/>
+      <rect x="286" y="160" width="28" height="24" rx="8" fill="#8B76E3"/>
+      <path d="M116,196 C130,214 140,222 152,232" fill="none" stroke="#C9C2B4" stroke-width="1.5"/>
+      <path d="M300,190 C300,208 310,224 314,242" fill="none" stroke="#C9C2B4" stroke-width="1.5"/>
+      <rect x="150" y="224" width="116" height="28" rx="9" fill="#EFEBFF"/>
+      <rect x="172" y="262" width="132" height="28" rx="9" fill="#F6F5FA" stroke="#E3DEF6" stroke-width="1.2"/>
+      <rect x="150" y="300" width="100" height="28" rx="9" fill="#EFEBFF"/>
+      <rect x="172" y="338" width="142" height="28" rx="9" fill="#F6F5FA" stroke="#E3DEF6" stroke-width="1.2"/>
+      <line x1="330" y1="228" x2="330" y2="362" stroke="#9C8BEB" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arv)"/>
+      <text x="236" y="398" font-size="12.5" fill="#68718A" text-anchor="middle">一问一答，基本单线程</text>
+      <rect x="52" y="410" width="368" height="36" rx="10" fill="#FFFFFF" stroke="#E3DEF6" stroke-width="1.5"/>
+      <text x="236" y="433" font-size="11" fill="#68718A" text-anchor="middle">另有平台侧 coding agent：issue→PR（不在你编辑器里跑）</text>
+
+      <!-- right -->
+      <rect x="512" y="48" width="424" height="404" rx="18" fill="#F8FAFF" stroke="#DCE5F8" stroke-width="1.5"/>
+      <rect x="640" y="72" width="168" height="52" rx="12" fill="#3E63DD" filter="url(#ds)"/>
+      <text x="724" y="103" font-size="14" font-weight="700" fill="#FFFFFF" text-anchor="middle">主智能体（经理）</text>
+      <line x1="700" y1="124" x2="604" y2="184" stroke="#9DB4F0" stroke-width="1.8"/>
+      <line x1="724" y1="124" x2="724" y2="184" stroke="#9DB4F0" stroke-width="1.8"/>
+      <line x1="748" y1="124" x2="844" y2="184" stroke="#9DB4F0" stroke-width="1.8"/>
+      <rect x="544" y="188" width="112" height="44" rx="10" fill="#FFFFFF" stroke="#9DB4F0" stroke-width="1.5"/>
+      <text x="600" y="215" font-size="11.5" fill="#1B2437" text-anchor="middle">子智能体 A</text>
+      <rect x="668" y="188" width="112" height="44" rx="10" fill="#FFFFFF" stroke="#9DB4F0" stroke-width="1.5"/>
+      <text x="724" y="215" font-size="11.5" fill="#1B2437" text-anchor="middle">子智能体 B</text>
+      <rect x="792" y="188" width="112" height="44" rx="10" fill="#FFFFFF" stroke="#9DB4F0" stroke-width="1.5"/>
+      <text x="848" y="215" font-size="11.5" fill="#1B2437" text-anchor="middle">子智能体 C</text>
+      <text x="724" y="254" font-size="11.5" fill="#68718A" text-anchor="middle">拉群派活 · 并行干活 · 各自交作业</text>
+      <rect x="544" y="272" width="170" height="58" rx="10" fill="#FFF7E8" stroke="#E8C983" stroke-width="1.5"/>
+      <text x="629" y="296" font-size="12" font-weight="700" fill="#B45309" text-anchor="middle">workflow 脚本</text>
+      <text x="629" y="314" font-size="10.5" fill="#A16207" text-anchor="middle">一段代码＝排班表</text>
+      <line x1="629" y1="330" x2="578" y2="350" stroke="#E8C983" stroke-width="1.5"/>
+      <line x1="629" y1="330" x2="612" y2="350" stroke="#E8C983" stroke-width="1.5"/>
+      <line x1="629" y1="330" x2="646" y2="350" stroke="#E8C983" stroke-width="1.5"/>
+      <line x1="629" y1="330" x2="678" y2="350" stroke="#E8C983" stroke-width="1.5"/>
+      <circle cx="574" cy="356" r="5" fill="#D97706"/><circle cx="608" cy="356" r="5" fill="#D97706"/>
+      <circle cx="642" cy="356" r="5" fill="#D97706"/><circle cx="676" cy="356" r="5" fill="#D97706"/>
+      <rect x="744" y="272" width="176" height="58" rx="10" fill="#FFFFFF" stroke="#9DB4F0" stroke-width="1.5"/>
+      <text x="832" y="294" font-size="12" font-weight="700" fill="#2F4FC7" text-anchor="middle">后台任务 ×N</text>
+      <rect x="758" y="302" width="148" height="9" rx="4" fill="#C7D6F8"/>
+      <rect x="758" y="302" width="104" height="9" rx="4" fill="#3E63DD"/>
+      <text x="832" y="324" font-size="10.5" fill="#68718A" text-anchor="middle">进度可查 · 随时叫停</text>
+      <rect x="688" y="372" width="72" height="18" rx="5" fill="#E5E0F0" stroke="#8A93A8" stroke-width="1.5"/>
+      <rect x="678" y="392" width="92" height="9" rx="3" fill="#C9CFDD"/>
+      <text x="748" y="386" font-size="10" fill="#68718A">z z</text>
+      <text x="724" y="430" font-size="12" fill="#68718A" text-anchor="middle">你合上电脑，它继续跑</text>
+    </svg>
+  </div>
+  <p class="cap"><span class="vio">你和 Copilot 的对话基本是单线程的</span>；平台侧的 coding agent 能把 issue 变成 PR，但它不在你的编辑器里。<span class="blu">DSH 的主智能体可以随手拉群</span>：派子智能体、用一段脚本当排班表并行跑、后台任务不断线——你合上笔记本它还在干。</p>
+</section>
+
+<!-- ========================= 07 生态 ========================= -->
+<section class="screen">
+  <h2>切面六 · 生态：装 app vs 改水电</h2>
+  <div class="fig" aria-label="扩展生态对比图">
+    <svg viewBox="0 0 960 480" role="img">
+      <text x="236" y="34" font-size="15" font-weight="700" fill="#5B48C2" text-anchor="middle">Copilot：给编辑器装 app</text>
+      <text x="724" y="34" font-size="15" font-weight="700" fill="#2F4FC7" text-anchor="middle">DSH：给房子改水电</text>
+
+      <!-- left -->
+      <rect x="24" y="48" width="424" height="384" rx="18" fill="#FBFAFF" stroke="#E3DEF6" stroke-width="1.5"/>
+      <rect x="56" y="72" width="360" height="104" rx="12" fill="#F6F5FA" stroke="#D8D2EE" stroke-width="1.5"/>
+      <rect x="74" y="90" width="72" height="66" rx="8" fill="#EFEBFF" stroke="#C9BCF5" stroke-width="1.5"/>
+      <text x="110" y="130" font-size="15" font-weight="700" fill="#7A68D6" text-anchor="middle">A</text>
+      <rect x="160" y="90" width="72" height="66" rx="8" fill="#EFEBFF" stroke="#C9BCF5" stroke-width="1.5"/>
+      <text x="196" y="130" font-size="15" font-weight="700" fill="#7A68D6" text-anchor="middle">B</text>
+      <rect x="246" y="90" width="72" height="66" rx="8" fill="#EFEBFF" stroke="#C9BCF5" stroke-width="1.5"/>
+      <text x="282" y="130" font-size="15" font-weight="700" fill="#7A68D6" text-anchor="middle">C</text>
+      <text x="374" y="128" font-size="11" fill="#68718A" text-anchor="middle">扩展市场</text>
+      <line x1="236" y1="184" x2="236" y2="214" stroke="#6E56CF" stroke-width="2" marker-end="url(#arv)"/>
+      <rect x="96" y="220" width="280" height="42" rx="10" fill="#FFFFFF" stroke="#6E56CF" stroke-width="1.5"/>
+      <text x="236" y="246" font-size="12.5" font-weight="700" fill="#5B48C2" text-anchor="middle">你的编辑器（宿主没变）</text>
+      <line x1="182" y1="300" x2="204" y2="264" stroke="#C9BCF5" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <line x1="254" y1="300" x2="266" y2="264" stroke="#C9BCF5" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <rect x="150" y="300" width="64" height="28" rx="8" fill="#EFEBFF" stroke="#C9BCF5" stroke-width="1.5"/>
+      <rect x="222" y="300" width="64" height="28" rx="8" fill="#F6F5FA" stroke="#D8D2EE" stroke-width="1.5"/>
+      <line x1="214" y1="314" x2="222" y2="314" stroke="#8A93A8" stroke-width="3"/>
+      <ellipse cx="306" cy="308" rx="9" ry="3.5" fill="none" stroke="#8A93A8" stroke-width="1.5"/>
+      <path d="M297,308 v10 a9,3.5 0 0 0 18,0 v-10" fill="none" stroke="#8A93A8" stroke-width="1.5"/>
+      <circle cx="338" cy="314" r="10" fill="none" stroke="#8A93A8" stroke-width="1.5"/>
+      <path d="M328,314 h20 M338,304 c4,4 4,16 0,20" fill="none" stroke="#8A93A8" stroke-width="1.2"/>
+      <text x="236" y="352" font-size="11.5" fill="#68718A" text-anchor="middle">MCP＝万能转接头：数据库、浏览器接进来</text>
+      <rect x="56" y="368" width="360" height="48" rx="12" fill="#FFFFFF" stroke="#E3DEF6" stroke-width="1.5"/>
+      <text x="236" y="390" font-size="12.5" font-weight="700" fill="#1B2437" text-anchor="middle">像装 app：能力住在编辑器里</text>
+      <text x="236" y="408" font-size="10.5" fill="#68718A" text-anchor="middle">手机本身，并没有变成另一台机器</text>
+
+      <!-- right -->
+      <rect x="512" y="48" width="424" height="384" rx="18" fill="#F8FAFF" stroke="#DCE5F8" stroke-width="1.5"/>
+      <path d="M536,88 L724,40 L912,88 Z" fill="#E7EEFF" stroke="#9DB4F0" stroke-width="1.5" stroke-linejoin="round"/>
+      <rect x="548" y="88" width="352" height="224" fill="#FFFFFF" stroke="#9DB4F0" stroke-width="1.5"/>
+      <text x="724" y="114" font-size="12.5" font-weight="700" fill="#2F4FC7" text-anchor="middle">DSH runtime（房子本体）</text>
+      <rect x="560" y="140" width="92" height="62" rx="8" fill="#FFF7E8" stroke="#E8C983" stroke-width="1.5"/>
+      <text x="606" y="166" font-size="12" font-weight="700" fill="#B45309" text-anchor="middle">插件包</text>
+      <text x="606" y="186" font-size="10" fill="#A16207" text-anchor="middle">来自 dsh-m 市场</text>
+      <line x1="652" y1="171" x2="686" y2="171" stroke="#B45309" stroke-width="2" marker-end="url(#arAm)"/>
+      <rect x="690" y="156" width="28" height="30" rx="4" fill="#FFFFFF" stroke="#9DB4F0" stroke-width="1.5"/>
+      <circle cx="698" cy="166" r="2.5" fill="#3E63DD"/><circle cx="710" cy="166" r="2.5" fill="#3E63DD"/>
+      <line x1="718" y1="171" x2="742" y2="171" stroke="#3E63DD" stroke-width="2"/>
+      <path d="M742,171 C762,171 762,150 780,150" fill="none" stroke="#3E63DD" stroke-width="1.8"/>
+      <circle cx="786" cy="150" r="5" fill="#F5C889" stroke="#B98A4A" stroke-width="1.2"/>
+      <text x="800" y="166" font-size="11.5" fill="#68718A">装进 runtime：</text>
+      <text x="800" y="184" font-size="11.5" fill="#68718A">能力长在墙上</text>
+      <rect x="568" y="232" width="20" height="56" rx="3" fill="#DCE7FB" stroke="#9DB4F0" stroke-width="1.2"/>
+      <rect x="592" y="232" width="20" height="56" rx="3" fill="#E7EEFF" stroke="#9DB4F0" stroke-width="1.2"/>
+      <rect x="616" y="232" width="20" height="56" rx="3" fill="#F0E9FF" stroke="#9DB4F0" stroke-width="1.2"/>
+      <text x="652" y="254" font-size="11.5" fill="#68718A">SKILL.md 技能书架</text>
+      <text x="652" y="272" font-size="10.5" fill="#68718A">翻到哪页，用哪页</text>
+      <rect x="548" y="334" width="352" height="58" rx="12" fill="#FFFFFF" stroke="#E3DEF6" stroke-width="1.5"/>
+      <text x="724" y="356" font-size="12.5" font-weight="700" fill="#1B2437" text-anchor="middle">装完，房子本身多了新线路</text>
+      <text x="724" y="376" font-size="11" fill="#68718A" text-anchor="middle">卸载要重启才生效——因为长在本体上</text>
+      <text x="724" y="414" font-size="11.5" fill="#68718A" text-anchor="middle">技能是 Markdown 说明书，随取随用</text>
+    </svg>
+  </div>
+  <p class="cap"><span class="vio">Copilot 的扩展从市场装进 IDE</span>，外部工具靠 MCP 转接头接入——能力住在编辑器里。<span class="blu">DSH 的插件直接装进 runtime 本体</span>，技能是一页页随取随用的说明书——装完之后，「房子本身」多了新的水电线路。</p>
+</section>
+
+<!-- ========================= 08 收尾全景 ========================= -->
+<section class="screen">
+  <h2>收尾 · 回到全景：一张表复述全程</h2>
+  <div class="fig" aria-label="总结对照表">
+    <svg viewBox="0 0 960 590" role="img">
+      <rect x="210" y="24" width="230" height="52" rx="12" fill="#F5F2FF" stroke="#C9BCF5" stroke-width="1.5"/>
+      <text x="325" y="55" font-size="12.5" font-weight="700" fill="#5B48C2" text-anchor="middle">Copilot：AI 进你的编辑器</text>
+      <rect x="520" y="24" width="230" height="52" rx="12" fill="#F2F5FF" stroke="#B9CBF7" stroke-width="1.5"/>
+      <text x="635" y="55" font-size="12.5" font-weight="700" fill="#2F4FC7" text-anchor="middle">DSH：你进它的机器</text>
+      <line x1="446" y1="50" x2="484" y2="50" stroke="#8A93A8" stroke-width="2" marker-start="url(#arv)" marker-end="url(#arb)"/>
+
+      <rect x="40" y="112" width="880" height="436" fill="none" stroke="#E4DECF" stroke-width="1.5"/>
+      <rect x="190" y="112" width="365" height="40" fill="#F5F2FF"/>
+      <rect x="555" y="112" width="365" height="40" fill="#F2F5FF"/>
+      <text x="115" y="138" font-size="13.5" font-weight="700" fill="#4A5568" text-anchor="middle">维度</text>
+      <text x="372" y="138" font-size="13.5" font-weight="700" fill="#5B48C2" text-anchor="middle">GitHub Copilot</text>
+      <text x="737" y="138" font-size="13.5" font-weight="700" fill="#2F4FC7" text-anchor="middle">DeepSeek Harness</text>
+      <line x1="190" y1="112" x2="190" y2="548" stroke="#EFE9DC" stroke-width="1.5"/>
+      <line x1="555" y1="112" x2="555" y2="548" stroke="#EFE9DC" stroke-width="1.5"/>
+      <line x1="40" y1="218" x2="920" y2="218" stroke="#EFE9DC" stroke-width="1.5"/>
+      <line x1="40" y1="284" x2="920" y2="284" stroke="#EFE9DC" stroke-width="1.5"/>
+      <line x1="40" y1="350" x2="920" y2="350" stroke="#EFE9DC" stroke-width="1.5"/>
+      <line x1="40" y1="416" x2="920" y2="416" stroke="#EFE9DC" stroke-width="1.5"/>
+      <line x1="40" y1="482" x2="920" y2="482" stroke="#EFE9DC" stroke-width="1.5"/>
+
+      <text x="115" y="187" font-size="12.5" font-weight="700" fill="#4A5568" text-anchor="middle">谁的地盘</text>
+      <text x="206" y="189" font-size="12.3" fill="#3D4559">你的编辑器——AI 是装进来的插件</text>
+      <text x="571" y="189" font-size="12.3" fill="#3D4559">它的机器——你是远程指挥的人</text>
+
+      <text x="115" y="253" font-size="12.5" font-weight="700" fill="#4A5568" text-anchor="middle">工作单元</text>
+      <text x="206" y="255" font-size="12.3" fill="#3D4559">一次补全、一次 diff（建议级）</text>
+      <text x="571" y="255" font-size="12.3" fill="#3D4559">一个任务：后台跑、断点续跑（任务级）</text>
+
+      <text x="115" y="319" font-size="12.5" font-weight="700" fill="#4A5568" text-anchor="middle">权限模型</text>
+      <text x="206" y="321" font-size="12.3" fill="#3D4559">逐个动作弹窗，等你签字</text>
+      <text x="571" y="321" font-size="12.3" fill="#3D4559">沙箱圈范围 · 策略管审批 · 提权带理由</text>
+
+      <text x="115" y="385" font-size="12.5" font-weight="700" fill="#4A5568" text-anchor="middle">记忆</text>
+      <text x="206" y="387" font-size="12.3" fill="#3D4559">指令文件 ＋ 本轮聊天上下文</text>
+      <text x="571" y="387" font-size="12.3" fill="#3D4559">常驻规则 ＋ 按需技能 ＋ 插件说明书</text>
+
+      <text x="115" y="451" font-size="12.5" font-weight="700" fill="#4A5568" text-anchor="middle">并行</text>
+      <text x="206" y="453" font-size="12.3" fill="#3D4559">基本单线程的一问一答</text>
+      <text x="571" y="453" font-size="12.3" fill="#3D4559">子智能体 ＋ 脚本编排 ＋ 后台任务</text>
+
+      <text x="115" y="517" font-size="12.5" font-weight="700" fill="#4A5568" text-anchor="middle">生态</text>
+      <text x="206" y="519" font-size="12.3" fill="#3D4559">编辑器扩展市场 ＋ MCP 转接头</text>
+      <text x="571" y="519" font-size="12.3" fill="#3D4559">runtime 插件市场 ＋ 技能书架（Markdown）</text>
+    </svg>
+  </div>
+  <p class="cap">顺着表格从上到下读一遍，你就能向同事复述两者的差别：<span class="vio">Copilot 把 AI 带到你的工位</span>，<span class="blu">DSH 把你的工位搬到 AI 面前</span>。这不是优劣题，是位置题——先想清楚活儿该在谁的地盘干，再挑工具。</p>
+  <div class="colophon">ELI5 单文件图解 · 无外部依赖 · 浏览器直接打开</div>
+</section>
+
+</body>
+</html>
