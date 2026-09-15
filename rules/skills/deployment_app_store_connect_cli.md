@@ -6,6 +6,7 @@
 - **适用场景**：通过非 beta 版 Xcode 在命令行完成 iOS App 的 archive、App Store 签名导出与 App Store Connect 上传
 - **输出**：可审计的 `.xcarchive`、App Store `.ipa`、上传结果与版本信息
 - **创建日期**：2026-07-31
+- **更新**：2026-09-11
 
 ## 目标与边界
 
@@ -71,6 +72,7 @@ xcodebuild archive \
   -configuration Release \
   -destination 'generic/platform=iOS' \
   -archivePath <output/App.xcarchive> \
+  -allowProvisioningUpdates \
   CODE_SIGN_STYLE=Automatic \
   DEVELOPMENT_TEAM=<TEAM_ID>
 ```
@@ -99,7 +101,8 @@ xcodebuild archive \
 xcodebuild -exportArchive \
   -archivePath <output/App.xcarchive> \
   -exportPath <output/export> \
-  -exportOptionsPlist <output/ExportOptions.plist>
+  -exportOptionsPlist <output/ExportOptions.plist> \
+  -allowProvisioningUpdates
 ```
 
 Xcode 默认可能通过 `manageAppVersionAndBuildNumber` 把导出 IPA 的 build number 调整为 App Store Connect 可接受的下一值。必须以 `DistributionSummary.plist` 和最终 IPA 为准，并记录源码 build number 与上传 build number 是否不同。需要完全由源码控制版本时，应显式关闭该行为并提前更新工程 build number。
@@ -125,7 +128,8 @@ metadata 与预期不符时，修正工程后重新 build、test、archive、exp
 xcodebuild -exportArchive \
   -archivePath <output/App.xcarchive> \
   -exportPath <output/upload> \
-  -exportOptionsPlist <output/UploadOptions.plist>
+  -exportOptionsPlist <output/UploadOptions.plist> \
+  -allowProvisioningUpdates
 ```
 
 使用独立 App Store Connect API key 时，也可以调用官方 `altool`：
@@ -138,6 +142,8 @@ xcrun altool --upload-app -f <App.ipa> \
 ```
 
 私钥应位于 Apple 官方支持的 private key 搜索目录或由受控环境提供；不要把 `.p8` 内容写进命令历史。
+
+用 App 专用密码（而非 API key）调用 `altool` 时，若该 Apple ID 绑定了多个 provider，必须加 `--provider-public-id <PROVIDER_PUBLIC_ID>`；不带该参数首次运行会列出各 provider 的 Name 与 Public ID。只读查询（如 `--list-apps`）可用 1Password 里的 app-specific password（例如 `op read 'op://dev/dev-api-keys/icloud_app_specific_password'`），不要写明文。注意：app-specific password 查不到单个 build 的 processing 状态，那需要 ASC API key 或 App Store Connect web。
 
 ## 已知陷阱
 
@@ -160,6 +166,20 @@ Xcode managed versioning 可能在导出时查询 App Store Connect 并选择下
 ### Upload succeeded 不等于 processing succeeded
 
 `Upload succeeded` 只说明 Apple 接受了 package。任务若以“上传”为终点，应准确报告“已上传并进入 processing”；若以“可选作 TestFlight build”为终点，则必须继续等待处理完成。
+
+### Team Store Profile 不含云托管 Distribution 证书
+
+`method=app-store-connect` + `signingStyle=automatic` 走云托管签名时，Apple 会在 distribution 证书到期前约 90 天自动轮换证书。若 portal 上的 "iOS Team Store Provisioning Profile" 仍引用旧证书，export 会在重签前的 qualification 阶段报 `Provisioning profile "iOS Team Store Provisioning Profile: <bundle-id>" doesn't include signing certificate "Apple Distribution: <team>"`，或 `failed qualification checks`。Xcode 不会自动刷新该 profile，除非命令带了 `-allowProvisioningUpdates`。修复：给 archive / export / upload 加 `-allowProvisioningUpdates`，让 Xcode 重建 profile。不要尝试在 Apple Developer portal 手动删除 Xcode 托管的 profile——它通常不在 portal 列表里，删不掉；若加 flag 仍失败，删除本机两处缓存 profile 后重跑：`~/Library/Developer/Xcode/UserData/Provisioning Profiles/`（Xcode 16+）与 `~/Library/MobileDevice/Provisioning Profiles/`（legacy），用 `security cms -D -i <file>` 按 Name 定位到对应 bundle id 的条目。
+
+## 故障诊断
+
+命令失败时，不要只读终端最后一行。`xcodebuild -exportArchive` 每次都会生成一个 `.xcdistributionlogs` 日志 bundle（终端会打印其路径），读其中的 `IDEDistribution.standard.log`，按 step 定位卡点：
+
+- 停在 `IDEDistributionUploadAccountStep` 且出现 `Failed to find an account with App Store Connect access for team ...`：Xcode 里没有已登录且带 App Store Connect 权限的 Apple ID。云托管签名完全依赖这个登录态，到 Xcode → Settings → Accounts 登录或重新认证（2FA）。可用 `plutil -p ~/Library/Preferences/com.apple.dt.Xcode.plist | grep -A6 DVTDeveloperAccountManagerAppleIDLists` 检查登录态；该 plist 由稳定版与 beta **共享**，所以账号缺失通常不是"某个 Xcode 版本有、另一个没有"的版本差异问题。
+- 卡在 profile qualification（`failed qualification checks` / `doesn't include signing certificate`）：profile 与当前解析到的 distribution 证书不匹配，见上方陷阱条目，加 `-allowProvisioningUpdates` 修复。
+- `No signing certificate "iOS Distribution" found`：多为"无登录账号"的表象，先按登录态排查，而不是去 keychain 找本地 distribution 证书。
+
+诊断只读日志与账号状态，不改动 portal 资源；真正的修复动作仍按上方方法与授权边界执行。
 
 ## 输出规格
 

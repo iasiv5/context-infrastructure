@@ -51,6 +51,7 @@ Start from my workspace AGENTS.md or CLAUDE.md. Follow any WORKSPACE.md or skill
 | Portraits | [genai_portrait_skill](https://github.com/grapeot/genai_portrait_skill) | vision agent 驱动的人像、头像和证件照编辑；强调身份保真、摄影整体一致性、多图灯光迁移和 alpha 输出 |
 | Images | [tiff-icc-profile](https://github.com/grapeot/tiff-icc-profile) | 给未标记 TIFF 嵌入 ICC profile，常用于 DaVinci still workflow |
 | Health | [health-quantification](https://github.com/grapeot/health-quantification) | Apple Health / 手动记录 → SQLite → CLI → AI 分析 |
+| Health / education | [ct-education-skill](https://github.com/grapeot/ct-education-skill) | 支持外部胸部 CT DICOM，提供与原始切片联动的本地交互式 3D 可视化及 Blender 教学影片。仅用于教学，不用于诊断；检查数据及所有衍生产物均私下保存在仓库外。 |
 | Home network | [firewalla-local-skill](https://github.com/grapeot/firewalla-local-skill) | Firewalla 本地导出分析、设备/流量报告和 redacted artifact 工作流；家庭网络细节留在本地 overlay |
 | Coffee | [roest-analysis](https://github.com/grapeot/roest-analysis) | Roest roast log 抓取与分析 |
 | Intake | [intake-skill](https://github.com/grapeot/intake-skill) | Voice memos / intake workflow 的 public-ready skill |
