@@ -167,3 +167,7 @@ Date: 2026-08-24
 Date: 2026-09-07
 
 🟡 Medium: [iasi 跟踪 main 第十一次同步] commit 95c7aee 合并 main `421df58`（PR #90+#91：diet skills INDEX 路由层 + INDEX 描述 re-voice 修 review drift + GPT 3D skill 入生态文档，共 5 个上游提交）。本次打破连续 8 次零冲突记录：`rules/skills/INDEX.md` 出现第 5 类真冲突——main 在 ba463f2 对 3 个共享条目（iOS Test Acceleration / Playwright E2E / Playwright Ajax Capture）刻意 re-voice 措辞，iasi 侧同区域挂着 3 个 fork 独有条目。按决策表手动合并：共享条目取 main re-voice 措辞（上游纯正增益），fork 独有条目（forked_upstream_sync / external_skill_overlay / writing_skill_local_overlay）全部保留。AGENTS.md / SKILL_ECOSYSTEM.md auto-merge 正确。overlay refresh 已跑：writing-skill @ 9f2f697 already up to date。下次起点锚定 `95c7aee`（merge-base `421df58`）。已知分叉点复用：INDEX.md fork 专属条目区仍是首选冲突位，re-voice 类上游改写取 main。
+
+Date: 2026-09-15
+
+🟢 Low: [iasi 跟踪 main 第十二次同步（零冲突）+ DSH 服务器 overlay CLI 层缺 pip] commit `423bac5` 合并 main `6337d84`（PR #92 ASC `-allowProvisioningUpdates`/profile 轮换/故障诊断 + PR #93 CT Education Skill 入生态文档，main 领先 4 提交）。dry-run 零冲突：INDEX.md main 改 ~48 行 ASC 条目、fork 新增条目在 ~92 行区域，hunk 不重叠；另两文件 fork 自 merge-base 未改，纯 main 增益。overlay refresh：writing-skill @ `5815393` already up to date；但本机（DSH Linux 服务器）无 pip/ensurepip/uv/venv，`external-prose-lint` CLI 层无法安装——overlay 内容层（clone + 路由文件）完整可用，写作 Round 4 的 CLI 自查仍需在有 pip 的主力机跑。下次起点锚定 `423bac5`。
