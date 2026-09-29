@@ -47,7 +47,10 @@ Start from my workspace AGENTS.md or CLAUDE.md. Follow any WORKSPACE.md or skill
 | Slides | [presentation_skill](https://github.com/grapeot/presentation_skill) | 默认 image-generated full-slide deck；明确不用图像生成时 fallback 到 HTML module deck |
 | Slides | [pptx.skill](https://github.com/grapeot/pptx.skill) | AI-first PPTX 读取、编辑和渲染 |
 | Images | [image-generation-skill](https://github.com/grapeot/image-generation-skill) | Gemini Flash / Gemini Pro / GPT-Image-2 文生图、图片编辑、分辨率放大 |
+| Voice clone | [tts-clone-skill](https://github.com/grapeot/tts-clone-skill) | Gemini 3.8 Flash TTS 声音复制与本地 Qwen3-TTS 克隆：同意句校验、24 kHz WAV、voice key 不进 stdout |
 | 3D / animation | [gpt_3d_skill](https://github.com/grapeot/gpt_3d_skill) | 专为用好 GPT-6 跃升后的三维建模能力而设计：通过参考分解、材质、镜头编排与反复视觉检查，改善缺少方法时仍停留在粗糙 demo 的问题。引导制作 Blender 模型、动画与 Three.js 网页漫游，含角色绑骨与本地动捕工作流 |
+| Music | [zun-music-skill](https://github.com/grapeot/zun-music-skill) | 把公有领域旋律改编成 ZUN（东方 Project 作曲者）风格的短乐句（通常 8 小节约 15 秒）：保留原曲强拍骨架并自动校验，叠加 ZUN 进行、3-3-2 切分、16 分音符装饰、小号+钢琴主旋律和机械感鼓组，用 FluidSynth + 东方向 SoundFont 渲染 MIDI/MP3，并提供局域网试听页做 A/B 对比；含公有领域边界和真实多轮试听踩坑 |
+| Video | [opus-video-audio-skill](https://github.com/grapeot/opus-video-audio-skill) | 专为 Claude Opus 设计与验证：用代码逐帧渲染短视频并按分镜配乐或对齐歌曲。画面侧覆盖先定概念并由独立 critic 逐轮审阅、按真实角大小定焦段、线性合成与一次 tone map、光晕/倒影/屏幕文字的常见坑、防止审阅旧帧的逐帧验收、关键帧拼图与手机预览；支持解说旁白（TTS 转录校验与字幕）及随现成歌曲剪辑（分轨测算、节拍与唱句吸附到真实起音、鼓点包络驱动辉光、单画布揭示、把歌词放在画面空白处）；音频侧用 MIDI + FluidSynth 让音符落在画面节拍上，也能铺旁白下的垫乐，因 agent 听不见而以时长、峰值、RMS 包络和频谱质心客观校验并做标准化。附 check_frames、score_cue 等 5 个 CLI 及 lib/opusvid 库；未在其他模型上测试 |
 | Portraits | [genai_portrait_skill](https://github.com/grapeot/genai_portrait_skill) | vision agent 驱动的人像、头像和证件照编辑；强调身份保真、摄影整体一致性、多图灯光迁移和 alpha 输出 |
 | Images | [tiff-icc-profile](https://github.com/grapeot/tiff-icc-profile) | 给未标记 TIFF 嵌入 ICC profile，常用于 DaVinci still workflow |
 | Health | [health-quantification](https://github.com/grapeot/health-quantification) | Apple Health / 手动记录 → SQLite → CLI → AI 分析 |
