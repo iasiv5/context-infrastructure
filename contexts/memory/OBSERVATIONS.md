@@ -167,3 +167,7 @@ Date: 2026-08-24
 Date: 2026-09-15
 
 🟡 Medium: [iasi 跟踪 main 第十二次同步（零冲突恢复）+ DSH 服务器无 pip 环境限制] commit `423bac5` 合并 main `6337d84`（PR #92 ASC `-allowProvisioningUpdates`/profile 轮换/故障诊断 + PR #93 CT Education Skill，4 个上游提交），dry-run 零冲突，零冲突模式恢复（INDEX.md 双方 hunk 不重叠 + 两文件纯 main 增益）。overlay refresh：writing-skill @ `5815393` already up to date；暴露环境事实：DSH Linux 服务器无 pip/ensurepip/uv/venv，overlay 的 `external-prose-lint` CLI 层装不上，内容层（clone + 路由文件）完整可用——陷阱已晋升进 `bestpractice_external_skill_overlay.md` 已知陷阱表，需 CLI 的写作 Round 4 自查仍须在主力机跑。下次起点锚定 `423bac5`。
+
+Date: 2026-09-29
+
+🟡 Medium: [iasi 跟踪 main 第十三次同步（零冲突，纯 main 增益）] commit `c77ab51` 合并 main `a907372`（PR #94-#98 共 10 个提交：SKILL_ECOSYSTEM 新增 tts-clone-skill / zun-music-skill / opus-video-audio-skill 三条公共生态条目 + compressor skill 新增 Waiting 状态语义、stomp log 验证法、交付完整性 decode check（ffmpeg -f null - 全解码）与 6 条 Known Pitfalls）。dry-run 零冲突；两文件 hunk 级核验均纯 main 增益（SKILL_ECOSYSTEM iasi 零改动；compressor.md iasi 唯一相关提交 cefe9a9 本身是 main 418f2c7 的逐字拷贝，无 fork 独有内容）。overlay refresh：writing-skill 63b4fc1→15c1989（含 src/ 变化：scanner.py 新增、rules/formatter 更新；0 rename，路由文件 7 个路径全部有效；本机无 pip，CLI 层重装仍留主力机）。已知分叉点清单不变。下次起点锚定 `c77ab51`。
