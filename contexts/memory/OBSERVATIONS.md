@@ -171,3 +171,7 @@ Date: 2026-09-15
 Date: 2026-09-29
 
 🟡 Medium: [iasi 跟踪 main 第十三次同步（零冲突，纯 main 增益）] commit `c77ab51` 合并 main `a907372`（PR #94-#98 共 10 个提交：SKILL_ECOSYSTEM 新增 tts-clone-skill / zun-music-skill / opus-video-audio-skill 三条公共生态条目 + compressor skill 新增 Waiting 状态语义、stomp log 验证法、交付完整性 decode check（ffmpeg -f null - 全解码）与 6 条 Known Pitfalls）。dry-run 零冲突；两文件 hunk 级核验均纯 main 增益（SKILL_ECOSYSTEM iasi 零改动；compressor.md iasi 唯一相关提交 cefe9a9 本身是 main 418f2c7 的逐字拷贝，无 fork 独有内容）。overlay refresh：writing-skill 63b4fc1→15c1989（含 src/ 变化：scanner.py 新增、rules/formatter 更新；0 rename，路由文件 7 个路径全部有效；本机无 pip，CLI 层重装仍留主力机）。已知分叉点清单不变。下次起点锚定 `c77ab51`。
+
+Date: 2026-10-04
+
+🟡 Medium: [iasi 跟踪 main 第十四次同步] merge commit `72a0bd9` 合并 `origin/main` `e2d50ae`（从上次基线 `a907372` 增量 11 个提交，PR #99–#104：voice-lora、Firecrawl、iOS development、Koyeb、Maven、UniFi）。dry-run 出现 1 个冲突（`rules/skills/INDEX.md`）；保留 iasi 独有的 upstream-sync / external-skill overlay 条目，并按 main PR #101 接受 iOS skills 外部化到 `ios-development-skill`（三份本地 iOS skill 文件自 merge-base 后无 fork 专属改动，INDEX 中旧 `iOS Test Acceleration` 本地条目同步移除）。overlay refresh：writing-skill `9f2f697→df7eece`；`pip install -e .` 成功，`external-prose-lint --help` 与 `install_overlays.py --check` 均通过，clone clean。下次增量起点锚定 `72a0bd9`。
