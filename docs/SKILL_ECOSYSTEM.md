@@ -22,9 +22,11 @@ Start from my workspace AGENTS.md or CLAUDE.md. Follow any WORKSPACE.md or skill
 | 方向 | Repo | 能力 |
 |---|---|---|
 | Web search | [tavily-skill](https://github.com/grapeot/tavily-skill) | Tavily search/extract CLI，给 agent 稳定 JSON 输出 |
+| Web search | [firecrawl-skill](https://github.com/grapeot/firecrawl-skill) | 使用 Firecrawl v2 的搜索/提取 CLI，纯标准库没有第三方依赖。命令行和 JSON 输出完全兼容 tavily-skill，可以直接平替。搜索默认包含网页全文 Markdown，网页提取支持按查询高亮，调用前会在 stderr 输出 credit 预估 |
 | Documents | [gdocs-skill](https://github.com/grapeot/gdocs-skill) | Google Docs 创建、搜索、修改、分享，支持 Markdown 和 tab |
 | Maps / travel | [google-maps-routing-skill](https://github.com/grapeot/google-maps-routing-skill) | Google Maps Routes + Geocoding CLI，支持地址解析、实时 drive time 和 leave-by 规划 |
 | Domains / DNS | [go-daddy-skill](https://github.com/grapeot/go-daddy-skill) | GoDaddy 域名与权威 DNS read-first CLI；完整清单、敏感字段脱敏，以及独立 write PAT 保护的 TXT create plan/apply |
+| Cloud operations | [koyeb-skill](https://github.com/grapeot/koyeb-skill) | 基于官方 Koyeb CLI 5.12.0 的 Markdown 运维技能与轻量凭证加载器，从 `.env` 读取字面 key 或通过 1Password 解析 `op://` 引用。覆盖应用与实例盘点、构建和运行时日志、授权配置变更、休眠与扩缩容，并结合配置回读、部署状态和线上入口核验结果 |
 | Email | [outlook_skill](https://github.com/grapeot/outlook_skill) | Outlook.com 邮件下载、归档、Markdown 渲染、发送和日历邀请 |
 | Email | [resend_email_skill](https://github.com/grapeot/resend_email_skill) | Resend 自定义域名发信、收件读取、Markdown 导出和附件检查 |
 | Email / newsletter | [kit-skill](https://github.com/grapeot/kit-skill) | Kit Broadcast Markdown 发信 CLI，支持 dry-run、draft-only、web-only 和 tag/segment 定向；账号默认值放本地 overlay |
@@ -40,6 +42,7 @@ Start from my workspace AGENTS.md or CLAUDE.md. Follow any WORKSPACE.md or skill
 | Usage analytics | [ai_usage_dashboard](https://github.com/grapeot/ai_usage_dashboard) | 多平台 AI token usage、成本估算、本地 dashboard 和 E1002 JSON |
 | Social / growth | [typefully-twitter-skill](https://github.com/grapeot/typefully-twitter-skill) | Typefully 发帖、账号指标和 X/Twitter 单帖 analytics |
 | Community publishing | [circle-post-skill](https://github.com/grapeot/circle-post-skill) | Circle community Markdown conversion, dry-run preflight, publish/update/delete CLI；社区默认值放本地 overlay |
+| Course operations | [maven-skill](https://github.com/grapeot/maven-skill) | 基于 CDP 连接已登录 Chrome 浏览器，支持课程与班期（Cohort）动态发现，以及报名学员（Enrolled）CSV 导出、格式校验与收据生成 |
 | Payments / growth | [stripe-skill](https://github.com/grapeot/stripe-skill) | Stripe 只读 finance / sales analytics，live tests 默认 opt-in |
 | Media | [online-media-skill](https://github.com/grapeot/online-media-skill) | 在线媒体下载、ASR artifact、query pack、source identification，以及 Agent 主导的双语 SRT：Agent 负责纠错、语义断句和翻译，CLI 负责 coverage、render 和 validate |
 | Photos | [apple-photos-skill](https://github.com/grapeot/apple-photos-skill) | macOS Photos metadata 搜索、筛选、导出和备份，以及默认 dry-run、显式授权的 PhotoKit import/delete；当前 mutation 能力为 live-unverified alpha，不用于 production library |
@@ -51,11 +54,13 @@ Start from my workspace AGENTS.md or CLAUDE.md. Follow any WORKSPACE.md or skill
 | 3D / animation | [gpt_3d_skill](https://github.com/grapeot/gpt_3d_skill) | 专为用好 GPT-6 跃升后的三维建模能力而设计：通过参考分解、材质、镜头编排与反复视觉检查，改善缺少方法时仍停留在粗糙 demo 的问题。引导制作 Blender 模型、动画与 Three.js 网页漫游，含角色绑骨与本地动捕工作流 |
 | Music | [zun-music-skill](https://github.com/grapeot/zun-music-skill) | 把公有领域旋律改编成 ZUN（东方 Project 作曲者）风格的短乐句（通常 8 小节约 15 秒）：保留原曲强拍骨架并自动校验，叠加 ZUN 进行、3-3-2 切分、16 分音符装饰、小号+钢琴主旋律和机械感鼓组，用 FluidSynth + 东方向 SoundFont 渲染 MIDI/MP3，并提供局域网试听页做 A/B 对比；含公有领域边界和真实多轮试听踩坑 |
 | Video | [opus-video-audio-skill](https://github.com/grapeot/opus-video-audio-skill) | 专为 Claude Opus 设计与验证：用代码逐帧渲染短视频并按分镜配乐或对齐歌曲。画面侧覆盖先定概念并由独立 critic 逐轮审阅、按真实角大小定焦段、线性合成与一次 tone map、光晕/倒影/屏幕文字的常见坑、防止审阅旧帧的逐帧验收、关键帧拼图与手机预览；支持解说旁白（TTS 转录校验与字幕）及随现成歌曲剪辑（分轨测算、节拍与唱句吸附到真实起音、鼓点包络驱动辉光、单画布揭示、把歌词放在画面空白处）；音频侧用 MIDI + FluidSynth 让音符落在画面节拍上，也能铺旁白下的垫乐，因 agent 听不见而以时长、峰值、RMS 包络和频谱质心客观校验并做标准化。附 check_frames、score_cue 等 5 个 CLI 及 lib/opusvid 库；未在其他模型上测试 |
+| iOS 开发 | [ios-development-skill](https://github.com/grapeot/ios-development-skill) | 直接调用 xcodebuild、simctl 与 devicectl 不经封装 CLI；覆盖模拟器 UI 测试与快速测试循环、配对 iPhone 免 Xcode 部署与真机 benchmark，以及 App Store Connect 归档导出与授权上传 |
 | Portraits | [genai_portrait_skill](https://github.com/grapeot/genai_portrait_skill) | vision agent 驱动的人像、头像和证件照编辑；强调身份保真、摄影整体一致性、多图灯光迁移和 alpha 输出 |
 | Images | [tiff-icc-profile](https://github.com/grapeot/tiff-icc-profile) | 给未标记 TIFF 嵌入 ICC profile，常用于 DaVinci still workflow |
 | Health | [health-quantification](https://github.com/grapeot/health-quantification) | Apple Health / 手动记录 → SQLite → CLI → AI 分析 |
 | Health / education | [ct-education-skill](https://github.com/grapeot/ct-education-skill) | 支持外部胸部 CT DICOM，提供与原始切片联动的本地交互式 3D 可视化及 Blender 教学影片。仅用于教学，不用于诊断；检查数据及所有衍生产物均私下保存在仓库外。 |
 | Home network | [firewalla-local-skill](https://github.com/grapeot/firewalla-local-skill) | Firewalla 本地导出分析、设备/流量报告和 redacted artifact 工作流；家庭网络细节留在本地 overlay |
+| Home network | [unifi-skill](https://github.com/grapeot/unifi-skill) | 自建 UniFi Network Controller 的只读 CLI：`status` 看每台 AP 的 RF 与信道占用，`clients` 查终端清单并支持信号强度和频段筛选，`aps` 列设备清单（含 `snmp_location`），`wlan` 列 SSID，`export` 生成带时间戳的配置快照；统一 `{command,input,data}` 信封，退出码 0/2/10/12/13，纯标准库 Python，浏览器 cookie 鉴权。硬约束是只读：设计上不做任何 RF、SSID 或配置写入，改配置仍然回到 Controller GUI，因此 coding agent 可以安全观察家庭网络 RF 状态（信道拥塞、弱信号终端、IoT band steering），但不具备改动它的能力 |
 | Coffee | [roest-analysis](https://github.com/grapeot/roest-analysis) | Roest roast log 抓取与分析 |
 | Intake | [intake-skill](https://github.com/grapeot/intake-skill) | Voice memos / intake workflow 的 public-ready skill |
 | Testing | [playwright-test-skill](https://github.com/grapeot/playwright-test-skill) | CDP step-by-step debugging CLI for AI agents writing Playwright E2E tests |
@@ -70,6 +75,7 @@ Start from my workspace AGENTS.md or CLAUDE.md. Follow any WORKSPACE.md or skill
 | Embedded hardware | [m5stack-sticks3-skill](https://github.com/grapeot/m5stack-sticks3-skill) | M5StickS3 板级 bring-up 与实机验收指南；覆盖 Arduino/ESP-IDF、按钮、电源、LCD、IR、ES8311 音频、NVS 和 BLE HID 陷阱，不回显设备 secret |
 | Identity | [logto-management-skill](https://github.com/grapeot/logto-management-skill) | 安全发现、审计和管理 Logto 租户配置的 CLI + Python 库；支持租户 Swagger 检索、配置写入强制备份与回读校验、快照 diff、MFA 运维和破坏性操作 dry-run |
 | Writing | [writing-skill](https://github.com/grapeot/writing-skill) | 内部写作与外部写作两条工作流，共享诊断词汇表与 L1-L8 thesis catalog，以及确定性中文 prose lint CLI；内部文档降决策摩擦，外部文章防教材声、防认知超载 |
+| Writing | [voice-lora](https://github.com/grapeot/voice-lora) | 包含一个随包分发的 0.55 MB 轻量级 CPU 分类器（voice-lora-detect）和一个基于 Qwen3.5-9B 的改写模型（voice-lora-rewrite）。前者评估中文文章的 AI 味并分档，同时标出 AI 腔词；后者用 llama-server 逐段润色，保证结构、论证顺序和事实不变，改写后的文章带有鸭哥（yage.ai）的口吻，在 Mac 上处理 40 段约 45 秒，生成的内容需要复核事实漂移和格式。此外还提供一套反向合成数据的工具链（voice-lora），方便 agent 在有足够个人语料和一张 32 GB 显存 GPU 的前提下训练专属的改写模型和分类器。 |
 | Vision | [dinov3-classifier-skill](https://github.com/grapeot/dinov3-classifier-skill) | 把未标注图像转成精简本地视觉模型的完整流程：主动采样、人机校准、ONNX 导出、低成本端侧部署 |
 
 ## 选择原则

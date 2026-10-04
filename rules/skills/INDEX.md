@@ -45,7 +45,7 @@
 - [AI CLI Agent 实用指南](https://github.com/grapeot/ai-agent-cli-skill) → 已迁移到独立 public repo；按需安装 Claude Code / Codex / OpenCode / Antigravity / Grok 等 CLI 支持
 - [OpenReview API](./openreview.md) — 检索 AI 学术会议论文 metadata 与作者 profile（含 institution history、position、tilde ID）。触发词："OpenReview"、"查作者 profile"、"ICLR papers"、"NeurIPS papers"、"tilde ID"
 - [GitHub Actions → Koyeb 部署指南](./deployment_github_actions_koyeb.md) — 测试通过后通过 GitHub Actions 自动部署至 Koyeb；适用于各类 Docker 化应用
-- [使用 Apple 官方命令行工具发布 App Store Connect](./deployment_app_store_connect_cli.md) ✅ — 用稳定版 Xcode 完成 iOS archive、distribution export、IPA metadata 核验与授权后的上传；覆盖云托管 distribution 签名、profile 证书轮换与上传故障诊断
+- [Koyeb 运维操作技能](https://github.com/grapeot/koyeb-skill) 🔧 — 通过官方 CLI 运维 Koyeb 应用与部署，凭证经 `.env` 读取，项目专用配置留在本地 overlay；入口 `skills/koyeb/SKILL.md`。触发词："koyeb"、"light sleep"、"Koyeb 日志"、"Koyeb 扩缩容"
 - [分享报告到 Web](./share_report.md) ⚙️ — 将 Markdown 报告转为 HTML 发布至自建服务器并返回访问 URL
 - [Apple Compressor Skill](./compressor.md) ⚙️ — 本机 Apple Compressor CLI 转码；custom preset 路径、源文件写入完成检测、batch 提交与监控
 
@@ -68,7 +68,6 @@
 - [延时执行技能](./delayed_execution.md) ⚙️ — `sleep + nohup` 低风险 fallback；durable 或 AI 延时任务见 ecosystem 的 Process Launcher + OpenCode Skill
 - [项目脚手架与重整](./project_scaffold.md) ✅ — 把散落文件升级为规范工程目录并初始化独立 Git 仓库
 - [AI Session Search & Archive](./ai_session_search_archive.md) — 在 OpenCode、Claude Code、Codex、Antigravity 与 Second Mind 的统一 Markdown 归档中按来源检索历史会话
-- [iOS UI 自动化测试工作流](./ios_ui_automation.md) — 基于 Xcode 模拟器、XCTest 与 simctl 的 iOS 界面及功能自动化验证
 
 ### BestPractice（最佳实践）
 
@@ -91,7 +90,6 @@
 - [Mac Universal Clipboard 重置](./mac_universal_clipboard.md) ✅ — 当 Mac 与 iPhone/iPad 剪贴板不同步时，重置系统 `useractivityd` / `sharingd` / `pboard` 守护进程
 - [AI 产品设计原则](./bestpractice_ai_product_design.md) ✅ — 线性聊天 vs 知识工作、感知规则解耦
 - [产品/技术决策逆向工程](./bestpractice_product_decision_analysis.md) ✅ — 从设计空间、约束和 trade-off 分析产品或技术决策
-- [iOS Test Acceleration](./ios_test_acceleration.md) — iOS 单元测试与 UI 测试提速实践：涵盖串行 `xcodebuild`、`build-for-testing` + `test-without-building`、固定模拟器 UUID、定向 `-only-testing`、fixture launch arguments 及 `.xcresult` 解析
 - [严重分叉上游跟踪策略](./bestpractice_forked_upstream_sync.md) ✅ — 跟踪双向各领先数十提交的严重分叉上游；从逐提交 cherry-pick 切换到一次性 merge + 增量基线；含 modify/delete、文件权属、INDEX 混合文件等 5 类冲突决策表
 - [外部 Skill Overlay 的本地安装与更新](./bestpractice_external_skill_overlay.md) ✅ — 主仓 skill 迁移到外部 repo 后，本地 clone 完整内容 + 保持更新；merge main to iasi 时顺手刷新 overlay。触发词：“刷新 external skill”、“overlay 更新”、“writing-skill pull”
 - [写作 Skill 本地 overlay](./writing_skill_local_overlay.md) ✅ — main 上 5 个写作 skill 文件已迁移为转发桩，AI 读不到内容；本文件路由到 `external_skills/writing-skill/` 本地 clone 的完整 skill 内容 + CLI。触发词："写公众号"、"外部写作工作流"、"prose lint"
