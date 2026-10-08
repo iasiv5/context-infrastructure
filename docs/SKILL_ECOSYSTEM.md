@@ -45,6 +45,7 @@ Start from my workspace AGENTS.md or CLAUDE.md. Follow any WORKSPACE.md or skill
 | Course operations | [maven-skill](https://github.com/grapeot/maven-skill) | 基于 CDP 连接已登录 Chrome 浏览器，支持课程与班期（Cohort）动态发现，以及报名学员（Enrolled）CSV 导出、格式校验与收据生成 |
 | Payments / growth | [stripe-skill](https://github.com/grapeot/stripe-skill) | Stripe 只读 finance / sales analytics，live tests 默认 opt-in |
 | Media | [online-media-skill](https://github.com/grapeot/online-media-skill) | 在线媒体下载、ASR artifact、query pack、source identification，以及 Agent 主导的双语 SRT：Agent 负责纠错、语义断句和翻译，CLI 负责 coverage、render 和 validate |
+| Speech transcription | [asr-skill](https://github.com/grapeot/asr-skill) | 本地音频转写与说话人分离：CPU Nemotron 做说话人分离，Qwen3-ASR 经 MLX 在 Apple Silicon 识别（macOS 26+ / CPython 3.12）。保留原始时间轴、说话人区间与原始转写，由 Agent 经 prepare-edit、语义清理、finalize-edit 分步生成可读文本，不确定片段按原序保留并附 source map；说话人姓名使用调用方提供的映射或有文本依据的推断，未确认项保留标记。 |
 | Photos | [apple-photos-skill](https://github.com/grapeot/apple-photos-skill) | macOS Photos metadata 搜索、筛选、导出和备份，以及默认 dry-run、显式授权的 PhotoKit import/delete；当前 mutation 能力为 live-unverified alpha，不用于 production library |
 | Family media | [bright-horizons-photo-sync-skill](https://github.com/grapeot/bright-horizons-photo-sync-skill) | 增量备份已授权家庭账号可见的 My Bright Day 事件与媒体，支持断点续传、完整性校验和 macOS Photos 去重导入；凭证与家庭数据留在本地 |
 | Slides | [presentation_skill](https://github.com/grapeot/presentation_skill) | 默认 image-generated full-slide deck；明确不用图像生成时 fallback 到 HTML module deck |
@@ -71,6 +72,7 @@ Start from my workspace AGENTS.md or CLAUDE.md. Follow any WORKSPACE.md or skill
 | SEO / marketing | [dataforseo-skill](https://github.com/grapeot/dataforseo-skill) | DataForSEO keyword / SERP / ranked keyword API CLI |
 | Design | [design_skill](https://github.com/grapeot/design_skill) | UI evaluation and improvement judgment framework |
 | Home automation | [smart_home_skill](https://github.com/grapeot/smart_home_skill) | Smart home CLI；device aliases and household details in local overlay |
+| Home automation | [narwal-skill](https://github.com/grapeot/narwal-skill) | 基于 9002 端口本地 WebSocket 的轻量只读 Python CLI 与 Agent 技能，无需云端账号或 Home Assistant。支持状态快照、户型地图、有界遥测与连接诊断。Flow 2 已完成真机冒烟测试，其他部分 Flow/Freo 机型仍为协议候选。 |
 | E-ink display | [eink_diary](https://github.com/grapeot/eink_diary) | Visual diary generation for e-ink displays |
 | Embedded hardware | [m5stack-sticks3-skill](https://github.com/grapeot/m5stack-sticks3-skill) | M5StickS3 板级 bring-up 与实机验收指南；覆盖 Arduino/ESP-IDF、按钮、电源、LCD、IR、ES8311 音频、NVS 和 BLE HID 陷阱，不回显设备 secret |
 | Identity | [logto-management-skill](https://github.com/grapeot/logto-management-skill) | 安全发现、审计和管理 Logto 租户配置的 CLI + Python 库；支持租户 Swagger 检索、配置写入强制备份与回读校验、快照 diff、MFA 运维和破坏性操作 dry-run |
