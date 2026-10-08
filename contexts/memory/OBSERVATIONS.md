@@ -175,3 +175,7 @@ Date: 2026-09-29
 Date: 2026-10-04
 
 🟡 Medium: [iasi 跟踪 main 第十四次同步] merge commit `72a0bd9` 合并 `origin/main` `e2d50ae`（从上次基线 `a907372` 增量 11 个提交，PR #99–#104：voice-lora、Firecrawl、iOS development、Koyeb、Maven、UniFi）。dry-run 出现 1 个冲突（`rules/skills/INDEX.md`）；保留 iasi 独有的 upstream-sync / external-skill overlay 条目，并按 main PR #101 接受 iOS skills 外部化到 `ios-development-skill`（三份本地 iOS skill 文件自 merge-base 后无 fork 专属改动，INDEX 中旧 `iOS Test Acceleration` 本地条目同步移除）。overlay refresh：writing-skill `9f2f697→df7eece`；`pip install -e .` 成功，`external-prose-lint --help` 与 `install_overlays.py --check` 均通过，clone clean。下次增量起点锚定 `72a0bd9`。
+
+Date: 2026-10-08
+
+🟡 Medium: [iasi 跟踪 main 第十五次同步（零冲突，纯 main 增益）] merge commit `7ba1000` 合并 `origin/main` `0656c59`（从上次基线 `e2d50ae` 增量 9 个提交，PR #105–#109：narwal-skill、local ASR skill、Astra coordinator workflow、REST API scaffolding guidance）。dry-run 零冲突；auto-merge 语义抽查通过——README 仅一行 skill 计数变化、INDEX.md main 新增 Astra 条目与 iasi 独有 semantic-search 条目并存、project_scaffold.md main 新增 §3.5 为纯追加。overlay refresh：本机（DSH Linux 无 pip）writing-skill @ `df7eece` already up to date，CLI 层重装按已知陷阱留主力机，内容层完整可用。已知分叉点清单不变（INDEX.md fork 专属条目区仍是首选冲突位）。下次增量起点锚定 `7ba1000`。
