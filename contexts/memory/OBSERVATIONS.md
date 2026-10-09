@@ -48,10 +48,6 @@ Date: 2026-05-29
 🔴 High: openbmc-aware-harness 子项目作为独立 Git 仓库完成种子态骨架搭建。核心决策是采用"先高保真迁移 context infrastructure 骨架，再做第一轮收敛到 OpenBMC 语境"的双阶段路线，第一版排除 periodic_jobs 和 tools。设计文档 `docs/specs/2026-05-29-openbmc-aware-harness-design.md`，实施计划 `docs/plans/2026-05-29-openbmc-aware-harness-implementation-plan.md`。子仓已有独立 AGENTS.md、CLAUDE.md、rules/、docs/、contexts/memory/OBSERVATIONS.md，启动链路自洽。这是 context infrastructure 从个人 workspace 向领域专用可发布仓库迁移的第一个实例，验证了整个骨架的可移植性。
 🟡 Medium: 新增 Harness Engineering 文章 `adhoc_jobs/2026/20260528-harness-engineering-copilot-verified.md`，将 Anthropic 七层扩展模型（CLAUDE.md / Hooks / Skills / Plugins / MCP / LSP / Subagents）对应到 VS Code + GitHub Copilot Chat 的落地路径，并给出固件团队的具体实施顺序。配套社交卡片项目 `adhoc_jobs/2026/social_card_harness_engineering/`。
 
-Date: 2026-05-30
-
-🔴 High: AI Heartbeat 已完成架构收口：当前 chat 中的 `/ai-heartbeat` 是唯一主执行入口，SessionStart hook 仅做 reminder，observer / reflector 的 due 判定与状态回写统一收敛到 `heartbeat_preflight.py` 和 `heartbeat_status_cli.py`；相关实现与 `AGENTS.md`、`README.md`、`setup_guide.md`、`docs/CRONTAB.md`、`periodic_jobs/ai_heartbeat/docs/KNOWLEDGE_BASE.md`、`periodic_jobs/ai_heartbeat/docs/PRD.md` 已对齐。
-
 Date: 2026-05-31
 
 🔴 High: AI Heartbeat 状态语义闭环完成：执行入口收敛到 `.github/prompts/ai-heartbeat.prompt.md`，`--command-spec` 忽略 `last_prompted_on`，`collect_due_tasks()` 视 `skipped` 为已处理。本地时区切日、reminder-only 两步语义、same-day skipped 测试均已覆盖。
@@ -85,10 +81,6 @@ Date: 2026-06-18
 🟡 Medium: ob-harness 把 destructive confirmations 的视觉层统一成 confirmation banner：`ob` 新增 `print_confirm_banner` 纯展示函数，替换 build/init/start-qemu/update community QEMU binary 四处手写块，并补齐 kill-and-restart 与 stop-qemu 两个缺口；确认循环、`--force` 分支和退出语义保持原样。`GLOSSARY.md` 与实施计划同步把 banner 定义为“只负责视觉强调，不承载确认逻辑”的术语。
 🟡 Medium: Harness Engineering 内部演讲稿收敛成 14 页版本，主线固定为 inner/outer harness、蒸馏与固化、四层固化路径、ob-harness 工作台与 Venice 试点数据。分享重点已经从“AI 会不会写代码”转向“如何把固件经验写进平台与流程”，这是当前专案叙事的明显收口。
 
-Date: 2026-06-19
-
-🔴 High: [observer 扫描方法论与实际环境脱节，已于本次 reflector 修正 KNOWLEDGE_BASE §2] 两处实测发现：(1) Windows git-bash 下 `find -mtime -N` 静默漏报——本次 `-mtime -1` 返回空，而 `-newermt "2026-06-17 00:00"` 正常命中 06-18 的演讲稿等文件；KB §2.1 推荐的扫描示例 `-mtime -1` 在本环境不可靠，observer/reflector 扫描应统一改用 `-newermt`。(2) KB §2.2/2.3 列为扫描白名单的 `contexts/blog/content/` 与 `contexts/life_record/*.csv` 在本仓不存在（`contexts/` 实际只有 daily_records/memory/survey_sessions/thought_review，WORKSPACE.md 也未收录这两条路径）。这两点已于本次 reflector 修正进 KNOWLEDGE_BASE §2.1（mtime→newermt）与 §2.2/2.3（白名单路径加存在性注记）。
-🟡 Medium: [reflector 2026-06-19] ~~ob-harness 子仓已由用户删除，以后不再出现。~~ **⚠️ 已被 07-20~08-06 后续观测推翻：ob-harness 在 07-20 起恢复活跃开发（07-30 know-how 优化、07-31 GDD、08-02 内置 Goal-Driven、08-05 互检均在该子仓），本条"不再出现"判断失效。** 保留此条仅因其附带的"06-18 confirmation banner（视觉强调与确认逻辑分离）模式有跨项目 CLI 复用价值"的观察仍成立；但不要据此认为 ob-harness 已废弃。06-04/06-09/06-13/06-15/06-18 的早期记录应与 07-20+ 后续记录连读方可还原项目全貌。
 Date: 2026-06-21
 
 🟡 Medium: [项目里程碑] ob-harness V1.2 发布（子仓独立 git 仓库）。四条互锁主线：重构（§1-§7 物理分层 + 抽 5 个公共函数 + 清死代码，4200 行脚本重新可维护）、退出码协议统一（取消 exit0/exit2 混用、bitbake 码不再透传、领域函数层前提 1→3，修了 menu 把取消误报 Init succeeded 的 bug，统一到 0/2/3/1 四档）、从零搭起四层测试体系（protocol/unit/orchestration/integration + run_all + CI + 双核心层交叉覆盖 + multiset shellcheck baseline 防同类告警静默吸收）、ob-first 共识（ADR 0003 + bestpractice_06 skill + AGENTS.md 守卫 + usage↔dispatch 防漂移测试）。ob 从「能用」升级到「可被 agent 稳定依赖」。
@@ -107,11 +99,6 @@ Date: 2026-07-05
 
 🟡 Medium: [框架工程资产新增] commit 48aed2c 新增 `adhoc_jobs/2026/20260704-harness-loop-engineering-diagram-zh.html` 与配套 `adhoc_jobs/2026/20260704-harness-loop-engineering-diagram.gif`，把 Prompt/Context/Harness/Loop Engineering 关系图沉淀为可复用可传播的可视化资产，延续 Harness Engineering 叙事从文字到图形表达的体系化推进。
 
-Date: 2026-07-12
-
-🟡 Medium: [跨分叉分支 cherry-pick 的维护权属核查] 把 main 最近提交同步到严重分叉的 iasi 分支（iasi 领先 main 98 提交，main 领先 73）时，模块化大重构提交（如 731a3bb 拆 external writing、14cd828 拆 internal writing）会直接覆盖目标分支独有演进。核查方法：`git log <merge-base>..<branch> -- <file>` 确认目标分支分叉后是否动过该文件 + 检查作者权属。iasi 写作方法论文档（COMMUNICATION/workflow_*.md）经核查全是鸭哥（Yan Wang）提交、用户未维护，故直接 checkout main HEAD 对齐；INDEX.md 含用户自有 skill 条目需手动合并。决策模式已晋升为 skill `rules/skills/bestpractice_forked_upstream_sync.md` 并存 memory（iasi-forked-upstream-sync）。
-🟡 Medium: [写作方法论文档对齐 main 模块化重构] commit f94993b 将 main 上鸭哥的 external/internal writing 模块化重构同步到 iasi：3 个 workflow/COMMUNICATION 文档对齐 main 最新版，新增 bestpractice_external_prose.md（外部文章文风手册）、reference_writing_thesis_catalog.md（L1-L8 分析视角）、bestpractice_internal_visuals.md（内部视觉组件规范）。main 重构方向是把臃肿单一 workflow 文件拆成「精简 workflow + 独立 bestpractice/reference 文件」，iasi 原为鸭哥早期未精炼版本。
-
 Date: 2026-07-14
 
 🟡 Medium: [合规科普] commit 2f936a6 新增欧盟 CRA（网络韧性法案）科普文章（`adhoc_jobs/2026/20260713-eu-cra-kepu.md`）。核心要点：安全责任从"出厂前测试"延伸到"产品全生命周期漏洞处理"；覆盖所有连网设备含独立芯片/固件/App；四项核心义务（出厂不带已知漏洞、提供安全更新至少 5 年、维护 SBOM 并跟踪漏洞影响、技术文件保存 10 年）；两个关键节点——2026-09-11 通报时钟开启（24h 早期预警 + 72h 正式报告）、2027-12-11 全面验牌（未贴 CE 标志不得进入欧盟市场）；罚款上限 1500 万欧元或全球营收 2.5%。与固件/BMC 安全领域直接相关，是 OpenBMC 产品出口欧洲需关注的合规背景。
@@ -121,12 +108,6 @@ Date: 2026-07-16
 🟡 Medium: [外部写作体系重构 + Antigravity CLI 接入] commit 9aee80c 大规模重构外部写作 skill 矩阵：新增 `rules/skills/antigravity_cli.md`（Antigravity CLI 即 `agy` 文件式调用 guide，区分 `agy-ide` launcher 与 `agy` headless agent；已验证版本 1.1.2），新增 `rules/skills/workflow_external_thesis_mining.md`（调研与 external writing 之间的判断层，把 topic 转化为有证据可反驳的 thesis，7 项成功标准含单一判断/证据承载/读者增量/作者连续性/语料增量/可证伪/可写性），重构 `workflow_external_writing.md`（193→精简并模块化），扩展 `ai_agent_cli_guide.md` 和 `workflow_deep_research_survey.md`。延续 main 的"精简 workflow + 独立 bestpractice/reference"模块化重构方向。
 🟡 Medium: [AI Session Search & Archive 跨供应商会话检索] commit 0ae58e5 新增 `rules/skills/ai_session_search_archive.md`，定位为多供应商 AI 会话历史的统一检索工作流。源归档按 `contexts/ai_sessions/{opencode,claude_code,codex,antigravity,second_mind}` 路由，策略是先词法搜 names/identifiers 再语义搜 approximate wording，依赖第三方归档导出器 `ai_session_export`。填补了"跨 Claude/Codex/Antigravity/OpenCode 查历史会话"的工具空白，WORKSPACE.md 与 CRONTAB.md 同步更新。
 🟡 Medium: [内部写作理解门槛理论完善] commit 8b0f63a 在 `workflow_internal_writing.md` 中引入两层核心判断：①"项目上下文 vs 概念上下文"分离——共享项目背景不等于共享术语，本轮新概念仍须建立完整依赖；②"双层结论"原则——首屏先普通语言层（不含术语也能复述发生了什么）再技术精确层，应对"负载术语但无含义"的标签代替解释问题。结论卡片标题从英文改为中文（Bottom Line→核心结论 / Why This Matters→为什么重要 / Recommended Action→建议行动）。适用场景描述也收紧为"熟悉同一项目或决策背景的协作者"。
-
-Date: 2026-07-18
-
-🔴 High: [iasi 跟踪 main 策略升级 cherry-pick→merge] 对严重分叉的上游（iasi 与 main 双向各领先数十提交）逐提交 cherry-pick 会让结构性分叉点反复冲突；改用 `git merge main` 一次性处理 + 建立增量基线（merge commit b1b4a50），后续同步只处理增量。dry-run merge（`--no-commit` 后 `--abort`）是评估策略代价的有效手段：本次 33 文件自动合并、13 文件冲突。**完整方法论（含 5 类冲突决策表、已知分叉点清单、dry-run 流程）已晋升为 skill `rules/skills/bestpractice_forked_upstream_sync.md`，user memory 同步存 `iasi-forked-upstream-sync.md`。**
-🟡 Medium: [merge 冲突解决决策模式] 13 个结构性冲突的处理范式：modify/delete 保留 iasi 有意删除（observer/opencode_client/reflector.py 三脚本 `git rm`）；main 引用 iasi 已删文件的（CRONTAB/setup_guide 的 reflector.py/observer.py）保留 iasi preflight 版；iasi 领先 main 的改动（cognitive 的 semantic-search repo 升级）保留 iasi；纯 main 增益（Google Maps 列表、trailing whitespace 清理、`functions.task` API 纠正、ChatGPT OAuth）取 main。
-🟡 Medium: [main 内容同步] 本次带入 main 上游内容：7 个新 skill（35e5d94：deployment_github_actions_koyeb / growth_analytics / ios_test_acceleration / openreview / skill_download_paper / workflow_public_consensus_net_income_audit / workflow_research_paper_survey_writing）+ 公开写作工作流术语更新（2510988，thesis gate→reasoning architecture 等）+ ChatGPT OAuth ecosystem 引用（32c96e）+ 代码清理（7902adf）。
 
 Date: 2026-07-20
 
@@ -156,21 +137,8 @@ Date: 2026-08-06
 
 Date: 2026-08-24
 
-🔴 High: [跨仓记忆自治模式确立——主仓 observer 对子仓降级为指针式记录] ob-harness 子仓已自带完整 heartbeat 基础设施（`ob-harness/contexts/memory/OBSERVATIONS.md`），且已于 08-18 自行运行 observer（观测 16 天/86 commits）+ reflector 首次全量 GC（删 30+ 条已固化/过期条目）。配合主仓 08-18 的 .gitignore 改动（d008f61 把 ob-harness/ 与 external_skills/ 全目录排除跟踪），两子仓与主仓仅剩物理相邻关系。由此确立：主仓 observer 对子仓内容只记里程碑级指针条目（发生了什么 + 去子仓哪里看细节），不再复述子仓 commit 级细节，避免双仓记忆重复膨胀。
-🟡 Medium: [ob-harness test-qemu 基线测试框架落地（08-07~08-20，89 commits，PR #42~#45）] per-machine baseline 双轨硬路由：`tests/baseline/`（社区标准卷，随上游分发）+ `contexts/baseline/`（定制卷）物理隔离，凭 manifest 谱系嗅探锁定加载路径；`ar_probes.yaml`（产品需求→Redfish 请求+断言原语）与 `applicability.yaml`（skip/xfail 确权）声明式配置；六态 verdict（pass/fail/skip/xfail/xpass/error）+ exit 契约 0/1/2/3（error 属 infra 不进 αtruth 统计）。谱系判定四步演进收口 ADR-0026（优先级覆盖+WARN → 硬路由 → source label 单维度 → 缺失态 fail-closed 对称防御）；CI coverage 哨兵拒绝 EXEMPT 豁免（哨兵不弱化原则），改用 protocol 测试直调补偿 xtrace 子进程盲区。PR #45 把 run.sh bash 编排全量下沉 runner.py（归一化单副本 + schema_version 两仓门禁，ADR-0027）。主仓配套文章 `adhoc_jobs/2026/20260818-ob-harness：新增固件基线测试框架.md`。六轮评审+grilling 两轮八项决策的完整链条见子仓 `contexts/memory/OBSERVATIONS.md` 2026-08-18 条目，不在此复述。
-🟡 Medium: [.gitignore 子仓独立化 + WORKSPACE 路由缺口] 主仓 d008f61 把 `external_skills/` 与 `ob-harness/` 加入 ignore，两子仓完全独立演化、主仓不再跟踪其内容变动。但 `rules/WORKSPACE.md` 路由表尚未收录这两条目录（本次 reflector 补录），后续找文件仍可能全盘 glob。
-🟡 Medium: [写作/CLI skill 外部化后的本地 overlay 方案落地（08-13 四连提交）] main 于 PR #86/#88 把写作 skill 与 CLI agent skill 迁出到 grapeot 外部 repo，iasi 以 overlay 机制承接本地定制：新增 `rules/skills/bestpractice_external_skill_overlay.md` + `writing_skill_local_overlay.md`（89eb8b0）；修 overlay refresh 在 nothing-to-merge 时被短路的缺口——从条件式尾步骤提升为验收标准无条件项（91d6d80/a81216d）；AGENTS.md 强化"严禁 AI 直接输出最终文章"入口（f2e35a1）。
-🟡 Medium: [iasi 跟踪 main 第5~11次同步合并记录（07-30~09-07，2026-09-07/09-15 reflector 两轮压缩）] 增量基线模式在此区间持续成立，七次同步中六次零冲突 auto-merge：第5次 ffba3d5（main c3e9d9c，PR #77-#81，M5StickS3 + project_scaffold 增强）；第6次 bf11140（PR #82+#83，App Store Connect CLI + Codex CLI provider）；第7次 3c7c03c（PR #84，external prose lint CLI 强制 Round 4；首次出现 main 实质修改 iasi-native 文件但 hunk 不重叠的新模式）；第10次 f8c9c8c（main 3f62b8b，PR #88 CLI agent skill 外部化 + PR #89 grok-oauth-skill，三个被删文件 iasi 零改动故接受删除）；第11次 95c7aee（main 421df58，PR #90/#91，5 个上游提交）打破连续 8 次零冲突：INDEX.md 出现第 5 类真冲突——main ba463f2 对 3 个共享条目（iOS Test Acceleration / Playwright E2E / Playwright Ajax Capture）re-voice 措辞 vs iasi 同区域 3 个 fork 独有条目，按决策表手动合并：共享条目取 main re-voice 措辞（上游纯正增益），fork 独有条目全保留。区间沉淀两条验证条例：（1）对有 iasi-native 改动的 auto-merge 结果必须 diff merge-base→main 确认 hunk 级不重叠而非语义覆盖（已于 09-07 晋升进 `bestpractice_forked_upstream_sync.md` 验收标准）；（2）权属核查用上次 merge 之后的范围限定（如 `3d9ce78..HEAD`），排除历史回流提交干扰。已知分叉点：#8 CLI agent skill 已外部化，自定义走 ai-agent-cli-skill 本地 overlay（同 writing-skill 模式）；INDEX.md fork 专属条目区是首选冲突位，re-voice 类上游改写取 main。
-🟡 Medium: [m 子仓 5.7.2/5.7.3 发布] 5.7.3（08-18）：skill 跨引用去斜杠命令化（"run the `/grilling` skill" → "call the Skill tool with grilling"），skill-to-skill 调用不再伪装成用户面 slash command；domain-modeling 触发条件从抽象 "ubiquitous language" 改为具体制品锚（编辑 GLOSSARY.md / 记录 ADR / 术语讨论）。5.7.2（08-07）：sub-agent 生成指引去工具化，skill 文本跨 agent runtime 可移植。
+🟡 Medium: [ob-harness test-qemu 基线测试框架落地] 08-07~08-20 完成 per-machine baseline、AR probes 与六态 verdict/runner 体系（PR #42~#45）；架构细节与评审链保存在独立子仓 `ob-harness/contexts/memory/OBSERVATIONS.md` 的 2026-08-18 条目，主仓只保留里程碑指针。
 <!-- 2026-09-07 reflector GC：删除 🟢 一条（08-17 归档迁移噪音过滤流水——同模式第四次出现，过滤口径早已稳定，与 08-24 被删的两条同类前驱同理由）；合并同主题 🟡 三条（iasi 跟踪 main 第5次、第6/7次合记、第10次同步 → 上方"第5~10次同步合并记录"单条，各次锚点/验证条例/分叉点 #8 均保留）。原 08-24 GC 注记所涉条目均已消化，并入本条不再单列。2026-09-15 reflector 第二轮：第11次同步独立条目（原 Date: 2026-09-07 小节）并入合并记录，升级为"第5~11次"；当日第12次同步条目保留在 Date: 2026-09-15 小节（当天新鲜观测不折叠，下次 GC 再并入）。-->
-
-Date: 2026-09-15
-
-🟡 Medium: [iasi 跟踪 main 第十二次同步（零冲突恢复）+ DSH 服务器无 pip 环境限制] commit `423bac5` 合并 main `6337d84`（PR #92 ASC `-allowProvisioningUpdates`/profile 轮换/故障诊断 + PR #93 CT Education Skill，4 个上游提交），dry-run 零冲突，零冲突模式恢复（INDEX.md 双方 hunk 不重叠 + 两文件纯 main 增益）。overlay refresh：writing-skill @ `5815393` already up to date；暴露环境事实：DSH Linux 服务器无 pip/ensurepip/uv/venv，overlay 的 `external-prose-lint` CLI 层装不上，内容层（clone + 路由文件）完整可用——陷阱已晋升进 `bestpractice_external_skill_overlay.md` 已知陷阱表，需 CLI 的写作 Round 4 自查仍须在主力机跑。下次起点锚定 `423bac5`。
-
-Date: 2026-09-29
-
-🟡 Medium: [iasi 跟踪 main 第十三次同步（零冲突，纯 main 增益）] commit `c77ab51` 合并 main `a907372`（PR #94-#98 共 10 个提交：SKILL_ECOSYSTEM 新增 tts-clone-skill / zun-music-skill / opus-video-audio-skill 三条公共生态条目 + compressor skill 新增 Waiting 状态语义、stomp log 验证法、交付完整性 decode check（ffmpeg -f null - 全解码）与 6 条 Known Pitfalls）。dry-run 零冲突；两文件 hunk 级核验均纯 main 增益（SKILL_ECOSYSTEM iasi 零改动；compressor.md iasi 唯一相关提交 cefe9a9 本身是 main 418f2c7 的逐字拷贝，无 fork 独有内容）。overlay refresh：writing-skill 63b4fc1→15c1989（含 src/ 变化：scanner.py 新增、rules/formatter 更新；0 rename，路由文件 7 个路径全部有效；本机无 pip，CLI 层重装仍留主力机）。已知分叉点清单不变。下次起点锚定 `c77ab51`。
 
 Date: 2026-10-04
 
@@ -179,3 +147,9 @@ Date: 2026-10-04
 Date: 2026-10-08
 
 🟡 Medium: [iasi 跟踪 main 第十五次同步（零冲突，纯 main 增益）] merge commit `7ba1000` 合并 `origin/main` `0656c59`（从上次基线 `e2d50ae` 增量 9 个提交，PR #105–#109：narwal-skill、local ASR skill、Astra coordinator workflow、REST API scaffolding guidance）。dry-run 零冲突；auto-merge 语义抽查通过——README 仅一行 skill 计数变化、INDEX.md main 新增 Astra 条目与 iasi 独有 semantic-search 条目并存、project_scaffold.md main 新增 §3.5 为纯追加。overlay refresh：本机（DSH Linux 无 pip）writing-skill @ `df7eece` already up to date，CLI 层重装按已知陷阱留主力机，内容层完整可用。已知分叉点清单不变（INDEX.md fork 专属条目区仍是首选冲突位）。下次增量起点锚定 `7ba1000`。
+
+Date: 2026-10-09
+
+🟡 Medium: [Copilot prompt 文件格式兼容性调整] 10-09 的提交记录称 GHC 最新版不再支持 `*.prompt.md`，因此删除 `ai-heartbeat` 与 `wen-zhang-rui-ping` 两个 GitHub prompt 文件，暂时复用 `.claude/commands/` 入口。
+
+<!-- 2026-10-09 reflector GC：清除已由心跳 SOP/KNOWLEDGE_BASE 固化的架构与扫描记录、已晋升到 bestpractice_forked_upstream_sync.md 的 fork 同步方法、由 WORKSPACE/overlay 文档承接的路由与安装信息，以及已进入 project_scaffold.md / workflow_astra_coordinator.md 的本日重复观测。移除被后续增量覆盖的 #5~#13 同步摘要，保留当前 #14/#15 锚点；ob-harness test-qemu 细节降为子仓 memory 指针。无 🟢 Low 条目需要回收。-->
