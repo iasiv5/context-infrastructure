@@ -27,6 +27,7 @@ Start from my workspace AGENTS.md or CLAUDE.md. Follow any WORKSPACE.md or skill
 | Maps / travel | [google-maps-routing-skill](https://github.com/grapeot/google-maps-routing-skill) | Google Maps Routes + Geocoding CLI，支持地址解析、实时 drive time 和 leave-by 规划 |
 | Domains / DNS | [go-daddy-skill](https://github.com/grapeot/go-daddy-skill) | GoDaddy 域名与权威 DNS read-first CLI；完整清单、敏感字段脱敏，以及独立 write PAT 保护的 TXT create plan/apply |
 | Cloud operations | [koyeb-skill](https://github.com/grapeot/koyeb-skill) | 基于官方 Koyeb CLI 5.12.0 的 Markdown 运维技能与轻量凭证加载器，从 `.env` 读取字面 key 或通过 1Password 解析 `op://` 引用。覆盖应用与实例盘点、构建和运行时日志、授权配置变更、休眠与扩缩容，并结合配置回读、部署状态和线上入口核验结果 |
+| Cloud GPU | [colab-skill](https://github.com/grapeot/colab-skill) | 用官方 `google-colab-cli` 无头跑 Google Colab 的 GPU/TPU 作业（最高 G4 = RTX PRO 6000 96GB），面向批量数据生成与微调。登录用脚本自动 `open` 授权 URL（无需手动 copy），并写清 G4 的 Premium 档位门槛、按小时计费与会话上限、`/content` 不持久，以及禁止常驻服务等边界。私有账号与档位决策留本地 overlay |
 | Email | [outlook_skill](https://github.com/grapeot/outlook_skill) | Outlook.com 邮件下载、归档、Markdown 渲染、发送和日历邀请 |
 | Email | [resend_email_skill](https://github.com/grapeot/resend_email_skill) | Resend 自定义域名发信、收件读取、Markdown 导出和附件检查 |
 | Email / newsletter | [kit-skill](https://github.com/grapeot/kit-skill) | Kit Broadcast Markdown 发信 CLI，支持 dry-run、draft-only、web-only 和 tag/segment 定向；账号默认值放本地 overlay |
@@ -79,6 +80,7 @@ Start from my workspace AGENTS.md or CLAUDE.md. Follow any WORKSPACE.md or skill
 | Writing | [writing-skill](https://github.com/grapeot/writing-skill) | 内部写作与外部写作两条工作流，共享诊断词汇表与 L1-L8 thesis catalog，以及确定性中文 prose lint CLI；内部文档降决策摩擦，外部文章防教材声、防认知超载 |
 | Writing | [voice-lora](https://github.com/grapeot/voice-lora) | 包含一个随包分发的 0.55 MB 轻量级 CPU 分类器（voice-lora-detect）和一个基于 Qwen3.5-9B 的改写模型（voice-lora-rewrite）。前者评估中文文章的 AI 味并分档，同时标出 AI 腔词；后者用 llama-server 逐段润色，保证结构、论证顺序和事实不变，改写后的文章带有鸭哥（yage.ai）的口吻，在 Mac 上处理 40 段约 45 秒，生成的内容需要复核事实漂移和格式。此外还提供一套反向合成数据的工具链（voice-lora），方便 agent 在有足够个人语料和一张 32 GB 显存 GPU 的前提下训练专属的改写模型和分类器。 |
 | Vision | [dinov3-classifier-skill](https://github.com/grapeot/dinov3-classifier-skill) | 把未标注图像转成精简本地视觉模型的完整流程：主动采样、人机校准、ONNX 导出、低成本端侧部署 |
+| Calendar | [apple-calendar-skill](https://github.com/grapeot/apple-calendar-skill) | 通过本地数据库快照只读查询 Apple Calendar 的轻量 CLI 与 Agent 技能，直接以只读模式读取数据库及 sidecar 文件，无需 TCC 自动化权限。提供 `calendars`、`list`、`search`、`get` 与 `selftest` 五项命令，以 JSON 格式输出日历清单、按日期区间过滤日程并检索事件详情。针对底层存储基于 2001 年 Cocoa 参考时刻绝对秒数的机制，工具在结构上严格保证时间语义，同时输出 `start_utc` 真值与 `start_local` 本地显示时间，避免墙钟误读。包含 31 项离线 pytest 单元测试并通过 GitHub Actions CI，内置 `selftest` 在真实数据库上校验七项不变式。 |
 
 ## 选择原则
 

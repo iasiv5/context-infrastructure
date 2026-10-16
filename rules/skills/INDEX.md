@@ -44,6 +44,7 @@
 
 - [AI CLI Agent 实用指南](https://github.com/grapeot/ai-agent-cli-skill) → 已迁移到独立 public repo；按需安装 Claude Code / Codex / OpenCode / Antigravity / Grok 等 CLI 支持
 - [OpenReview API](./openreview.md) — 检索 AI 学术会议论文 metadata 与作者 profile（含 institution history、position、tilde ID）。触发词："OpenReview"、"查作者 profile"、"ICLR papers"、"NeurIPS papers"、"tilde ID"
+- [Reddit Content Reader](./reddit_reader.md) — 读取 Reddit 帖子与评论作为调研证据：默认走 PullPush 归档 API（submission/comment/subreddit 检索，实测可复现）；firecrawl 对 reddit 直接拒绝、tavily extract 返回空、官方 json 端点匿名受限，兼容矩阵与陷阱见文内。触发词："reddit"、"读帖子"、"Reddit 评论区"、"pullpush"
 - [GitHub Actions → Koyeb 部署指南](./deployment_github_actions_koyeb.md) — 测试通过后通过 GitHub Actions 自动部署至 Koyeb；适用于各类 Docker 化应用
 - [Koyeb 运维操作技能](https://github.com/grapeot/koyeb-skill) 🔧 — 通过官方 CLI 运维 Koyeb 应用与部署，凭证经 `.env` 读取，项目专用配置留在本地 overlay；入口 `skills/koyeb/SKILL.md`。触发词："koyeb"、"light sleep"、"Koyeb 日志"、"Koyeb 扩缩容"
 - [分享报告到 Web](./share_report.md) ⚙️ — 将 Markdown 报告转为 HTML 发布至自建服务器并返回访问 URL
