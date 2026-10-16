@@ -153,3 +153,7 @@ Date: 2026-10-09
 🟡 Medium: [Copilot prompt 文件格式兼容性调整] 10-09 的提交记录称 GHC 最新版不再支持 `*.prompt.md`，因此删除 `ai-heartbeat` 与 `wen-zhang-rui-ping` 两个 GitHub prompt 文件，暂时复用 `.claude/commands/` 入口。
 
 <!-- 2026-10-09 reflector GC：清除已由心跳 SOP/KNOWLEDGE_BASE 固化的架构与扫描记录、已晋升到 bestpractice_forked_upstream_sync.md 的 fork 同步方法、由 WORKSPACE/overlay 文档承接的路由与安装信息，以及已进入 project_scaffold.md / workflow_astra_coordinator.md 的本日重复观测。移除被后续增量覆盖的 #5~#13 同步摘要，保留当前 #14/#15 锚点；ob-harness test-qemu 细节降为子仓 memory 指针。无 🟢 Low 条目需要回收。-->
+
+Date: 2026-10-16
+
+🟡 Medium: [iasi 跟踪 main 第十六次同步（零冲突，纯 main 增益）] merge commit `4abd542` 合并 `origin/main` `bb5bebe`（从上次基线 `0656c59` 增量 9 个提交，PR #110–#114：verified agent continuations、coordinator-ready async branches、apple-calendar-skill 生态条目、colab-skill、reddit content reader skill）。dry-run 零冲突；auto-merge 语义抽查通过——INDEX.md main 新增 Reddit 条目（L47）与 iasi 独有 3 条 fork 条目（L95-97 upstream-sync / external-skill overlay / writing overlay）并存，hunk 不重叠；SKILL_ECOSYSTEM.md、workflow_astra_coordinator.md、workflow_parallel_subagents.md 为纯 main 增益（iasi 自 merge-base 未动），新增文件 reddit_reader.md 原样接入。overlay refresh：本机（DSH Linux 无 pip/ensurepip/uv）writing-skill @ `1e25853` already up to date，CLI 层重装按已知陷阱留主力机，内容层完整可用（stub 路由两个 workflow 文件存在性核对通过）。已知分叉点清单不变（INDEX.md fork 专属条目区仍是首选冲突位）。下次增量起点锚定 `4abd542`。
