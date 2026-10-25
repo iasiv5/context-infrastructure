@@ -38,126 +38,22 @@ grep -A 20 "Date: $(date -v-7d +%Y-%m-%d)" contexts/memory/OBSERVATIONS.md
 
 <!-- 以下是记录区域，由 /ai-heartbeat 追加与整理 -->
 
-Date: 2026-05-27
+Date: 2026-05-27 ~ 2026-08-24（2026-10-25 reflector 合并归档）
 
-🟡 Medium: 图片生成能力从 workspace 内置 skill 拆分为独立 public repo `grapeot/image-generation-skill`。删除了 `rules/skills/generate_image.md`、`tools/generate_image.py` 及测试，改为在 `docs/SKILL_ECOSYSTEM.md` 引用。这是 skill 管理从单体打包向生态系统模型迁移的延续，已有 Tavily、Stripe、PPTX 等多个 skill 走了同样的路径。
-🟡 Medium: 新增 PQC（后量子密码）芯片安全文章 `adhoc_jobs/2026/20260526-pqc-chip-security-foundation.md`，覆盖 NIST FIPS 203/204/205、Caliptra 2.0 RTL 冻结集成 ML-KEM/ML-DSA、ASPEED AST2700 BMC SoC 的 PQC 落地方案。文章定位在固件安全与新密码标准交汇点，与 iasi 的固件专家身份高度契合。
+🟡 Medium: [ob-harness 里程碑链] 种子骨架（05-29，context infrastructure 骨架可移植性首次验证）→ 更名 ob-harness 并完成 init/build/status 工作台（06-09）→ V1.1 引入 QEMU 启停（06-13）→ V1.2 物理分层重构 + 退出码 0/2/3/1 协议 + 四层测试体系（06-21）→ ob dev 进入源码深水区（07-20，PR #21）→ test-qemu 基线测试框架（08-24，PR #42~#45）。架构与评审细节一律以子仓 `ob-harness/contexts/memory/OBSERVATIONS.md` 为权威，主仓只留里程碑指针。
+🟡 Medium: [harness engineering 叙事线] BU6 分享会 PPT 与 14 页演讲稿（06-13/06-18，主线收口为"如何把固件经验写进平台与流程"）→ Prompt/Context/Harness/Loop 关系图资产（07-05）→ 《AI 采纳的阶梯》翻译+iasi-remix（07-20，分水岭是机器校验机器的闭环与信任迭代速度）→ IPDD 收口线（07-21 Plan First→SDD→IPDD；07-29 重定义为 Intent & Plan Driven Development；07-30 与 GitHub 官方博客互证，共同内核"锁定变量、降方差"）→ 持续重构工作流三连文（07-03，pick-one-arch-task 流水线）与 GDD/know-how/防过度设计四连文（08-06）。全部文章落盘 `adhoc_jobs/2026/`，当前叙事状态：约束越做越薄、方向越做越锋利。
+🔴 High: [harness 互检方法论] （08-06）用外部 harness（better-harness 五维）反向体检 ob-harness 得 65/100：有效诊断不是看文档严密程度，而是对照"文档承诺 vs 门禁实际触发面"的落差——Stop hook 自检只覆盖 `ob/lib`，know-how 与 tools 的改动收口不到验证；任务理解扎实不等于变更验证到位，缺口总在最后一公里。与 07-29 reviewer gate / test-mapped failure mode 判据互补，构成可复现的假门禁诊断路径。
+🟡 Medium: [skill 与写作体系里程碑（内容以 skill 文件与文章本体为权威）] skill 生态模型确立（05-27 image-generation 拆分起步，延续 Tavily/Stripe/PPTX 路径）→ internal writing 视觉认知负载三层构架与三公理（06-15）→ 外部写作模块化重构 + workflow_external_thesis_mining 判断层 + Antigravity CLI 接入（07-16）→ 内部写作"项目上下文 vs 概念上下文"分离与双层结论原则（07-16）→ external prose lint CLI 确定性自查闭环（08-06，PR #84，Round 4 强制 CLI 自查）→ m/ 子仓 brainstorming/grill 双设计轨道 + 单向 pull handoff + reviewer gate / test-mapped failure mode 判据（07-29，ADR 0001 与 m/GLOSSARY.md 为权威）→ 认知画像工作流 Round 驱动迭代引擎（07-29）。
+🟡 Medium: [LLM cache billing 实测结论] （06-30）基于 ob-harness 41 个会话日志：输入 token 约为输出的 87 倍、总体缓存命中率 93.6%、百轮以上长会话 94.4%，prompt caching 是重上下文 agent 工作流成本可承受的关键机制（分析见 `adhoc_jobs/2026/20260624-llm_cache_billing_analysis.md`）。
+🟡 Medium: [欧盟 CRA 合规背景] （07-14 科普文）安全责任从出厂前测试延伸到产品全生命周期；固件/BMC 产品出口欧盟关键节点：2026-09-11 漏洞通报时钟已开启、2027-12-11 起未贴 CE 不得进入欧盟市场（文章 `adhoc_jobs/2026/20260713-eu-cra-kepu.md`）。
 
-Date: 2026-05-29
+Date: 2026-10-04 ~ 2026-10-16（2026-10-25 reflector 合并归档）
 
-🔴 High: openbmc-aware-harness 子项目作为独立 Git 仓库完成种子态骨架搭建。核心决策是采用"先高保真迁移 context infrastructure 骨架，再做第一轮收敛到 OpenBMC 语境"的双阶段路线，第一版排除 periodic_jobs 和 tools。设计文档 `docs/specs/2026-05-29-openbmc-aware-harness-design.md`，实施计划 `docs/plans/2026-05-29-openbmc-aware-harness-implementation-plan.md`。子仓已有独立 AGENTS.md、CLAUDE.md、rules/、docs/、contexts/memory/OBSERVATIONS.md，启动链路自洽。这是 context infrastructure 从个人 workspace 向领域专用可发布仓库迁移的第一个实例，验证了整个骨架的可移植性。
-🟡 Medium: 新增 Harness Engineering 文章 `adhoc_jobs/2026/20260528-harness-engineering-copilot-verified.md`，将 Anthropic 七层扩展模型（CLAUDE.md / Hooks / Skills / Plugins / MCP / LSP / Subagents）对应到 VS Code + GitHub Copilot Chat 的落地路径，并给出固件团队的具体实施顺序。配套社交卡片项目 `adhoc_jobs/2026/social_card_harness_engineering/`。
-
-Date: 2026-05-31
-
-🔴 High: AI Heartbeat 状态语义闭环完成：执行入口收敛到 `.github/prompts/ai-heartbeat.prompt.md`，`--command-spec` 忽略 `last_prompted_on`，`collect_due_tasks()` 视 `skipped` 为已处理。本地时区切日、reminder-only 两步语义、same-day skipped 测试均已覆盖。
-
-Date: 2026-06-04
-
-🔴 High: AI Heartbeat 完成跨平台重构的主仓库侧迁移。薄壳入口引用独立 SOP，Claude Code 入口共享同一份合同。首次验证"子仓库先行重构→主仓库跟进迁移"的跨仓知识同步模式。
-🟡 Medium: 主仓 06-04 至 06-07 持续扩展 SKILL_ECOSYSTEM（10 个 PR）：新增 Google Maps 路由、Circle Post 社交发布、PDF-to-Markdown CLI、delayed agent jobs 路由等。
-🟡 Medium: iasi 插件体系新增 brainstorming、writing-plans、handoff、cleanup 四个 skills，均标注 obra/superpowers 致敬和 MIT 许可证。
-
-Date: 2026-06-09
-
-🔴 High: ob-harness 子仓经历 06-02 到 06-09 的爆发式开发周期（40+ commits），仓库名从 `openbmc-aware-harness` 简化为 `ob-harness`。期间完成：ob 脚本迁至根目录、machine 校验关卡与 single-source lock、rules 数字前缀统一、README 重写为人类手册。核心能力演进：`ob init` 增加镜像加速克隆、HTTPS→SSH 自动检测、bare mirror 缓存、WSL 并行度调优；`ob build` 全新实现（init-done 标记、三遍 machine 确认）；`ob status` 三段式总览；`ob` 交互菜单。context infrastructure 骨架的可移植性和可演进性得到实战确认。
-
-Date: 2026-06-13
-
-🔴 High: ob-harness V1.1 完成开发与发布，新增 `ob start-qemu` 和 `ob stop-qemu`，把 BMC 镜像的 QEMU 仿真启停纳入 `ob` 工作台。核心设计决策：（1）QB 变量通过 `bitbake -e` 解析不做 fallback（ADR 0002），架构由 `QB_SYSTEM_NAME` 自动区分 AST2600/AST2700；（2）QEMU binary URL 配置化落盘到 `workspace/qemu-bin/`，按 source_label × 架构索引；（3）community 源通过比对 Jenkins `lastSuccessfulBuild` build number 提示更新，custom 源首次交互输入后持久化复用；（4）PID 文件记录进程信息防误杀，端口冲突前置检测。`ob` 覆盖 init / build / start-qemu / stop-qemu 完整开发回路。
-🟡 Medium: ob-harness 新增 npm 网络超时 bestpractice skill（`bestpractice_05-npm_network_timeout_in_yocto.md`），`ob build` 已内置 npm 注册表自动探测（并行测试 npmjs.org 与 npmmirror.com）、600 秒超时参数注入和 24 小时探测缓存。Skills INDEX 更新至 5 个 skill 条目。
-🟡 Medium: 完成 BU6 第二轮内部技术分享会 PPT 稿《Agent Harness 工程：固件开发工作流的蒸馏与固化》（`adhoc_jobs/2026/20260612-Agent Harness 工程： 固件开发工作流的蒸馏与固化.md`），定位在从"AI 能生成代码"到"AI 能按固件流程交付"之间的 Harness 概念压实。配套 release note 文章 V1.1 已产出。
-
-Date: 2026-06-15
-
-🔴 High: [internal-writing skill 三层构架落地] rules/skills/workflow_internal_writing.md 经三连 PR（#30-#32）引入视觉认知负载完整方法论体系。三条核心公理：（1）Visual 是 bandwidth 工具不是装饰；（2）Adaptive 优于静态；（3）MD-first + HTML 优化层。配套前置 gate/后置 gate/武器库/delta 对照表/HTML-in-MD 试验规则。
-🟡 Medium: [Harness 演讲稿完整产出] 完成 BU6 第二轮分享会演讲稿（adhoc_jobs/2026/20260614-演讲稿.MD），13 页逐页讲稿，核心叙事线覆盖 AI 缺固件上下文、三条路径、Harness 两层结构、固化四层级、ob-harness、Venice OTS 三个月数据、质量写进平台。
-🟡 Medium: [GLM-5.2 上下文窗口探测工具] 新增 adhoc_jobs/2026/20260613-ctx_window_probe.py，零依赖实测 GLM-5.2 最大输入上下文，区分上下文超限与 HTTP 413，锚点优先 + 二分精扫。
-🟡 Medium: [ob-harness QEMU SSH host key 自动清理] ob start-qemu 主动检测并清理陈旧 SSH known_hosts host key（ee4c7ff），解决 QEMU 重启后连接被拒问题。
-🟡 Medium: [Skills 跨仓同步] 从 main 同步 compressor skill、SOUL 自主执行契约和 docling macOS CPU workaround 至 iasi 分支。
-
-Date: 2026-06-18
-
-🟡 Medium: ob-harness 把 destructive confirmations 的视觉层统一成 confirmation banner：`ob` 新增 `print_confirm_banner` 纯展示函数，替换 build/init/start-qemu/update community QEMU binary 四处手写块，并补齐 kill-and-restart 与 stop-qemu 两个缺口；确认循环、`--force` 分支和退出语义保持原样。`GLOSSARY.md` 与实施计划同步把 banner 定义为“只负责视觉强调，不承载确认逻辑”的术语。
-🟡 Medium: Harness Engineering 内部演讲稿收敛成 14 页版本，主线固定为 inner/outer harness、蒸馏与固化、四层固化路径、ob-harness 工作台与 Venice 试点数据。分享重点已经从“AI 会不会写代码”转向“如何把固件经验写进平台与流程”，这是当前专案叙事的明显收口。
-
-Date: 2026-06-21
-
-🟡 Medium: [项目里程碑] ob-harness V1.2 发布（子仓独立 git 仓库）。四条互锁主线：重构（§1-§7 物理分层 + 抽 5 个公共函数 + 清死代码，4200 行脚本重新可维护）、退出码协议统一（取消 exit0/exit2 混用、bitbake 码不再透传、领域函数层前提 1→3，修了 menu 把取消误报 Init succeeded 的 bug，统一到 0/2/3/1 四档）、从零搭起四层测试体系（protocol/unit/orchestration/integration + run_all + CI + 双核心层交叉覆盖 + multiset shellcheck baseline 防同类告警静默吸收）、ob-first 共识（ADR 0003 + bestpractice_06 skill + AGENTS.md 守卫 + usage↔dispatch 防漂移测试）。ob 从「能用」升级到「可被 agent 稳定依赖」。
-🟡 Medium: [写作方法论] V1.2 发布文章采用「技术深度 + 故事门槛」双轨策略：`adhoc_jobs/2026/20260621-ob-harness-v1.2-release-未发表.md` 完整展开四条主线工程含量供固件同行深度阅读；`adhoc_jobs/2026/20260621-ob-harness-v1.2-release-故事版.md` 用「管家 ob」拟人化隐喻降低阅读门槛，面向破圈与公众号沟通。发文过程踩到「只看 release notes 漏掉 PR 工程含量、把系统性治理窄化成单一主题」的坑，完整教训已沉淀进 user memory（`ob-harness-v1.2-article.md`）。
-🟡 Medium: [方法论/CLI 协议设计] V1.2 退出码 0/2/3/1 四档语义配合 exit 3 的 remedy line（如 `Run 'ob init romulus' first`），让 AI agent 按退出码区分「该重试」vs「该放弃」，是 CLI 工具为 agent 调用方专门设计稳定协议的实例，可作为后续 ob 或类似 CLI 工具设计的参考范式。
-Date: 2026-06-30
-
-🟡 Medium: [LLM cache billing 成本结构] `adhoc_jobs/2026/20260624-llm_cache_billing_analysis.md` 基于 ob-harness 41 个会话日志解释 AI 编程账单：5.75 亿输入 token 对 663 万输出 token，输入约为输出 87 倍；总体缓存命中率 93.6%，100 轮以上长会话命中率 94.4%，实际全额计费的新鲜输入约 3679.9 万 token。结论是长会话的高上下文依赖通过前缀缓存被显著摊薄，prompt caching 是当前重上下文 agent 工作流成本可承受的关键机制。
-
-Date: 2026-07-03
-
-🟡 Medium: [ob-harness 持续重构工作流文章产出] commit 7f896eb 新增三篇 ob-harness 持续重构工作流文章（`adhoc_jobs/2026/20260703-*`），用不同叙事角度拆解 pick-one-arch-task 工作流：（1）三个 Skill 串联的流水线——improve-codebase-architecture（浅模块发掘，删除测试法）→ grill-with-docs（逐个极端输入追问生成 ADR）→ writing-plans（分钟粒度执行计划）；（2）双 Agent 对抗验证——基于 1M 上下文让顾问 Agent 与主力 Agent 多轮 PK 消除逻辑漂移；（3）防回归结构锁——`grep -c 旧函数名` 断言为 0、bitbake 调用次数锁。核心论点是 prompt 只负责路由+约束（"只挑一条"），真正的智能在 skill，把架构决策从直觉搬进有纪律的流程。
-🟡 Medium: [SKILL_ECOSYSTEM 持续扩展] 06-04 至 07-14 期间持续把独立 skill 单体打包纳入 `docs/SKILL_ECOSYSTEM.md` 索引（如 Google Maps 路由、Circle Post、PDF-to-Markdown、delayed agent jobs、open_router_data_scraper、innovation-assistant 等），延续"独立 skill repo → 生态索引"的扩展模式。单条 PR 不再单独记录。
-
-Date: 2026-07-05
-
-🟡 Medium: [框架工程资产新增] commit 48aed2c 新增 `adhoc_jobs/2026/20260704-harness-loop-engineering-diagram-zh.html` 与配套 `adhoc_jobs/2026/20260704-harness-loop-engineering-diagram.gif`，把 Prompt/Context/Harness/Loop Engineering 关系图沉淀为可复用可传播的可视化资产，延续 Harness Engineering 叙事从文字到图形表达的体系化推进。
-
-Date: 2026-07-14
-
-🟡 Medium: [合规科普] commit 2f936a6 新增欧盟 CRA（网络韧性法案）科普文章（`adhoc_jobs/2026/20260713-eu-cra-kepu.md`）。核心要点：安全责任从"出厂前测试"延伸到"产品全生命周期漏洞处理"；覆盖所有连网设备含独立芯片/固件/App；四项核心义务（出厂不带已知漏洞、提供安全更新至少 5 年、维护 SBOM 并跟踪漏洞影响、技术文件保存 10 年）；两个关键节点——2026-09-11 通报时钟开启（24h 早期预警 + 72h 正式报告）、2027-12-11 全面验牌（未贴 CE 标志不得进入欧盟市场）；罚款上限 1500 万欧元或全球营收 2.5%。与固件/BMC 安全领域直接相关，是 OpenBMC 产品出口欧洲需关注的合规背景。
-
-Date: 2026-07-16
-
-🟡 Medium: [外部写作体系重构 + Antigravity CLI 接入] commit 9aee80c 大规模重构外部写作 skill 矩阵：新增 `rules/skills/antigravity_cli.md`（Antigravity CLI 即 `agy` 文件式调用 guide，区分 `agy-ide` launcher 与 `agy` headless agent；已验证版本 1.1.2），新增 `rules/skills/workflow_external_thesis_mining.md`（调研与 external writing 之间的判断层，把 topic 转化为有证据可反驳的 thesis，7 项成功标准含单一判断/证据承载/读者增量/作者连续性/语料增量/可证伪/可写性），重构 `workflow_external_writing.md`（193→精简并模块化），扩展 `ai_agent_cli_guide.md` 和 `workflow_deep_research_survey.md`。延续 main 的"精简 workflow + 独立 bestpractice/reference"模块化重构方向。
-🟡 Medium: [AI Session Search & Archive 跨供应商会话检索] commit 0ae58e5 新增 `rules/skills/ai_session_search_archive.md`，定位为多供应商 AI 会话历史的统一检索工作流。源归档按 `contexts/ai_sessions/{opencode,claude_code,codex,antigravity,second_mind}` 路由，策略是先词法搜 names/identifiers 再语义搜 approximate wording，依赖第三方归档导出器 `ai_session_export`。填补了"跨 Claude/Codex/Antigravity/OpenCode 查历史会话"的工具空白，WORKSPACE.md 与 CRONTAB.md 同步更新。
-🟡 Medium: [内部写作理解门槛理论完善] commit 8b0f63a 在 `workflow_internal_writing.md` 中引入两层核心判断：①"项目上下文 vs 概念上下文"分离——共享项目背景不等于共享术语，本轮新概念仍须建立完整依赖；②"双层结论"原则——首屏先普通语言层（不含术语也能复述发生了什么）再技术精确层，应对"负载术语但无含义"的标签代替解释问题。结论卡片标题从英文改为中文（Bottom Line→核心结论 / Why This Matters→为什么重要 / Recommended Action→建议行动）。适用场景描述也收紧为"熟悉同一项目或决策背景的协作者"。
-
-Date: 2026-07-20
-
-🟡 Medium: [ob-harness 项目里程碑] commit e5c1a5d（07-19）新增 ob dev 首次开发体验文章（`adhoc_jobs/2026/20260719-ob-dev-first-experience.md`）。`ob dev` 命令组（list/modify/refresh/reset/status/finish 共 6 个子命令）把 Yocto devtool 工作流转译为对 Agent 透明的 API，标志 ob-harness 从"外围统筹（init/build/qemu）"跨入"源码深水区"。以替换 gb200nvl-obmc webui logo 为真案例，验证 Agent 一气呵成跑通"方案对齐（bbappend vs devtool modify 取舍）→ 源码替换 → ob build 后台挂起监控 → ob dev finish 生成 patch 落盘 meta-phosphor → ob run-qemu 浏览器验真"全闭环。PR iasiv5/ob-harness#21。这是"AI 合伙人"叙事从外围打杂到代码区输出的关键一步。
-🟡 Medium: [AI 采纳阶梯方法论] commit cfb88b3（07-19）新增《AI 采纳的阶梯》中文翻译与 iasi-remix 版（`adhoc_jobs/2026/20260716-steps-of-ai-adoption-zh.md` + `20260718-steps-of-ai-adoption-iasi-remix.md`），原作者 Boris Cherny（Claude Code 作者，Anthropic）。5 级阶梯（Step 0 受限/1 辅助/2 并行/3 有监督自治/4 AI 原生），核心判断是"单兵 10 倍→全团队 10 倍"的差距不是 token 和模型档位，而是每一级各自的瓶颈与验证护栏构成。关键分水岭是"机器校验机器的闭环"和"信任迭代的速度"，而非"再多买点 token"。iasi-remix 版把判定红线提炼为"这件事本是不是某个工程师会做的？是就发 AI 自动化，不是就交人工审核"。Anthropic 自评 Step 3、Cherny 个人 Step 4。该阶梯与 ob-harness V1.0→V1.2 的工程化路径形成方法论↔实践互证，后续可作 harness engineering 叙事的对标框架。
-
-Date: 2026-07-21
-
-🟡 Medium: [AI 编程工作流方法论收口 IPDD] commit ce700d0 新增文章 `adhoc_jobs/2026/20260721-从Plan first 到 SDD 再到 IPDD.md`，把 AI 编程工作流演进拆为三阶段：Plan First（Plan Mode 事无巨细指挥）→ SDD（GSD/OpenSpec 强制全量 proposal/specs/design/tasks 落盘，质量兜底但推广阻力大）→ IPDD（实施计划驱动，GPT-5.4/Opus-4.6 + 百万 token 让 Agent 内化工程素养后，一份实施计划即可全自主闭环）。除模型进化外，2026-06 GitHub Copilot Enterprise 改 Usage-based Billing 是第二驱动力，倒逼轻重任务分轨：logo 替换/调用链分析直出指令，跨文件接口改造走 IPDD。三步走固定为 grill-with-docs 锚定意图 → writing-plans + 顾问 Agent 对抗审查 → 新会话主力执行 + 顾问 Agent 闭环验收。与 07-20《AI 采纳阶梯》形成互证：约束随模型升维消退是趋势，但"动手前确立计划"是底线。harness engineering 叙事从"四层固化"向"实施计划为王"收口。
-
-Date: 2026-07-29
-
-🔴 High: [iasi skill 双设计轨道 + 单向 pull handoff 模式] m/ 子仓完成 brainstorming/writing-plans/handoff/cleanup 四 skill 的结构性优化，沉淀出新词汇与 ADR 0001。核心设计：（1）两条对等设计轨道——brainstorming（澄清式，本地可改）与 grill-with-docs（对抗式，上游冻结不可改）；（2）单向 pull handoff——下游靠识别上游产物承接上游，而非依赖上游 push payload，专门解决上游冻结 skill 无法加出口指针的难题；（3）reviewer gate（reviewer 可单独拒绝某任务才成立为独立单元）与 test-mapped failure mode（反例段挑选用已知失败案例做依据）两个判据。配套词汇表 m/GLOSSARY.md 建立设计轨道/单向 pull/reviewer gate/test-mapped failure/中模型校准/检索难度轴六术语。
-🟡 Medium: [IPDD 定义修订] `adhoc_jobs/2026/20260724-IPDD定义修订.md` 把 IPDD 从"Implementation-Plan Driven Development"重定义为"Intent & Plan Driven Development"，三阶段对齐 workflow：I=Intent（对齐意图，确保人机认知一致）、P=Plan（生成计划，含任务拆分/执行顺序/预期结果）、DD=Driven Development（计划指导下 Agent 自主执行 + 代码审查验收）。与 07-21 收口的 IPDD 文章呼应，harness engineering 叙事从"实施计划为王"进一步收紧为"意图锚定先于计划"。
-🟡 Medium: [ob-harness Know-how 双通道经验沉淀] `adhoc_jobs/2026/20260728-ob-harness 实战：把 Agent 踩的坑变成 Know-how.md` 实录纯手动把 Agent 协作坑沉淀成 Know-how 的三轮迭代：Round1 阻断 DRY-RUN 逻辑断裂（CWD 无主仓时 machine check 失去物理依据）→ Round2 阻断交互盲区（ob init 遗漏 --url 卡在交互窗口）→ Round3 经验生效一次跑通。框架内 SKILL 改名 KNOW-HOW 避免与 Agent Skill 语义混淆。手动沉淀与 /ai-heartbeat 半自动机制互为补充，构成 ob-harness 双通道经验积累体系。
-🟡 Medium: [认知画像提取工作流成熟] `rules/skills/workflow_cognitive_profile_extraction.md` 基于多源大规模实践（6.9M 字 → 8 条公理/6 轮）更新：Guardrail 区分 Opus（设计/QA/写作不 delegate）与非 Opus（暂停确认）；Round 驱动迭代引擎（Discover/Verify/Finalize/Restructure 四动作）替代固定线性 Phase；确立"写作不 delegate"硬约束保证概念一致性与文风统一。INDEX.md 已同步。
-
-Date: 2026-07-30
-
-🟡 Medium: [harness engineering 叙事延续] commit 7c7e003 新增文章 `adhoc_jobs/2026/20260730-从 GitHub 到 IPDD：约束凭什么越做越薄.md`，把 GitHub 官方博客《The harness is all you need (mostly)》八步原生循环（原型→plan 模式→Autopilot→rubber duck review）与 IPDD 三阶段（Intent/Plan/DD）互证，提炼出共同内核是"锁定变量、降方差"：同一 session 不换模型保 prompt cache、一份计划锁死意图防发散。区分大众场景（原生 harness 足够）与严肃工程深水区（需 IPDD 对抗式审查兜底 mostly 余量）。与 07-21/07-29 的 IPDD 收口叙事连续，从"实施计划为王"进一步收紧为"约束越做越薄、方向越做越锋利"。
-
-Date: 2026-08-06
-
-🔴 High: [harness 互检方法论：用 better-harness 给 ob-harness 做证据型体检] 文章 `adhoc_jobs/2026/20260805-better-harness-diagnose-ob-harness.md` 实录用外部 harness（QoderAI/better-harness，Agent Work Loop 五维：任务理解/可控执行/改动验证/可靠交付/经验沉淀）反向审视 ob-harness，打出 65/100。核心发现不是"门禁不存在"而是"门禁宽度窄于文档契约"——Stop hook 自检只覆盖 `ob/lib`，`know-how` 与 `tools/*.py` 的改动收口不到验证（文档承诺改完必跑 `ob_check.sh`，实际门禁触发面比承诺窄一圈）。方法论价值：当一个 harness 审视另一个 harness，有效的不是看文档严密程度，而是对照"文档承诺 vs 门禁实际触发面"的落差；任务理解扎实不等于变更验证到位，缺口总在最后一公里。与 07-29"reviewer gate/test-mapped failure mode"判据互补，提供了从外部视角发现"假门禁"的可复现诊断路径。
-🟡 Medium: [ob-harness 连续四篇实战收束 GDD + know-how + 防过度设计] 观察期内 ob-harness 实战叙事加速产出 4 篇文章，三条主线互锁：（1）Goal-Driven（GDD）：`20260731-ob-harness-gdd-wechat-article.md` + `20260802-...` 把 lidangzzz 的 Goal/Criteria 模板落地为 ob-harness 斜杠命令，验证从"接受命令→系统验证→自动落盘 Git"的 E2E 闭环；（2）know-how 沉淀机制重构：`20260730-ob-harness-knowhow-mechanism-optimization.md` 针对"用户本地踩坑经验与上游 knowhow 混搭引发分支同步冲突"缺陷，用 IPDD 流程做产品(oem)与用户(context/knowhow/)物理隔离 + `/sediment` 自动化；(3）防过度设计：08-02 文章以 Q5"拒绝扩散/形式主义/越权"清单实录砍掉 Agent 把小需求张罗成大工程（试图新增冗余 SKILL/ADR/改全局路由）的典型坏味道。三条主线共同把 ob-harness 从"工作台"叙事推向"可分发开源产品 + 治理纪律"叙事。
-🟡 Medium: [main 引入确定性 external prose lint CLI] PR #84（commit 66e6993）新增 `external_prose_lint_cli.py`（798 行）+ skill + tests，把中文 external 文稿的破折号/引号/括注补译/禁词表/单句段/裸 URL 等机械项从"主观语感判断"升级为"确定性 CLI 扫描 + 每条附 skill 问题"，外部写作工作流 Round 4 由"可选 fresh 返工"改"强制 CLI 自查 + 真实 draft residual"。意义：把 voice_contract 这类"开环背景规范"补上"观察真实输出→指出 residual→强制再执行"闭环——这是自 07-16 以来 harness engineering"机器校验机器"原则在写作域的具体落地。
-
-Date: 2026-08-24
-
-🟡 Medium: [ob-harness test-qemu 基线测试框架落地] 08-07~08-20 完成 per-machine baseline、AR probes 与六态 verdict/runner 体系（PR #42~#45）；架构细节与评审链保存在独立子仓 `ob-harness/contexts/memory/OBSERVATIONS.md` 的 2026-08-18 条目，主仓只保留里程碑指针。
-<!-- 2026-09-07 reflector GC：删除 🟢 一条（08-17 归档迁移噪音过滤流水——同模式第四次出现，过滤口径早已稳定，与 08-24 被删的两条同类前驱同理由）；合并同主题 🟡 三条（iasi 跟踪 main 第5次、第6/7次合记、第10次同步 → 上方"第5~10次同步合并记录"单条，各次锚点/验证条例/分叉点 #8 均保留）。原 08-24 GC 注记所涉条目均已消化，并入本条不再单列。2026-09-15 reflector 第二轮：第11次同步独立条目（原 Date: 2026-09-07 小节）并入合并记录，升级为"第5~11次"；当日第12次同步条目保留在 Date: 2026-09-15 小节（当天新鲜观测不折叠，下次 GC 再并入）。-->
-
-Date: 2026-10-04
-
-🟡 Medium: [iasi 跟踪 main 第十四次同步] merge commit `72a0bd9` 合并 `origin/main` `e2d50ae`（从上次基线 `a907372` 增量 11 个提交，PR #99–#104：voice-lora、Firecrawl、iOS development、Koyeb、Maven、UniFi）。dry-run 出现 1 个冲突（`rules/skills/INDEX.md`）；保留 iasi 独有的 upstream-sync / external-skill overlay 条目，并按 main PR #101 接受 iOS skills 外部化到 `ios-development-skill`（三份本地 iOS skill 文件自 merge-base 后无 fork 专属改动，INDEX 中旧 `iOS Test Acceleration` 本地条目同步移除）。overlay refresh：writing-skill `9f2f697→df7eece`；`pip install -e .` 成功，`external-prose-lint --help` 与 `install_overlays.py --check` 均通过，clone clean。下次增量起点锚定 `72a0bd9`。
-
-Date: 2026-10-08
-
-🟡 Medium: [iasi 跟踪 main 第十五次同步（零冲突，纯 main 增益）] merge commit `7ba1000` 合并 `origin/main` `0656c59`（从上次基线 `e2d50ae` 增量 9 个提交，PR #105–#109：narwal-skill、local ASR skill、Astra coordinator workflow、REST API scaffolding guidance）。dry-run 零冲突；auto-merge 语义抽查通过——README 仅一行 skill 计数变化、INDEX.md main 新增 Astra 条目与 iasi 独有 semantic-search 条目并存、project_scaffold.md main 新增 §3.5 为纯追加。overlay refresh：本机（DSH Linux 无 pip）writing-skill @ `df7eece` already up to date，CLI 层重装按已知陷阱留主力机，内容层完整可用。已知分叉点清单不变（INDEX.md fork 专属条目区仍是首选冲突位）。下次增量起点锚定 `7ba1000`。
-
-Date: 2026-10-09
-
-🟡 Medium: [Copilot prompt 文件格式兼容性调整] 10-09 的提交记录称 GHC 最新版不再支持 `*.prompt.md`，因此删除 `ai-heartbeat` 与 `wen-zhang-rui-ping` 两个 GitHub prompt 文件，暂时复用 `.claude/commands/` 入口。
-
-<!-- 2026-10-09 reflector GC：清除已由心跳 SOP/KNOWLEDGE_BASE 固化的架构与扫描记录、已晋升到 bestpractice_forked_upstream_sync.md 的 fork 同步方法、由 WORKSPACE/overlay 文档承接的路由与安装信息，以及已进入 project_scaffold.md / workflow_astra_coordinator.md 的本日重复观测。移除被后续增量覆盖的 #5~#13 同步摘要，保留当前 #14/#15 锚点；ob-harness test-qemu 细节降为子仓 memory 指针。无 🟢 Low 条目需要回收。-->
-
-Date: 2026-10-16
-
-🟡 Medium: [iasi 跟踪 main 第十六次同步（零冲突，纯 main 增益）] merge commit `4abd542` 合并 `origin/main` `bb5bebe`（从上次基线 `0656c59` 增量 9 个提交，PR #110–#114：verified agent continuations、coordinator-ready async branches、apple-calendar-skill 生态条目、colab-skill、reddit content reader skill）。dry-run 零冲突；auto-merge 语义抽查通过——INDEX.md main 新增 Reddit 条目（L47）与 iasi 独有 3 条 fork 条目（L95-97 upstream-sync / external-skill overlay / writing overlay）并存，hunk 不重叠；SKILL_ECOSYSTEM.md、workflow_astra_coordinator.md、workflow_parallel_subagents.md 为纯 main 增益（iasi 自 merge-base 未动），新增文件 reddit_reader.md 原样接入。overlay refresh：本机（DSH Linux 无 pip/ensurepip/uv）writing-skill @ `1e25853` already up to date，CLI 层重装按已知陷阱留主力机，内容层完整可用（stub 路由两个 workflow 文件存在性核对通过）。已知分叉点清单不变（INDEX.md fork 专属条目区仍是首选冲突位）。下次增量起点锚定 `4abd542`。
+🟡 Medium: [GHC prompt 格式变更] （10-09）GitHub Copilot 最新版不再支持 `*.prompt.md`，删除 ai-heartbeat 与 wen-zhang-rui-ping 两个 prompt 文件，入口暂用 `.claude/commands/`。
+🟡 Medium: [iasi 跟踪 main 第 14~16 次同步锚点] #14 `72a0bd9`←`e2d50ae`（11 提交 PR #99–#104，iOS skills 外部化到 ios-development-skill）；#15 `7ba1000`←`0656c59`（9 提交 PR #105–#109，零冲突）；#16 `4abd542`←`bb5bebe`（9 提交 PR #110–#114，零冲突）。各次 overlay refresh 均完成；下次同步冲突预案以 #17 的已知分叉点清单为准。
 
 Date: 2026-10-25
 
 🟡 Medium: [iasi 跟踪 main 第十七次同步（1 文件冲突，逐段合并）] merge commit `9702efd` 合并 `origin/main` `c747317`（从上次基线 `bb5bebe` 增量 18 个提交，PR #115–#126：voice-memos、niview、vlog、bilibili-upload、orchestral-midi、bilibili-live-monitor、youtube-upload、zoom-recording、video_export 共 9 个 skill 生态条目；compressor.md 迁出为外部 repo；#118 委派策略澄清）。冲突仅 AGENTS.md 共 2 hunks，按决策表逐段处理——①Sub-agent 模型路由取 fork：Copilot/Claude Code 是本 fork 实际工具链，main 版 explore/general/Antigravity 属上游生态概念；②高能力模型工作模式手动合并：采纳 main #118 政策澄清（实现与最终验收默认留主线程，取代 fork 旧版"调研/数据处理交 sub-agent"），保留 fork 泛化措辞。auto-merge 抽查通过——iasi 自 4abd542 仅动 OBSERVATIONS.md，其余文件均为纯 main 增益；INDEX.md fork 专属条目（L94-96）完好；compressor.md 删除属 main 纯增益迁移（SKILL_ECOSYSTEM.md 已有外部条目）。overlay refresh：writing-skill @ `8f83b6c` already up to date，本机无 pip 按已知陷阱 CLI 层留主力机，内容层完整（install_overlays --check 全部就绪，INDEX 42 链接无缺失）。已知分叉点清单更新：新增 AGENTS.md 两节（Sub-agent 模型路由 / 高能力模型工作模式）为首选冲突位——main 侧已引入 explore/general 与 Antigravity 语义，下次 main 再动这两节预期复冲突，处置基准见 `9702efd` commit message；INDEX.md fork 专属条目区仍列第二。下次增量起点锚定 `9702efd`。
+
+<!-- 2026-10-25 reflector GC：将 05-27~08-24 的 21 个条目折叠为 6 条合并记录（ob-harness 里程碑链 / harness engineering 叙事线 / harness 互检方法论 / skill 与写作体系里程碑 / LLM cache billing / EU CRA 背景），详情以子仓 memory、adhoc_jobs 文章本体与 rules/skills 文件为权威；10-04/10-08/10-16 三次同步摘要折叠为 #14~#16 锚点单条（沿用 09-07 GC"保留近期锚点、折叠历史摘要、当天新鲜观测不折叠"口径），10-09 GHC prompt 格式条目保留。被删 🔴（05-29 种子骨架、05-31 心跳状态闭环、06-04 跨平台重构、06-09/06-13 ob 爆发期与 V1.1、06-15 internal writing 构架、07-29 双设计轨道）均已由 SOP/入口文件/skill 文件/子仓 memory 固化，或已并入上方里程碑链。无 🟢 条目需要回收；未新增 rules/ 晋升（本次 merge 分叉点处置已由 bestpractice_forked_upstream_sync 流程 + commit message + memory 清单覆盖）。observer 因当天条目已存在记 skipped。继承 2026-09-07/09-15 两轮 GC 注记所涉条目均已消化。-->
