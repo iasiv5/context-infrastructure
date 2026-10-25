@@ -34,6 +34,7 @@
 - [ ] 如果有新提交：下一次跟踪 main 时，merge 范围仅限于上次 merge commit 之后 main 的新增提交（验证：`git log <merge-base>..main --oneline` 全部为新提交，无回溯）
 - [ ] fork 的自定义能力未被破坏（关键功能、关键 skill 条目、关键脚本仍存在且可用）
 - [ ] auto-merge 结果抽查（零冲突≠语义安全）：对 fork 曾独立改过的文件，`git diff <merge-base>..main -- <file>` 确认双方改动 hunk 级不重叠——auto-merge 通过只说明文本不打架，不排除 fork 演进被 main 语义覆盖（08-06 第七次同步沉淀的验证条例）
+- [ ] 机械项一键体检已跑：`python3 tools/check_repo_health.py --post-sync`（覆盖冲突标记 / INDEX 链接 / 基线锚点三类的机械部分）；脚本通过不免除上一条的语义抽查
 - [ ] **overlay refresh（无条件必做）**：对 `external_skills/` 下每个已 clone 的外部 skill repo 跑一遍 `git pull && pip install -e .`，确认本地 clone 与主仓 stub 指向一致。即使本次 merge already-up-to-date 也必须跑。详见 [外部 Skill Overlay 的本地安装与更新](./bestpractice_external_skill_overlay.md)
 - [ ] 关键决策已写入 user/repo memory，含"已知分叉点清单"，避免下次重复踩同一组冲突
 
@@ -43,6 +44,7 @@
 - `git log <merge-base>..<branch> -- <file>`：确认目标分支分叉后是否动过某文件，决定权属
 - `git log --author=<you> -- <file>` / `git blame`：判断文件作者权属，区分"你维护" vs "上游维护"
 - merge-base：`git merge-base fork main`，是判断"分叉后"起点的唯一可靠锚点
+- `python3 tools/check_repo_health.py [--post-sync]`：一键机械体检（tracked .md 冲突标记 / INDEX.md 相对链接 / 基线锚点可达当前分支 HEAD）；merge 落地后加 `--post-sync` 断言 origin/main 零领先。仅标准库，无 pip 机器可跑
 
 ## 冲突解决决策表（按优先级）
 
