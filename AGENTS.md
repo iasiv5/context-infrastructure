@@ -15,11 +15,12 @@ Before doing anything else:
 
 ## Multi-Agent Nudge
 
-This harness can delegate work to multiple sub-agents. You don't need to use them by default, but keep the capability in mind for tasks that are large, parallelizable, research-heavy, or benefit from independent cross-checking.
+调用 sub-agent 或独立审阅载体前，先读 `rules/skills/workflow_parallel_subagents.md`。
 
-Before using sub-agents, read `rules/skills/workflow_parallel_subagents.md`. The current OpenCode pattern is `multi_tool_use.parallel` wrapping multiple `functions.task` calls in the same assistant message.
+- **工程与代码实现**：默认主线程亲自完成，仅用户明确要求委派实现时才分派。
+- **Code / privacy / design review**：通常交独立 sub-agent 或 Antigravity CLI 获取 fresh context，主线程最终验收；轻微低风险局部变更可按比例例外。单次 review 不受多路并行门槛限制。
 
-Don't ask permission. Just do it.
+- **广泛调研与代码库探索**：满足并行门槛时可多 sub-agent 并行；同批就绪任务用 `multi_tool_use.parallel` 同消息启动，运行时支持时默认 `background: true`，等自动完成通知，不轮询。
 
 ## SessionStart Hook: AI Heartbeat
 
@@ -70,11 +71,7 @@ AI Heartbeat 的会前提醒由 `.github/hooks/pre-session.ps1` 直接处理。S
 
 当使用高能力模型（如 Opus、Sonnet 等）时，注意 token 预算的合理分配：
 
-- **设计**：拆分问题、设计计划、分配 sub-agent 任务
-- **质量把关与写作**：最终文本自己写，sub-agent 结果自己验证
-- **调研和数据处理**：交给 sub-agent 执行
-
-核心原则：把 token 预算集中在只有高能力模型才能做好的事情上，常规执行类工作交给 sub-agent。
+**实现与最终验收默认留在主线程。** 高能力模型同样默认亲自实现，仅用户明确要求时才委派实现；广泛调研探索可按需委派，code / privacy / design review 通常交独立载体。已选写作 workflow 可指定 writer，主线程仍须读回核验并承担最终交付责任。调度边界见 `rules/skills/workflow_parallel_subagents.md`。
 
 ## Memory System（记忆系统）
 
