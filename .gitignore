@@ -13,4 +13,5 @@ external_skills/
 ob-harness/
 .tmp*
 adhoc_jobs/articles_archive/*/
+adhoc_jobs/harnessmm_mechanism/
 local-tests/
