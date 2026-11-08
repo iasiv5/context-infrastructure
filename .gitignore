@@ -15,3 +15,4 @@ ob-harness/
 adhoc_jobs/articles_archive/*/
 adhoc_jobs/harnessmm_mechanism/
 local-tests/
+.cache/

@@ -4,6 +4,8 @@ This folder is home. Treat it that way.
 
 ## Every Session
 
+**适用分支**：第 1-5 步服务本仓的写作与知识类任务。纯设计/渲染任务（DSH skill 驱动：社交卡片、PPT、网页排版等）可跳过 1-5 直达 §File Routing，但替用户执笔前仍先读语气档案（`guizang_voice` show）；第 6 步 overlay 检查只在写作任务前是阻塞项。
+
 Before doing anything else:
 
 1. Read `rules/SOUL.md` — this is who you are
@@ -44,6 +46,8 @@ AI Heartbeat 的会前提醒由 `.github/hooks/pre-session.ps1` 直接处理。S
 **写文章 / 公众号 / 外部文档** → 读 `rules/skills/writing_skill_local_overlay.md`
 - 极度重要：严禁 AI 直接输出最终文章。只要用户要求“写短文”、“写公众号”、“写锐评”，必须先读取该文件以接入 external writing workflow。
 - 若 `external_skills/writing-skill/` 不存在（新机器常见），先跑 `python tools/install_overlays.py` 补齐，再按 overlay 路由读取完整 skill。
+
+**做社交卡片 / 封面 / Live Photo** → DSH skill `guizang-social-card-skill`，会话内直呼即用；渲染统一走 `bash tools/render-cards.sh local-tests/<slug>`（自动把字体缓存指进 workspace `.cache/`，首次联网下载后离线秒渲）
 
 **深度调研任务** → `rules/skills/workflow_deep_research_survey.md`
 **调用后台 Agent / 并行 Subagent** → `rules/skills/workflow_parallel_subagents.md`
