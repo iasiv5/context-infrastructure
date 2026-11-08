@@ -61,3 +61,7 @@ Date: 2026-10-25
 Date: 2026-11-02
 
 🟡 Medium: [iasi 跟踪 main 第十八次同步（零冲突纯增益）] merge commit `ab5f207` 合并 `origin/main` `cbb596f`（从上次基线 `9702efd` 增量 2 个提交，仅 PR #127：SKILL_ECOSYSTEM.md 新增 image-to-figure-skill 条目一行）。零冲突；语义抽查通过——iasi 自 9702efd 未动过 SKILL_ECOSYSTEM.md，纯 main 增益按决策表规则 4 整体采纳。已知分叉点清单不变（首位仍是 AGENTS.md 两节，其次 INDEX.md fork 专属条目区）。overlay refresh：writing-skill @ `df2f0a0` already up to date，本机无 pip 按已知陷阱 CLI 层留主力机（内容层完整）。同日早前本分支另有提交 `1733f8a`（语气档案仓库备份 + WORKSPACE.md profiles 路由，与 merge 无关）。下次增量起点锚定 `ab5f207`。
+
+Date: 2026-11-08
+
+🟡 Medium: [iasi 跟踪 main 第十九次同步（零冲突纯增益）] merge commit `75891bf` 合并 `origin/main` `6811a4f`（从上次基线 `ab5f207` 增量 2 个提交，仅 PR #128：SKILL_ECOSYSTEM.md 新增 live2d-modifier-skill 条目一行）。零冲突；语义抽查通过——iasi 自 ab5f207 未动过 SKILL_ECOSYSTEM.md，纯 main 增益按决策表规则 4 整体采纳。已知分叉点清单不变（首位仍是 AGENTS.md 两节，其次 INDEX.md fork 专属条目区）。overlay refresh：writing-skill `df2f0a0`→`35f100f` fast-forward（仅 skills/workflow_internal_writing.md +7/-3，内容层无 src 变更，免重装）；本机无 pip 按已知陷阱 CLI 层留主力机（install_overlays --check 全部就绪，路由表 9 条路径全部可达）。下次增量起点锚定 `75891bf`。
