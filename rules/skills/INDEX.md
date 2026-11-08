@@ -94,6 +94,8 @@
 - [严重分叉上游跟踪策略](./bestpractice_forked_upstream_sync.md) ✅ — 跟踪双向各领先数十提交的严重分叉上游；从逐提交 cherry-pick 切换到一次性 merge + 增量基线；含 modify/delete、文件权属、INDEX 混合文件等 5 类冲突决策表
 - [外部 Skill Overlay 的本地安装与更新](./bestpractice_external_skill_overlay.md) ✅ — 主仓 skill 迁移到外部 repo 后，本地 clone 完整内容 + 保持更新；merge main to iasi 时顺手刷新 overlay。触发词：“刷新 external skill”、“overlay 更新”、“writing-skill pull”
 - [写作 Skill 本地 overlay](./writing_skill_local_overlay.md) ✅ — main 上 5 个写作 skill 文件已迁移为转发桩，AI 读不到内容；本文件路由到 `external_skills/writing-skill/` 本地 clone 的完整 skill 内容 + CLI。触发词："写公众号"、"外部写作工作流"、"prose lint"
+- [语气档案（iasi voice profile）](../../contexts/profiles/iasi_voice_profile.md) ✅ — humanizer-zh v2 语气资产；写公众号、代笔、润色前先读它，把 voice 喂给写手。触发词："去 AI 味"、"语气"、"润色"、"voice"、"humanize"
+- 去味润色 skill（DSH 目录直呼即用）：`humanizer-zh`（中文去 AI 味编辑，润色已有文本）、`guizang-voice`（从你的旧文与修改意见学语气）。触发词："去 AI 味"、"humanize"、"学我的语气"
 - [Playwright E2E 测试方法论](https://github.com/grapeot/playwright-test-skill) 🔗 — 基于 CDP 的单步调试与端到端测试方法论。独立 public repo，CLI 为 `pw-test`。触发词："Playwright E2E"、"CDP debugging"、"SSO login test"、"browser step debugging"
 - [Playwright Ajax Capture](./playwright_ajax_capture.md) — 在已登录的 CDP 浏览器 session 中监听并拦截 fetch/XHR，逆向解析 Web 应用的 internal API 协议。触发词："抓 ajax"、"逆向 internal API"、"browser session 调 API"、"不用 admin key"
 

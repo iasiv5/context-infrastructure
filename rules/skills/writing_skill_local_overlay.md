@@ -23,7 +23,7 @@
 
 1. **先读 root 路由**：`external_skills/writing-skill/skills/writing_workflows.md`
 2. **按它路由到 external writing workflow**：读 `external_skills/writing-skill/skills/workflow_external_writing.md` 的完整内容
-3. **prose lint CLI 已安装**：直接跑 `external-prose-lint path/to/article.md` 或 `python -m writing_skill.external_prose_lint_cli path/to/article.md`
+3. **prose lint CLI**：调用命令见下文「本机运行契约」（旧文「CLI 已安装」指 Windows 工作机，Linux 服务器上未安装，勿直接跑 `external-prose-lint`）。
 4. **不要读主仓 `rules/skills/` 下那 5 个桩**——它们只是转发链接，没有内容
 
 ## 更新方式
@@ -33,6 +33,19 @@
 cd external_skills/writing-skill
 git pull           # 拉上游最新
 pip install -e .   # 重装（如果 src/ 有变化）
+```
+
+## 本机运行契约（iasi 专属，2026-11-08 实测）
+
+Linux 服务器上 Antigravity CLI（gemini-4-argon-high）与 voice-lora 服务不存在（它们只在工作机上）。缺席时按以下降级执行：
+
+- **写手与冷读**：用调用方 harness 的 fresh-context sub-agent（同一模型档位也可，隔离靠会话）；voice rewrite 由写手 prompt 里的文风硬约束替代。
+- **密度门降级**：≤1 处/千字在降级管线上不可达（2026-11-08 实测 8 稿 7 读，下限 ≈2.8 处/千字）。放行线改为：冷读 SHIP + 定性门全过（口吻、thesis 复述、进入理由、数字回收）+ 密度 ≤3 处/千字且连续两轮稳定。要破 1 处/千字，回工作机跑 Antigravity + voice-lora 全链路。
+- **源材料落盘**：「读取输入」一步的完成标准是源材料已存为 `draft-*.md` 文件。分享链接（如微信录音笔 share_token）易失效，源材料不能只活在对话上下文里。
+- **lint 调用**（宿主 python3 无 pip、ensurepip 被禁，勿走 pip install；PYTHONPATH 直跑已验证）：
+
+```bash
+PYTHONPATH=external_skills/writing-skill/src python3 -m writing_skill.external_prose_lint_cli <文章路径>
 ```
 
 ## 与 main 同步的关系
