@@ -47,20 +47,14 @@ Date: 2026-05-27 ~ 2026-08-24（2026-10-25 reflector 合并归档）
 🟡 Medium: [LLM cache billing 实测结论] （06-30）基于 ob-harness 41 个会话日志：输入 token 约为输出的 87 倍、总体缓存命中率 93.6%、百轮以上长会话 94.4%，prompt caching 是重上下文 agent 工作流成本可承受的关键机制（分析见 `adhoc_jobs/2026/20260624-llm_cache_billing_analysis.md`）。
 🟡 Medium: [欧盟 CRA 合规背景] （07-14 科普文）安全责任从出厂前测试延伸到产品全生命周期；固件/BMC 产品出口欧盟关键节点：2026-09-11 漏洞通报时钟已开启、2027-12-11 起未贴 CE 不得进入欧盟市场（文章 `adhoc_jobs/2026/20260713-eu-cra-kepu.md`）。
 
-Date: 2026-10-04 ~ 2026-10-16（2026-10-25 reflector 合并归档）
+Date: 2026-10-04 ~ 2026-11-02（2026-10-25 / 11-08 reflector 合并归档）
 
 🟡 Medium: [GHC prompt 格式变更] （10-09）GitHub Copilot 最新版不再支持 `*.prompt.md`，删除 ai-heartbeat 与 wen-zhang-rui-ping 两个 prompt 文件，入口暂用 `.claude/commands/`。
-🟡 Medium: [iasi 跟踪 main 第 14~16 次同步锚点] #14 `72a0bd9`←`e2d50ae`（11 提交 PR #99–#104，iOS skills 外部化到 ios-development-skill）；#15 `7ba1000`←`0656c59`（9 提交 PR #105–#109，零冲突）；#16 `4abd542`←`bb5bebe`（9 提交 PR #110–#114，零冲突）。各次 overlay refresh 均完成；下次同步冲突预案以 #17 的已知分叉点清单为准。
-
-Date: 2026-10-25
-
-🟡 Medium: [iasi 跟踪 main 第十七次同步（1 文件冲突，逐段合并）] merge commit `9702efd` 合并 `origin/main` `c747317`（从上次基线 `bb5bebe` 增量 18 个提交，PR #115–#126：voice-memos、niview、vlog、bilibili-upload、orchestral-midi、bilibili-live-monitor、youtube-upload、zoom-recording、video_export 共 9 个 skill 生态条目；compressor.md 迁出为外部 repo；#118 委派策略澄清）。冲突仅 AGENTS.md 共 2 hunks，按决策表逐段处理——①Sub-agent 模型路由取 fork：Copilot/Claude Code 是本 fork 实际工具链，main 版 explore/general/Antigravity 属上游生态概念；②高能力模型工作模式手动合并：采纳 main #118 政策澄清（实现与最终验收默认留主线程，取代 fork 旧版"调研/数据处理交 sub-agent"），保留 fork 泛化措辞。auto-merge 抽查通过——iasi 自 4abd542 仅动 OBSERVATIONS.md，其余文件均为纯 main 增益；INDEX.md fork 专属条目（L94-96）完好；compressor.md 删除属 main 纯增益迁移（SKILL_ECOSYSTEM.md 已有外部条目）。overlay refresh：writing-skill @ `8f83b6c` already up to date，本机无 pip 按已知陷阱 CLI 层留主力机，内容层完整（install_overlays --check 全部就绪，INDEX 42 链接无缺失）。已知分叉点清单更新：新增 AGENTS.md 两节（Sub-agent 模型路由 / 高能力模型工作模式）为首选冲突位——main 侧已引入 explore/general 与 Antigravity 语义，下次 main 再动这两节预期复冲突，处置基准见 `9702efd` commit message；INDEX.md fork 专属条目区仍列第二。下次增量起点锚定 `9702efd`。
+🟡 Medium: [iasi 跟踪 main 第 14~18 次同步锚点] #14 `72a0bd9`←`e2d50ae`（11 提交 PR #99–#104，iOS skills 外部化到 ios-development-skill）；#15 `7ba1000`←`0656c59`（9 提交 PR #105–#109，零冲突）；#16 `4abd542`←`bb5bebe`（9 提交 PR #110–#114，零冲突）；#17 `9702efd`←`c747317`（18 提交 PR #115–#126：9 个 skill 生态条目 + compressor.md 迁出外部 repo；唯一实质冲突 AGENTS.md 2 hunks 逐段合并——Sub-agent 模型路由取 fork、高能力模型工作模式采纳 main #118 委派澄清，处置基准见 `9702efd` commit message）；#18 `ab5f207`←`cbb596f`（2 提交 PR #127，零冲突）。已知分叉点清单自 #17 确立且后续各次零冲突同步持续确认不变：首位 AGENTS.md 两节（Sub-agent 模型路由 / 高能力模型工作模式），其次 INDEX.md fork 专属条目区；各次 overlay refresh 均完成。
 
 <!-- 2026-10-25 reflector GC：将 05-27~08-24 的 21 个条目折叠为 6 条合并记录（ob-harness 里程碑链 / harness engineering 叙事线 / harness 互检方法论 / skill 与写作体系里程碑 / LLM cache billing / EU CRA 背景），详情以子仓 memory、adhoc_jobs 文章本体与 rules/skills 文件为权威；10-04/10-08/10-16 三次同步摘要折叠为 #14~#16 锚点单条（沿用 09-07 GC"保留近期锚点、折叠历史摘要、当天新鲜观测不折叠"口径），10-09 GHC prompt 格式条目保留。被删 🔴（05-29 种子骨架、05-31 心跳状态闭环、06-04 跨平台重构、06-09/06-13 ob 爆发期与 V1.1、06-15 internal writing 构架、07-29 双设计轨道）均已由 SOP/入口文件/skill 文件/子仓 memory 固化，或已并入上方里程碑链。无 🟢 条目需要回收；未新增 rules/ 晋升（本次 merge 分叉点处置已由 bestpractice_forked_upstream_sync 流程 + commit message + memory 清单覆盖）。observer 因当天条目已存在记 skipped。继承 2026-09-07/09-15 两轮 GC 注记所涉条目均已消化。-->
 
-Date: 2026-11-02
-
-🟡 Medium: [iasi 跟踪 main 第十八次同步（零冲突纯增益）] merge commit `ab5f207` 合并 `origin/main` `cbb596f`（从上次基线 `9702efd` 增量 2 个提交，仅 PR #127：SKILL_ECOSYSTEM.md 新增 image-to-figure-skill 条目一行）。零冲突；语义抽查通过——iasi 自 9702efd 未动过 SKILL_ECOSYSTEM.md，纯 main 增益按决策表规则 4 整体采纳。已知分叉点清单不变（首位仍是 AGENTS.md 两节，其次 INDEX.md fork 专属条目区）。overlay refresh：writing-skill @ `df2f0a0` already up to date，本机无 pip 按已知陷阱 CLI 层留主力机（内容层完整）。同日早前本分支另有提交 `1733f8a`（语气档案仓库备份 + WORKSPACE.md profiles 路由，与 merge 无关）。下次增量起点锚定 `ab5f207`。
+<!-- 2026-11-08 reflector GC：#17（10-25）与 #18（11-02）两条全文折叠并入上方「第 14~18 次同步锚点」单条（沿用 09-07 / 10-25 GC 口径：保留近期锚点、折叠历史摘要、当天新鲜观测不折叠），#17 的 AGENTS.md 冲突处置要点与已知分叉点清单保留在锚点行内，权威处置基准仍是 `9702efd` commit message；10-09 GHC prompt 格式条目继续保留（迁移已由 .claude/commands/ 结构固化，下次 GC 可评估丢弃）；无 🟢 条目需要回收；无新 rules/ 晋升（同步流程与 overlay 陷阱均已由 bestpractice_forked_upstream_sync / bestpractice_external_skill_overlay 固化）；当天 #19 新鲜观测不折叠。-->
 
 Date: 2026-11-08
 
